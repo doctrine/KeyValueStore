@@ -43,9 +43,25 @@ class EntityManager
         $this->storgeDriver = $storageDriver;
     }
 
-    public function find($className, $key)
+    public function find($className, $key, array $fields = null)
     {
         return $this->unitOfWork->reconsititute($className, $key);
+    }
+
+    /**
+     * For key-value entities that have both a partition key and a range key of
+     * the combination (partition-key, range-key) you can use this operation
+     * to do queries for a partition of data.
+     *
+     * Some vendors don't support queries at all.
+     *
+     * @param string $className
+     * @param string $partitionKey
+     * @return Iterator
+     */
+    public function findRange($className, $partitionKey, array $conditions = array(), array $fields = array(), $limit = null, $offset null)
+    {
+
     }
 
     public function persist($object)
