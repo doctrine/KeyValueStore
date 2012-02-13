@@ -1,0 +1,9 @@
+{
+    "hash": "09b80610c08784c764e1df9edca9b53f",
+    "packages": [
+        {
+            "package": "doctrine\/common",
+            "version": "master-dev"
+        }
+    ]
+}

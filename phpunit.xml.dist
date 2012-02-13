@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="Doctrine KeyValueStore">
+            <directory suffix="Test.php">tests/Doctrine/Tests/KeyValueStore</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>lib/Doctrine/KeyValueStore</directory>
+        </whitelist>
+    </filter>
+</phpunit>

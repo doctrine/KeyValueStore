@@ -8,11 +8,11 @@ The Persistence interfaces are rather overkill for many implementations in the N
 * Unstructured/schema-less values that are mapped onto objects
 * Depending on the implementation embedded values/objects are supported
 * No complex mapping necessary, just put @Entity on the class and all properties are automatically mapped unless @Transient is given. At least one property has to be @Id. Depends on the underlying vendor though. Maybe we enforce two ids to enforce interoperability.
+* Properties dont have to exit on the class, public properties are created otherwise.
 * No support for references to other objects
 * EventListener for ODM/ORM that allows to manage key-value entities and collections of them as properties (postLoad, postUpdate, postPersist, postRemove)
 * Stripped down Object Manager Interface
 
-        @@@ php
         <?php
 
         namespace Doctrine\KeyValueStore;
@@ -49,4 +49,7 @@ Following vendors are targeted:
 * Riak
 * PHP In Memory provider
 * Doctrine\Common\Cache provider
+* RDBMS (id => serialized blob)
+
+We happly accept contributions for any of the drivers.
 

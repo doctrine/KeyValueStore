@@ -1,0 +1,11 @@
+{
+    "name": "doctrine/key-value-store",
+    "require": {
+        "doctrine/common": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Doctrine\\KeyValueStore\\": "lib/"
+        }
+    }
+}
