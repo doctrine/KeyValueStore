@@ -53,3 +53,41 @@ Following vendors are targeted:
 
 We happly accept contributions for any of the drivers.
 
+## Example
+
+Suppose we track e-mail campaigns based on campaign id and recipients.
+
+    use Doctrine\KeyValueStore\Mapping\Annotations as KeyValue;
+
+    /**
+     * @KeyValue\Entity
+     */
+    class Response
+    {
+        const RECIEVE = 0;
+        const OPEN = 10;
+        const CLICK = 20;
+        const ACTION = 30;
+
+        /** @KeyValue\Id */
+        private $campaign;
+        /** @KeyValue\Id */
+        private $recipient;
+        private $status;
+        private $date;
+
+        public function __construct($campaign, $recipient, $status)
+        {
+            $this->campaign = $campaign;
+            $this->recipient = $recipient;
+            $this->status = $status;
+        }
+    }
+
+    $response = new Response("1234", "kontakt@beberlei.de", Response::RECIEVE);
+
+    $entityManager->persist($response);
+    //.... persists as much as you can :-)
+
+    $entityManager->flush();
+
