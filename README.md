@@ -12,28 +12,28 @@ The Persistence interfaces are rather overkill for many implementations in the N
 * EventListener for ODM/ORM that allows to manage key-value entities and collections of them as properties (postLoad, postUpdate, postPersist, postRemove)
 * Stripped down Object Manager Interface
 
-    @@@ php
-    <?php
+        @@@ php
+        <?php
 
-    namespace Doctrine\KeyValueStore;
+        namespace Doctrine\KeyValueStore;
 
-    class EntityManager
-    {
-        public function find($key);
-        public function persist($object);
-        public function remove($object);
-        public function flush();
+        class EntityManager
+        {
+            public function find($key);
+            public function persist($object);
+            public function remove($object);
+            public function flush();
 
-        /**
-         * Unwrap the underlying connection/driver.
-         *
-         * Can be used to access advanced APIs of storage providers. No common
-         * abstraction layer can be guaranteed here anymore.
-         *
-         * @return object
-         */
-        public function unwrap();
-    }
+            /**
+             * Unwrap the underlying connection/driver.
+             *
+             * Can be used to access advanced APIs of storage providers. No common
+             * abstraction layer can be guaranteed here anymore.
+             *
+             * @return object
+             */
+            public function unwrap();
+        }
 
 That means for this project that its a data-mapper as any other Doctrine library and persistence and data-objects are seperated.
 
