@@ -12,3 +12,7 @@ EOT
 \Doctrine\Common\Annotations\AnnotationRegistry::registerFile(__DIR__ . '/../lib/Doctrine/KeyValueStore/Mapping/Annotations/Entity.php');
 \Doctrine\Common\Annotations\AnnotationRegistry::registerFile(__DIR__ . '/../lib/Doctrine/KeyValueStore/Mapping/Annotations/Id.php');
 \Doctrine\Common\Annotations\AnnotationRegistry::registerFile(__DIR__ . '/../lib/Doctrine/KeyValueStore/Mapping/Annotations/Transient.php');
+
+$loader = new \Doctrine\Common\ClassLoader("Doctrine\Tests", __DIR__);
+$loader->register();
+

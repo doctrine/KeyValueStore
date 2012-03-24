@@ -19,26 +19,30 @@
 
 namespace Doctrine\Tests\KeyValueStore\Functional;
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\KeyValueStore\EntityManager;
-use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
 use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
 use Doctrine\KeyValueStore\Mapping\Annotations as KVS;
+use Doctrine\Common\Cache\ArrayCache;
 
-class BasicCrudTest extends \PHPUnit_Framework_TestCase
+abstract class BasicCrudTestCase extends \PHPUnit_Framework_TestCase
 {
     private $manager;
-    private $cache;
+    private $storage;
 
     public function setUp()
     {
         $reader = new \Doctrine\Common\Annotations\AnnotationReader();
         $metadata = new AnnotationDriver($reader);
-        $cache = new ArrayCache();
-        $storage = new DoctrineCacheStorage($cache);
-        $this->manager = new EntityManager($storage, $cache, $metadata);
-        $this->cache = $cache;
+        $this->storage = $this->createStorage();
+        $cache = new ArrayCache;
+        $this->manager = new EntityManager($this->storage, $cache, $metadata);
     }
+
+    abstract protected function createStorage();
+
+    abstract protected function assertKeyExists($id);
+
+    abstract protected function populate($id, array $data);
 
     public function testPersistItem()
     {
@@ -50,7 +54,7 @@ class BasicCrudTest extends \PHPUnit_Framework_TestCase
         $this->manager->persist($post);
         $this->manager->flush();
 
-        $this->assertTrue($this->cache->contains("oid:id=1;"));
+        $this->assertKeyExists($post->id);
     }
 
     public function testPersistAndRetrieveItem()
@@ -69,7 +73,7 @@ class BasicCrudTest extends \PHPUnit_Framework_TestCase
 
     public function testRetrieveItem()
     {
-        $this->cache->save("oid:id=1;", array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => __NAMESPACE__ . '\\Post'));
+        $this->populate(1, array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => __NAMESPACE__ . '\\Post'));
 
         $post = $this->manager->find(__NAMESPACE__ . '\\Post', 1);
 
@@ -83,7 +87,7 @@ class BasicCrudTest extends \PHPUnit_Framework_TestCase
 
     public function testRetrieveWrongClass()
     {
-        $this->cache->save("oid:id=1;", array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => 'stdClass'));
+        $this->populate(1, array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => 'stdClass'));
 
         $this->setExpectedException("RuntimeException", "Trying to reconstitute");
         $post = $this->manager->find(__NAMESPACE__ . '\\Post', 1);
@@ -104,7 +108,7 @@ class BasicCrudTest extends \PHPUnit_Framework_TestCase
 
         $this->manager->flush();
 
-        $this->assertEquals(array('id' => 1, 'headline' => 'asdf', 'body' => 'bar', 'text' => 'baz', 'php_class' => __NAMESPACE__ . '\\Post'), $this->cache->fetch("oid:id=1;"));
+        $this->assertEquals(array('id' => 1, 'headline' => 'asdf', 'body' => 'bar', 'text' => 'baz', 'php_class' => __NAMESPACE__ . '\\Post'), $this->storage->find(array('id' => 1)));
     }
 
     public function testRemoveClass()
@@ -117,12 +121,12 @@ class BasicCrudTest extends \PHPUnit_Framework_TestCase
         $this->manager->persist($post);
         $this->manager->flush();
 
-        $this->assertTrue($this->cache->contains('oid:id=1;'));
+        $this->assertKeyExists($post->id);
 
         $this->manager->remove($post);
         $this->manager->flush();
 
-        $this->assertFalse($this->cache->contains('oid:id=1;'));
+        $this->assertKeyNotExists($post->id);
     }
 }
 
