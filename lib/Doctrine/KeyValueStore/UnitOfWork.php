@@ -22,7 +22,6 @@ namespace Doctrine\KeyValueStore;
 class UnitOfWork
 {
     private $cmf;
-    private $cache;
     private $storageDriver;
     private $idHandler;
     private $identityMap = array();
@@ -31,10 +30,9 @@ class UnitOfWork
     private $scheduledInsertions = array();
     private $scheduledDeletions = array();
 
-    public function __construct($cmf, $cache, $storageDriver)
+    public function __construct($cmf, $storageDriver)
     {
         $this->cmf = $cmf;
-        $this->cache = $cache;
         $this->storageDriver = $storageDriver;
         $this->idHandler = $storageDriver->supportsCompositePrimaryKeys() ?
                             new Id\CompositeIdHandler() :
@@ -57,7 +55,7 @@ class UnitOfWork
         $data = $this->storageDriver->find($id);
 
         $object = $this->tryGetById($id);
-        if (!$object) {
+        if ( ! $object) {
             $object = $class->newInstance();
         }
         $oid = spl_object_hash($object);

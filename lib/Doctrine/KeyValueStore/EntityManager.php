@@ -46,7 +46,7 @@ class EntityManager
         $cmf = new ClassMetadataFactory($mappingDriver);
         $cmf->setCacheDriver($cache);
 
-        $this->unitOfWork = new UnitOfWork($cmf, $cache, $storageDriver);
+        $this->unitOfWork = new UnitOfWork($cmf, $storageDriver);
         $this->storgeDriver = $storageDriver;
     }
 
