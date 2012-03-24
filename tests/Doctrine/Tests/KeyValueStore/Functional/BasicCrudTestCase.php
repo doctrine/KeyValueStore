@@ -27,7 +27,7 @@ use Doctrine\Common\Cache\ArrayCache;
 abstract class BasicCrudTestCase extends \PHPUnit_Framework_TestCase
 {
     private $manager;
-    private $storage;
+    protected $storage;
 
     public function setUp()
     {
@@ -43,6 +43,8 @@ abstract class BasicCrudTestCase extends \PHPUnit_Framework_TestCase
     abstract protected function assertKeyExists($id);
 
     abstract protected function populate($id, array $data);
+
+    abstract protected function find($id);
 
     public function testPersistItem()
     {
@@ -108,7 +110,7 @@ abstract class BasicCrudTestCase extends \PHPUnit_Framework_TestCase
 
         $this->manager->flush();
 
-        $this->assertEquals(array('id' => 1, 'headline' => 'asdf', 'body' => 'bar', 'text' => 'baz', 'php_class' => __NAMESPACE__ . '\\Post'), $this->storage->find(array('id' => 1)));
+        $this->assertEquals(array('id' => 1, 'headline' => 'asdf', 'body' => 'bar', 'text' => 'baz', 'php_class' => __NAMESPACE__ . '\\Post'), $this->find(1));
     }
 
     public function testRemoveClass()

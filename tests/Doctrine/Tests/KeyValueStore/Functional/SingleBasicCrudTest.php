@@ -4,35 +4,35 @@ namespace Doctrine\Tests\KeyValueStore\Functional;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
 
-class CompositeBasicCrudTest extends BasicCrudTestCase
+class SingleBasicCrudTest extends BasicCrudTestCase
 {
     private $cache;
 
     protected function createStorage()
     {
         $this->cache = new ArrayCache();
-        $storage = new DoctrineCacheStorage($this->cache);
+        $storage = new DoctrineCacheStorage($this->cache, false);
         return $storage;
     }
 
     public function assertKeyExists($id)
     {
-        $this->assertTrue($this->cache->contains("oid:id=".$id.";"));
+        $this->assertTrue($this->cache->contains($id));
     }
 
     public function assertKeyNotExists($id)
     {
-        $this->assertFalse($this->cache->contains("oid:id=".$id.";"));
+        $this->assertFalse($this->cache->contains($id));
     }
 
     public function populate($id, array $data)
     {
-        $this->cache->save("oid:id=".$id.";", $data);
+        $this->cache->save($id, $data);
     }
 
     public function find($id)
     {
-        return $this->cache->fetch("oid:id=".$id.";");
+        return $this->storage->find($id);
     }
 }
 

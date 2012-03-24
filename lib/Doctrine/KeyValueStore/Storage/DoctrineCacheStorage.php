@@ -36,9 +36,12 @@ class DoctrineCacheStorage implements Storage
      */
     private $cache;
 
-    public function __construct(Cache $cache)
+    private $supportsCompositeKeys;
+
+    public function __construct(Cache $cache, $supportsCompositeKeys = true)
     {
         $this->cache = $cache;
+        $this->supportsCompositeKeys = $supportsCompositeKeys;
     }
 
     public function supportsPartialUpdates()
@@ -48,7 +51,7 @@ class DoctrineCacheStorage implements Storage
 
     public function supportsCompositePrimaryKeys()
     {
-        return true;
+        return $this->supportsCompositeKeys;
     }
 
     public function requiresCompositePrimaryKeys()
@@ -56,8 +59,12 @@ class DoctrineCacheStorage implements Storage
         return false;
     }
 
-    private function flattenKey(array $key)
+    private function flattenKey($key)
     {
+        if ( ! $this->supportsCompositeKeys) {
+            return $key;
+        }
+
         $hash = "oid:";
         ksort($key);
         foreach ($key as $property => $value) {
@@ -66,25 +73,25 @@ class DoctrineCacheStorage implements Storage
         return $hash;
     }
 
-    public function insert(array $key, array $data)
+    public function insert($key, array $data)
     {
         $key = $this->flattenKey($key);
         $this->cache->save($key, $data);
     }
 
-    public function update(array $key, array $data)
+    public function update($key, array $data)
     {
         $key = $this->flattenKey($key);
         $this->cache->save($key, $data);
     }
 
-    public function delete(array $key)
+    public function delete($key)
     {
         $key = $this->flattenKey($key);
         $this->cache->delete($key);
     }
 
-    public function find(array $key)
+    public function find($key)
     {
         $key = $this->flattenKey($key);
         return $this->cache->fetch($key);
