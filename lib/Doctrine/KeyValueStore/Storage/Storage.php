@@ -19,12 +19,82 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
+/**
+ * Storage abstraction layer for key-value stores
+ *
+ * The storage layer is an interface for the CRUD operations on datastorages.
+ * There is currently no support for update in place operations that many of
+ * the no-sql databases have for counters and such. The focus is on mapping
+ * the data onto PHP objects. More efficient operations if required should be
+ * done with the raw connection of the underlying storage.
+ *
+ * The assumption is that keys are always arrays of multiple values. Each
+ * implementation has to handle the serialization of this keys into a single
+ * value if necessary or disallow composite primary keys through the
+ * {@supportsCompositePrimarKeys()} flag.
+ *
+ * Batch Query facilities of the storages will be handled through another
+ * interface.
+ *
+ * @author Benjamin Eberlei <kontakt@beberlei.de>
+ */
 interface Storage
 {
+    /**
+     * Determine if the storage supports updating only a subset of properties,
+     * or if all properties have to be set, even if only a subset of properties
+     * changed.
+     *
+     * @return bool
+     */
     function supportsPartialUpdates();
+
+    /**
+     * Does this storage support composite primary keys?
+     *
+     * @return bool
+     */
+    function supportsCompositePrimaryKeys();
+
+    /**
+     * Does this storage require composite primary keys?
+     *
+     * @return bool
+     */
+    function requiresCompositePrimaryKeys();
+
+    /**
+     * Insert data into the storage key specified.
+     *
+     * @param array $key
+     * @param array $data
+     * @return void
+     */
     function insert(array $key, array $data);
+
+    /**
+     * Update data into the given key.
+     *
+     * @param array $key
+     * @param array $data
+     * @return void
+     */
     function update(array $key, array $data);
+
+    /**
+     * Delete data at key
+     *
+     * @param array $key
+     * @return void
+     */
     function delete(array $key);
+
+    /**
+     * Find data at key
+     *
+     * @param array $key
+     * @return array
+     */
     function find(array $key);
 }
 

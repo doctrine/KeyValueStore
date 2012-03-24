@@ -69,7 +69,7 @@ class BasicCrudTest extends \PHPUnit_Framework_TestCase
 
     public function testRetrieveItem()
     {
-        $this->cache->save("oid:id=1;", array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'phpClass' => __NAMESPACE__ . '\\Post'));
+        $this->cache->save("oid:id=1;", array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => __NAMESPACE__ . '\\Post'));
 
         $post = $this->manager->find(__NAMESPACE__ . '\\Post', 1);
 
@@ -83,7 +83,7 @@ class BasicCrudTest extends \PHPUnit_Framework_TestCase
 
     public function testRetrieveWrongClass()
     {
-        $this->cache->save("oid:id=1;", array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'phpClass' => 'stdClass'));
+        $this->cache->save("oid:id=1;", array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => 'stdClass'));
 
         $this->setExpectedException("RuntimeException", "Trying to reconstitute");
         $post = $this->manager->find(__NAMESPACE__ . '\\Post', 1);
@@ -104,7 +104,7 @@ class BasicCrudTest extends \PHPUnit_Framework_TestCase
 
         $this->manager->flush();
 
-        $this->assertEquals(array('id' => 1, 'headline' => 'asdf', 'body' => 'bar', 'text' => 'baz', 'phpClass' => __NAMESPACE__ . '\\Post'), $this->cache->fetch("oid:id=1;"));
+        $this->assertEquals(array('id' => 1, 'headline' => 'asdf', 'body' => 'bar', 'text' => 'baz', 'php_class' => __NAMESPACE__ . '\\Post'), $this->cache->fetch("oid:id=1;"));
     }
 
     public function testRemoveClass()

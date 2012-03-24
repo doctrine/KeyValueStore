@@ -31,7 +31,14 @@ use Doctrine\Common\Cache\Cache;
  */
 class EntityManager
 {
+    /**
+     * @var Doctrine\KeyValueStore\UnitOfWork
+     */
     private $unitOfWork;
+
+    /**
+     * @var Doctrine\KeyValueStore\Storage\Storage
+     */
     private $storgeDriver;
 
     public function __construct(Storage $storageDriver, Cache $cache, MappingDriver $mappingDriver)
@@ -59,7 +66,7 @@ class EntityManager
      * @param string $partitionKey
      * @return Iterator
      */
-    public function findRange($className, $partitionKey, array $conditions = array(), array $fields = array(), $limit = null, $offset null)
+    public function findRange($className, $partitionKey, array $conditions = array(), array $fields = array(), $limit = null, $offset = null)
     {
 
     }
@@ -79,6 +86,9 @@ class EntityManager
         $this->unitOfWork->commit();
     }
 
+    /**
+     * @return Doctrine\KeyValueStore\Storage\Storage
+     */
     public function unwrap()
     {
         return $this->storageDriver;

@@ -53,7 +53,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
         $this->getDriver()->loadMetadataForClass($class->name, $class);
 
         if (!$class->identifier) {
-            throw new \InvalidARgumentException("Class " . $class->name . " has no identifier.");
+            throw new \InvalidArgumentException("Class " . $class->name . " has no identifier.");
         }
     }
 
@@ -69,7 +69,6 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
 
     protected function wakeupReflection(ClassMetadata $class, ReflectionService $reflService)
     {
-
         $class->reflClass = $reflService->getClass($class->name);
         foreach ($class->fields as $fieldName => $mapping) {
             $class->reflFields[$fieldName] = $reflService->getAccessibleProperty($class->name, $fieldName);

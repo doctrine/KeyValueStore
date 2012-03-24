@@ -8,7 +8,7 @@ The Persistence interfaces are rather overkill for many implementations in the N
 * Unstructured/schema-less values that are mapped onto objects
 * Depending on the implementation embedded values/objects are supported
 * No complex mapping necessary, just put @Entity on the class and all properties are automatically mapped unless @Transient is given. At least one property has to be @Id. Depends on the underlying vendor though. Maybe we enforce two ids to enforce interoperability.
-* Properties dont have to exit on the class, public properties are created otherwise.
+* Properties dont have to exist on the class, public properties are created for missing ones.
 * No support for references to other objects
 * EventListener for ODM/ORM that allows to manage key-value entities and collections of them as properties (postLoad, postUpdate, postPersist, postRemove)
 * Stripped down Object Manager Interface
@@ -22,7 +22,7 @@ The Persistence interfaces are rather overkill for many implementations in the N
             public function find($key);
             public function persist($object);
             public function remove($object);
-            public function flush();
+            public function flush($object = null);
 
             /**
              * Unwrap the underlying connection/driver.

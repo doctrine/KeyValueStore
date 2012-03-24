@@ -47,7 +47,7 @@ class ClassMetadata implements BaseClassMetadata
 
     public function mapField($mapping)
     {
-        if (!isset($this->transientFields[$mapping['fieldName']])) {
+        if ( ! isset($this->transientFields[$mapping['fieldName']])) {
             $this->fields[$mapping['fieldName']] = $mapping;
         }
     }

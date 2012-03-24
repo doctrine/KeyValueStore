@@ -21,9 +21,21 @@ namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\Common\Cache\Cache;
 
+/**
+ * Key-Value-Storage using a Doctrine Cache as backend.
+ *
+ * Given the nature of caches, data inside this storage is not "persistent"
+ * but depends on the garbage collection of the underlying storage.
+ *
+ * @author Benjamin Eberlei <kontakt@beberlei.de>
+ */
 class DoctrineCacheStorage implements Storage
 {
+    /**
+     * @var Doctrine\Common\Cache\Cache
+     */
     private $cache;
+
     public function __construct(Cache $cache)
     {
         $this->cache = $cache;
@@ -34,9 +46,20 @@ class DoctrineCacheStorage implements Storage
         return false;
     }
 
+    public function supportsCompositePrimaryKeys()
+    {
+        return true;
+    }
+
+    public function requiresCompositePrimaryKeys()
+    {
+        return false;
+    }
+
     private function flattenKey(array $key)
     {
         $hash = "oid:";
+        ksort($key);
         foreach ($key as $property => $value) {
             $hash .= "$property=$value;";
         }

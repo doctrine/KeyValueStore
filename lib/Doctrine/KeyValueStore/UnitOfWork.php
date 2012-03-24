@@ -83,8 +83,8 @@ class UnitOfWork
             $id[$identifier] = $data[$identifier];
         }
 
-        if (!isset($data['phpClass']) || !($object instanceof $data['phpClass'])) {
-            throw new \RuntimeException("Trying to reconstitute " . $data['phpClass'] . " but a " . $className . " was requested.");
+        if (!isset($data['php_class']) || !($object instanceof $data['php_class'])) {
+            throw new \RuntimeException("Trying to reconstitute " . $data['php_class'] . " but a " . $className . " was requested.");
         }
 
         foreach ($data as $property => $value) {
@@ -171,7 +171,7 @@ class UnitOfWork
             $changeSet = $this->computeChangeSet($this->cmf->getMetadataFor(get_class($object)), $object);
 
             if ($changeSet) {
-                $changeSet['phpClass'] = get_class($object);
+                $changeSet['php_class'] = get_class($object);
                 $this->storageDriver->update($this->identifiers[$hash], $changeSet);
 
                 if ($this->storageDriver->supportsPartialUpdates()) {
@@ -193,7 +193,7 @@ class UnitOfWork
             }
 
             $data = $this->getObjectSnapshot($class, $object);
-            $data['phpClass'] = get_class($object);
+            $data['php_class'] = get_class($object);
 
             $oid = spl_object_hash($object);
             $idHash = implode("__##__", $id);
