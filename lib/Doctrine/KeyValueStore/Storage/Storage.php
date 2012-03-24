@@ -96,6 +96,13 @@ interface Storage
      * @return array
      */
     function find(array $key);
+
+    /**
+     * Return a name of the underlying storage.
+     *
+     * @return string
+     */
+    function getName();
 }
 
 

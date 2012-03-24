@@ -89,5 +89,10 @@ class DoctrineCacheStorage implements Storage
         $key = $this->flattenKey($key);
         return $this->cache->fetch($key);
     }
+
+    public function getName()
+    {
+        return 'doctrine_cache';
+    }
 }
 

@@ -24,6 +24,7 @@ class UnitOfWork
     private $cmf;
     private $cache;
     private $storageDriver;
+    private $idHandler;
     private $identityMap = array();
     private $identifiers;
     private $originalData;
@@ -35,30 +36,14 @@ class UnitOfWork
         $this->cmf = $cmf;
         $this->cache = $cache;
         $this->storageDriver = $storageDriver;
-    }
-
-    private function sanitizeId($metadata, $key)
-    {
-        if (!$metadata->isCompositeKey && !is_array($key)) {
-            $id = array($metadata->identifier[0] => $key);
-        } else if (!is_array($key)) {
-            throw new \InvalidArgumentException("Array of identifier key-value pairs is expected!");
-        } else {
-            $id = array();
-            foreach ($metadata->identifier as $field) {
-                if (!isset($key[$field])) {
-                    throw new \InvalidArgumentException("Missing identifier field $field in request for the primary key.");
-                }
-                $id[$field] = $key[$field];
-            }
-        }
-
-        return $id;
+        $this->idHandler = $storageDriver->supportsCompositePrimaryKeys() ?
+                            new Id\CompositeIdHandler() :
+                            new Id\SingleIdHandler();
     }
 
     public function tryGetById($id)
     {
-        $idHash = implode("__##__", $id);
+        $idHash = $this->idHandler->hash($id);
         if (isset($this->identityMap[$idHash])) {
             return $this->identityMap[$idHash];
         }
@@ -68,22 +53,17 @@ class UnitOfWork
     public function reconsititute($className, $key)
     {
         $class = $this->cmf->getMetadataFor($className);
-        $key = $this->sanitizeId($class, $key);
-        $data = $this->storageDriver->find($key);
+        $id = $this->idHandler->normalizeId($class, $key);
+        $data = $this->storageDriver->find($id);
 
-        $object = $this->tryGetById($key);
+        $object = $this->tryGetById($id);
         if (!$object) {
             $object = $class->newInstance();
         }
         $oid = spl_object_hash($object);
         $this->originalData[$oid] = $data;
 
-        $id = array();
-        foreach ($class->identifier as $identifier) {
-            $id[$identifier] = $data[$identifier];
-        }
-
-        if (!isset($data['php_class']) || !($object instanceof $data['php_class'])) {
+        if ( ! isset($data['php_class']) || ! ($object instanceof $data['php_class'])) {
             throw new \RuntimeException("Trying to reconstitute " . $data['php_class'] . " but a " . $className . " was requested.");
         }
 
@@ -95,7 +75,7 @@ class UnitOfWork
             }
         }
 
-        $idHash = implode("__##__", $id);
+        $idHash = $this->idHandler->hash($id);
         $this->identityMap[$idHash] = $object;
         $this->identifiers[$oid] = $id;
 
@@ -143,12 +123,14 @@ class UnitOfWork
         }
 
         $class = $this->cmf->getMetadataFor(get_class($object));
-        $id = $class->getIdentifierValues($object);
-        if (count($id) != count($class->identifier)) {
+        $id = $this->idHandler->getIdentifier($class, $object);
+
+        if ( ! $id) {
             throw new \RuntimeException("Trying to persist entity that has no id.");
         }
 
-        $idHash = implode("__##__", $id);
+        $idHash = $this->idHandler->hash($id);
+
         if (isset($this->identityMap[$idHash])) {
             throw new \RuntimeException("Object with ID already exists.");
         }
@@ -187,8 +169,9 @@ class UnitOfWork
     {
         foreach ($this->scheduledInsertions as $object) {
             $class = $this->cmf->getMetadataFor(get_class($object));
-            $id = $class->getIdentifierValues($object);
-            if (count($id) != count($class->identifier)) {
+            $id = $this->idHandler->getIdentifier($class, $object);
+
+            if ( ! $id) {
                 throw new \RuntimeException("Trying to persist entity that has no id.");
             }
 
@@ -196,7 +179,7 @@ class UnitOfWork
             $data['php_class'] = get_class($object);
 
             $oid = spl_object_hash($object);
-            $idHash = implode("__##__", $id);
+            $idHash = $this->idHandler->hash($id);
 
             $this->storageDriver->insert($id, $data);
 
@@ -211,7 +194,7 @@ class UnitOfWork
         foreach ($this->scheduledDeletions as $object) {
             $oid = spl_object_hash($object);
             $id = $this->identifiers[$oid];
-            $idHash = implode("__##__", $id);
+            $idHash = $this->idHandler->hash($id);
 
             $this->storageDriver->delete($id);
 
