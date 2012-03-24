@@ -19,23 +19,18 @@
 
 namespace Doctrine\Tests\KeyValueStore\Functional;
 
-use Doctrine\KeyValueStore\EntityManager;
-use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
 use Doctrine\KeyValueStore\Mapping\Annotations as KVS;
-use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Tests\KeyValueStoreTestCase;
 
-abstract class BasicCrudTestCase extends \PHPUnit_Framework_TestCase
+abstract class BasicCrudTestCase extends KeyValueStoreTestCase
 {
     private $manager;
     protected $storage;
 
     public function setUp()
     {
-        $reader = new \Doctrine\Common\Annotations\AnnotationReader();
-        $metadata = new AnnotationDriver($reader);
         $this->storage = $this->createStorage();
-        $cache = new ArrayCache;
-        $this->manager = new EntityManager($this->storage, $cache, $metadata);
+        $this->manager = $this->createManager($this->storage);
     }
 
     abstract protected function createStorage();

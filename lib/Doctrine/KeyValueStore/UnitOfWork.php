@@ -135,6 +135,7 @@ class UnitOfWork
             throw new \RuntimeException("Object with ID already exists.");
         }
         $this->scheduledInsertions[$oid] = $object;
+        $this->identityMap[$idHash] = $object;
     }
 
     public function scheduleForDelete($object)
@@ -150,6 +151,11 @@ class UnitOfWork
     {
         foreach ($this->identityMap as $object) {
             $hash = spl_object_hash($object);
+
+            if ( isset($this->scheduledInsertions[$hash])) {
+                continue;
+            }
+
             $changeSet = $this->computeChangeSet($this->cmf->getMetadataFor(get_class($object)), $object);
 
             if ($changeSet) {
