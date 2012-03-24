@@ -7,35 +7,12 @@ The Persistence interfaces are rather overkill for many implementations in the N
 * Single- or multi-value primary keys
 * Unstructured/schema-less values that are mapped onto objects
 * Depending on the implementation embedded values/objects are supported
-* No complex mapping necessary, just put @Entity on the class and all properties are automatically mapped unless @Transient is given. At least one property has to be @Id. Depends on the underlying vendor though. Maybe we enforce two ids to enforce interoperability.
+* No complex mapping necessary, just put @Entity on the class and all properties are automatically mapped unless @Transient is given. At least one property has to be @Id. Depends on the underlying vendor though.
 * Properties dont have to exist on the class, public properties are created for missing ones.
 * No support for references to other objects
 * EventListener for ODM/ORM that allows to manage key-value entities and collections of them as properties (postLoad, postUpdate, postPersist, postRemove)
 * Stripped down Object Manager Interface
-
-        <?php
-
-        namespace Doctrine\KeyValueStore;
-
-        class EntityManager
-        {
-            public function find($key);
-            public function persist($object);
-            public function remove($object);
-            public function flush($object = null);
-
-            /**
-             * Unwrap the underlying connection/driver.
-             *
-             * Can be used to access advanced APIs of storage providers. No common
-             * abstraction layer can be guaranteed here anymore.
-             *
-             * @return object
-             */
-            public function unwrap();
-        }
-
-That means for this project that its a data-mapper as any other Doctrine library and persistence and data-objects are seperated.
+* Data-mapper as any other Doctrine library and persistence and data-objects are seperated.
 
 ## Implementations
 
@@ -47,9 +24,8 @@ Following vendors are targeted:
 * MongoDB
 * Couchbase
 * Riak
-* PHP In Memory provider
-* Doctrine\Common\Cache provider
-* RDBMS (id => serialized blob)
+* Doctrine\Common\Cache provider (Implemented)
+* RDBMS (Implemented)
 
 We happly accept contributions for any of the drivers.
 
