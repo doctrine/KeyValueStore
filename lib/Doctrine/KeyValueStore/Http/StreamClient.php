@@ -67,19 +67,18 @@ class StreamClient implements Client
         }
         $header = rtrim($header);
 
-        // TODO SSL support?
         $opts = array(
-                    'http' => array(
-                        'method'            => $method,
-                        'content'           => $body,
-                        'max_redirects'     => 2,
-                        'ignore_errors'     => false,
-                        'user_agent'        => 'Doctrine KeyValueStore',
-                        'timeout'           => $this->options['timeout'],
-                        'header'            => $header,
-                        'protocol_version'  => '1.1',
-                    ),
-                );
+            'http' => array(
+                'method'            => $method,
+                'content'           => $body,
+                'max_redirects'     => 0,
+                'ignore_errors'     => true,
+                'user_agent'        => 'Doctrine KeyValueStore',
+                'timeout'           => $this->options['timeout'],
+                'header'            => $header,
+                'protocol_version'  => '1.1',
+            ),
+        );
 
         $httpFilePointer = @fopen(
             $url,
@@ -92,12 +91,6 @@ class StreamClient implements Client
         if ( $httpFilePointer === false ) {
             $error = error_get_last();
             throw new \RuntimeException("Error sending to " . $host . ": " . $error['message']);
-        }
-
-        // Read request body
-        $body = '';
-        while ( !feof( $httpFilePointer ) ) {
-            $body .= fgets( $httpFilePointer );
         }
 
         $metaData = stream_get_meta_data( $httpFilePointer );
@@ -120,6 +113,12 @@ class StreamClient implements Client
 
         if ( empty($headers['status']) ) {
             throw \RuntimeException('Error sending to ' . $host . ': Received an empty response or not status code');
+        }
+
+        // Read request body
+        $body = '';
+        while ( ! feof( $httpFilePointer ) ) {
+            $body .= fgets( $httpFilePointer );
         }
 
         // Create repsonse object from couch db response
