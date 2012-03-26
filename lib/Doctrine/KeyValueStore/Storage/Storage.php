@@ -66,40 +66,40 @@ interface Storage
     /**
      * Insert data into the storage key specified.
      *
-     * @param string $className
+     * @param string $storageName
      * @param array|string $key
      * @param array $data
      * @return void
      */
-    function insert($className, $key, array $data);
+    function insert($storageName, $key, array $data);
 
     /**
      * Update data into the given key.
      *
-     * @param string $className
+     * @param string $storageName
      * @param array|string $key
      * @param array $data
      * @return void
      */
-    function update($className, $key, array $data);
+    function update($storageName, $key, array $data);
 
     /**
      * Delete data at key
      *
-     * @param string $className
+     * @param string $storageName
      * @param array|string $key
      * @return void
      */
-    function delete($className, $key);
+    function delete($storageName, $key);
 
     /**
      * Find data at key
      *
-     * @param string $className
+     * @param string $storageName
      * @param array|string $key
      * @return array
      */
-    function find($className, $key);
+    function find($storageName, $key);
 
     /**
      * Return a name of the underlying storage.

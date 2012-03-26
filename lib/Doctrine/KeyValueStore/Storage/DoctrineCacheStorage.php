@@ -73,27 +73,27 @@ class DoctrineCacheStorage implements Storage
         return $hash;
     }
 
-    public function insert($className, $key, array $data)
+    public function insert($storageName, $key, array $data)
     {
         $key = $this->flattenKey($key);
-        $data['php_class'] = $className;
+        $data['php_class'] = $storageName;
         $this->cache->save($key, $data);
     }
 
-    public function update($className, $key, array $data)
+    public function update($storageName, $key, array $data)
     {
         $key = $this->flattenKey($key);
-        $data['php_class'] = $className;
+        $data['php_class'] = $storageName;
         $this->cache->save($key, $data);
     }
 
-    public function delete($className, $key)
+    public function delete($storageName, $key)
     {
         $key = $this->flattenKey($key);
         $this->cache->delete($key);
     }
 
-    public function find($className, $key)
+    public function find($storageName, $key)
     {
         $key = $this->flattenKey($key);
         return $this->cache->fetch($key);

@@ -129,21 +129,21 @@ class WindowsAzureTableStorage implements Storage
         return $dom;
     }
 
-    public function insert($className, $key, array $data)
+    public function insert($storageName, $key, array $data)
     {
         $headers = array(
             'Content-Type' => 'application/atom+xml',
             'x-ms-date' => $this->now(),
         );
         // TODO: This sucks
-        $tableName = $className;
+        $tableName = $storageName;
 
         $dom = $this->createDomDocumentRequestBody();
 
         $propertiesNode = $dom->getElementsByTagNameNS(self::METADATA_NS, 'properties')->item(0);
 
         $this->serializeKeys($propertiesNode, $key);
-        $this->serializeProperties($propertiesNode, $data);
+        $this->serializeProperties($propertiesNode, $key, $data);
 
         $contentNodes = $dom->getElementsByTagName('content');
         $contentNodes->item(0)->appendChild($propertiesNode);
@@ -182,7 +182,7 @@ class WindowsAzureTableStorage implements Storage
         return $this->client->request($method, $url, $xml, $headers);
     }
 
-    private function serializeProperties($propertiesNode, array $data)
+    private function serializeProperties($propertiesNode, array $key, array $data)
     {
         foreach ($data as $propertyName => $propertyValue) {
             if ( isset($key[$propertyName])) {
@@ -215,11 +215,14 @@ class WindowsAzureTableStorage implements Storage
             case self::TYPE_DATETIME:
                 $propertyValue = $this->isoDate($propertyValue);
                 break;
+            case self::TYPE_BOOLEAN:
+                $propertyValue = $propertyValue ? "1" : "0";
+                break;
         }
         return $propertyValue;
     }
 
-    public function update($className, $key, array $data)
+    public function update($storageName, $key, array $data)
     {
         $headers = array(
             'Content-Type' => 'application/atom+xml',
@@ -227,14 +230,14 @@ class WindowsAzureTableStorage implements Storage
             'If-Match' => '*',
         );
         // TODO: This sucks
-        $tableName = $className;
+        $tableName = $storageName;
 
         $dom = $this->createDomDocumentRequestBody();
 
         $propertiesNode = $dom->getElementsByTagNameNS(self::METADATA_NS, 'properties')->item(0);
 
         $this->serializeKeys($propertiesNode, $key);
-        $this->serializeProperties($propertiesNode, $data);
+        $this->serializeProperties($propertiesNode, $key, $data);
         $keys = array_values($key);
         $url = $this->baseUrl . '/' . $tableName ."(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')";
         $idNode = $dom->getElementsByTagName('id')->item(0);
@@ -247,7 +250,7 @@ class WindowsAzureTableStorage implements Storage
         $this->request('POST', $url, $xml, $headers);
     }
 
-    public function delete($className, $key)
+    public function delete($storageName, $key)
     {
         $headers = array(
             'Content-Type' => 'application/atom+xml',
@@ -257,14 +260,14 @@ class WindowsAzureTableStorage implements Storage
         );
 
         // TODO: This sucks
-        $tableName = $className;
+        $tableName = $storageName;
         $keys = array_values($key);
         $url = $this->baseUrl . '/' . $tableName ."(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')";
 
         $this->request('DELETE', $url, '', $headers);
     }
 
-    public function find($className, $key)
+    public function find($storageName, $key)
     {
         $headers = array(
             'Content-Type' => 'application/atom+xml',
@@ -273,7 +276,7 @@ class WindowsAzureTableStorage implements Storage
         );
 
         // TODO: This sucks
-        $tableName = $className;
+        $tableName = $storageName;
         $keys = array_values($key);
         $url = $this->baseUrl . '/' . $tableName ."(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')";
 
@@ -313,6 +316,9 @@ class WindowsAzureTableStorage implements Storage
                         break;
                     case self::TYPE_DATETIME:
                         $value = new \DateTime(substr($value, 0, 19), new \DateTimeZone('UTC'));
+                        break;
+                    case self::TYPE_INT32:
+                        $value = (int)$value;
                         break;
                 }
             }

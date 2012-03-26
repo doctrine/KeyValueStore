@@ -28,7 +28,7 @@ class WindowsAzureTableStorageTest extends AbstractStorageTestCase
     {
         $expectedHeaders = array(
             'Content-Type' => 'application/atom+xml',
-            'Content-Length' => 659,
+            'Content-Length' => 617,
             'x-ms-date' => '2012-03-26T10:10:10.0000000Z',
             'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
         );
@@ -50,7 +50,7 @@ class WindowsAzureTableStorageTest extends AbstractStorageTestCase
   <content type="application/xml">
     
   <m:properties>
-    <d:PartitionKey>foo</d:PartitionKey><d:RowKey>100</d:RowKey><d:dist>foo</d:dist><d:range>100</d:range><d:name>Test</d:name><d:value>1</d:value><d:amount>200.23</d:amount><d:timestamp>2012-03-26T12:12:12+02:00</d:timestamp></m:properties></content>
+    <d:PartitionKey>foo</d:PartitionKey><d:RowKey>100</d:RowKey><d:name>Test</d:name><d:value>1</d:value><d:amount>200.23</d:amount><d:timestamp>2012-03-26T12:12:12+02:00</d:timestamp></m:properties></content>
 </entry>
 
 XML
@@ -90,7 +90,7 @@ XML
     {
         $expectedHeaders = array(
             'Content-Type' => 'application/atom+xml',
-            'Content-Length' => 746,
+            'Content-Length' => 704,
             'x-ms-date' => '2012-03-26T10:10:10.0000000Z',
             'If-Match' => '*',
             'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
@@ -113,7 +113,7 @@ XML
   <content type="application/xml">
     
   <m:properties>
-    <d:PartitionKey>foo</d:PartitionKey><d:RowKey>100</d:RowKey><d:dist>foo</d:dist><d:range>100</d:range><d:name>Test</d:name><d:value>1</d:value><d:amount>200.23</d:amount><d:timestamp>2012-03-26T12:12:12+02:00</d:timestamp></m:properties></content>
+    <d:PartitionKey>foo</d:PartitionKey><d:RowKey>100</d:RowKey><d:name>Test</d:name><d:value>1</d:value><d:amount>200.23</d:amount><d:timestamp>2012-03-26T12:12:12+02:00</d:timestamp></m:properties></content>
 </entry>
 
 XML
