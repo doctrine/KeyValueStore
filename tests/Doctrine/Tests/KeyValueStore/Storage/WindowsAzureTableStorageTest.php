@@ -161,7 +161,7 @@ XML
                         $this->equalTo(''),
                         $this->equalTo($expectedHeaders)
                      )->will($this->returnValue(
-                        new Response(201, <<<XML
+                        new Response(200, <<<XML
 <?xml version="1.0" ?>
 <entry xml:base="http://myaccount.table.core.windows.net/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:etag="W/&quot;datetime'2008-09-18T23%3A46%3A19.4277424Z'&quot;" xmlns="http://www.w3.org/2005/Atom">
   <id>http://myaccount.table.core.windows.net/mytable(PartitionKey='foo',RowKey='100')</id>

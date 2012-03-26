@@ -84,7 +84,7 @@ class WindowsAzureTableStorage implements Storage
      * @param HttpClient $client
      * @param AuthorizationSchema $authorization
      */
-    public function __construct(Client $client, $accountName, AuthorizationSchema $authorization, \DateTime $now)
+    public function __construct(Client $client, $accountName, AuthorizationSchema $authorization, \DateTime $now = null)
     {
         $this->client = $client;
         $this->authorization = $authorization;
@@ -175,7 +175,8 @@ class WindowsAzureTableStorage implements Storage
 
     private function request($method, $url, $xml, $headers)
     {
-        $authorizationHeader = $this->authorization->signRequest($method, "", $headers);
+        $parts = parse_url($url);
+        $authorizationHeader = $this->authorization->signRequest($method, $xml, $parts['path'], isset($parts['query']) ? $parts['query'] : '', $headers);
         $authorizationParts = explode(":" , $authorizationHeader, 2);
         $headers['Content-Length'] = strlen($xml);
         $headers[$authorizationParts[0]] = ltrim($authorizationParts[1]);

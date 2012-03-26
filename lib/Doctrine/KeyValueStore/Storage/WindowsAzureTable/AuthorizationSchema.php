@@ -30,10 +30,12 @@ interface AuthorizationSchema
      * Sign a request by returning a new header to be appended to headers.
      *
      * @param string $method
+     * @param string $path
+     * @param string $queryString
      * @param string $body
      * @param array $headers
      * @return string
      */
-    function signRequest($method, $body, array $headers);
+    function signRequest($method, $path, $queryString, $body, array $headers);
 }
 
