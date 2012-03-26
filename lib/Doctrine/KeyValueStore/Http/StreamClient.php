@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\CouchDB\HTTP;
+namespace Doctrine\KeyValueStore\Http;
 
 /**
  * Connection handler using PHPs stream wrappers.

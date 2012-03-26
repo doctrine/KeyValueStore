@@ -73,7 +73,7 @@ class DBALStorage implements Storage
      * @param array $data
      * @return void
      */
-    function insert($key, array $data)
+    function insert($className, $key, array $data)
     {
         try {
             $this->conn->insert($this->table, array(
@@ -91,7 +91,7 @@ class DBALStorage implements Storage
      * @param array $data
      * @return void
      */
-    public function update($key, array $data)
+    public function update($className, $key, array $data)
     {
         try {
             $this->conn->update($this->table, array(
@@ -109,7 +109,7 @@ class DBALStorage implements Storage
      * @param array|string $key
      * @return void
      */
-    public function delete($key)
+    public function delete($className, $key)
     {
         try {
             $this->conn->delete($this->table, array($this->keyColumn => $key));
@@ -123,7 +123,7 @@ class DBALStorage implements Storage
      * @param array|string $key
      * @return array
      */
-    public function find($key)
+    public function find($className, $key)
     {
         $sql = "SELECT " . $this->dataColumn . " FROM " . $this->table . " " .
                $this->keyColumn = " = ?";
