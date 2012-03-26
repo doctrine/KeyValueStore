@@ -56,33 +56,35 @@ class StreamClient implements Client
     public function request($method, $url, $body = null, array $headers)
     {
         $parts = parse_url($url);
-        $host = $parts['url'];
+        $host = $parts['host'];
 
         $header = "";
+        $header2 = array();
         foreach ($headers as $headerName => $v) {
             foreach ((array)$v as $value) {
                 $header .= $headerName . ": " . $value . "\r\n";
             }
         }
+        $header = rtrim($header);
 
         // TODO SSL support?
-        $httpFilePointer = @fopen(
-            $url,
-            'r',
-            false,
-            stream_context_create(
-                array(
+        $opts = array(
                     'http' => array(
                         'method'        => $method,
-                        'content'       => $data,
+                        'content'       => $body,
                         'ignore_errors' => true,
                         'max_redirects' => 0,
                         'user_agent'    => 'Doctrine KeyValueStore',
                         'timeout'       => $this->options['timeout'],
                         'header'        => $header,
                     ),
-                )
-            )
+                );
+
+        $httpFilePointer = fopen(
+            $url,
+            'r',
+            false,
+            stream_context_create($opts)
         );
 
         // Check if connection has been established successfully

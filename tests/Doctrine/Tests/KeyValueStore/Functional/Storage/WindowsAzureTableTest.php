@@ -3,7 +3,7 @@ namespace Doctrine\Tests\KeyValueStore\Functional\Storage;
 
 use Doctrine\Tests\KeyValueStoreTestCase;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTableStorage;
-use Doctrine\KeyValueStore\Storage\WindowsAzureTable\SharedKeyAuthorization;
+use Doctrine\KeyValueStore\Storage\WindowsAzureTable\SharedKeyLiteAuthorization;
 use Doctrine\KeyValueStore\Http\StreamClient;
 
 class WindowsAzureTableTest extends KeyValueStoreTestCase
@@ -16,7 +16,7 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
 
         switch ($GLOBALS['DOCTRINE_KEYVALUE_AZURE_AUTHSCHEMA']) {
             case 'shared':
-                $auth = new SharedKeyAuthorization(
+                $auth = new SharedKeyLiteAuthorization(
                     $GLOBALS['DOCTRINE_KEYVALUE_AZURE_NAME'],
                     $GLOBALS['DOCTRINE_KEYVALUE_AZURE_KEY']
                 );
@@ -29,7 +29,7 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
             $auth
         );
 
-        $storage->insert("test", array("partition" => "foo", "range" => 100), array("foo" => "bar"));
+        $storage->createTable("test");
     }
 }
 

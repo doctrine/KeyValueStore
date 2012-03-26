@@ -31,7 +31,7 @@ use Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema;
  */
 class WindowsAzureTableStorage implements Storage
 {
-    const WINDOWS_AZURE_TABLE_BASEURL = 'https://%s.table.core.windows.net';
+    const WINDOWS_AZURE_TABLE_BASEURL = 'http://%s.table.core.windows.net';
 
     const METADATA_NS = 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata';
     const DATA_NS = 'http://schemas.microsoft.com/ado/2007/08/dataservices';
@@ -49,6 +49,21 @@ class WindowsAzureTableStorage implements Storage
   <id />
   <content type="application/xml">
     <m:properties>
+    </m:properties>
+  </content>
+</entry>';
+
+    const XML_TEMPLATE_TABLE = '<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom"> 
+<title />
+<updated></updated>
+<author>
+  <name/>
+</author>
+  <id/>
+  <content type="application/xml">
+    <m:properties>
+      <d:TableName />
     </m:properties>
   </content>
 </entry>';
@@ -118,10 +133,10 @@ class WindowsAzureTableStorage implements Storage
         return str_replace('+00:00', '.0000000Z', $date->format('c'));
     }
 
-    private function createDomDocumentRequestBody()
+    private function createDomDocumentRequestBody($xml = null)
     {
         $dom = new \DOMDocument('1.0', 'UTF-8');
-        $dom->loadXML(self::XML_TEMPLATE_ENTITY);
+        $dom->loadXML($xml ?: self::XML_TEMPLATE_ENTITY);
 
         $updatedNodes = $dom->getElementsByTagName('updated');
         $updatedNodes->item(0)->appendChild($dom->createTextNode($this->now()));
@@ -133,7 +148,6 @@ class WindowsAzureTableStorage implements Storage
     {
         $headers = array(
             'Content-Type' => 'application/atom+xml',
-            'x-ms-date' => $this->now(),
         );
         // TODO: This sucks
         $tableName = $storageName;
@@ -150,7 +164,28 @@ class WindowsAzureTableStorage implements Storage
         $xml = $dom->saveXML();
 
         $url = $this->baseUrl . '/' . $tableName;
-        $this->request('POST', $url, $xml, $headers);
+        $response = $this->request('POST', $url, $xml, $headers);
+
+        if ($response->getStatusCode() == 404) {
+            $this->createTable($tableName);
+            $this->insert($storageName, $key, $data);
+        }
+    }
+
+    public function createTable($tableName)
+    {
+        $headers = array(
+            'Content-Type' => 'application/atom+xml',
+            'x-ms-version' => '2009-09-19',
+        );
+
+        $dom = $this->createDomDocumentRequestBody(self::XML_TEMPLATE_TABLE);
+        $tableNode = $dom->getElementsByTagNameNS(self::DATA_NS, 'TableName')->item(0);
+        $tableNode->appendChild($dom->createTextNode($tableName));
+        $xml = $dom->saveXML();
+
+        $url = $this->baseUrl .  '/Tables';
+        $response = $this->request('POST', $url, $xml, $headers);
     }
 
     private function serializeKeys($propertiesNode, $key)
@@ -176,9 +211,18 @@ class WindowsAzureTableStorage implements Storage
     private function request($method, $url, $xml, $headers)
     {
         $parts = parse_url($url);
-        $authorizationHeader = $this->authorization->signRequest($method, $xml, $parts['path'], isset($parts['query']) ? $parts['query'] : '', $headers);
-        $authorizationParts = explode(":" , $authorizationHeader, 2);
+        $requestDate = $this->now->format('D, d M Y H:i:s') . ' GMT';
         $headers['Content-Length'] = strlen($xml);
+        $headers['Date'] = $requestDate;
+        $headers['x-ms-date'] = $requestDate;
+        $authorizationHeader = $this->authorization->signRequest(
+            $method,
+            isset($parts['path']) ? $parts['path'] : '/',
+            isset($parts['query']) ? $parts['query'] : '',
+            $xml,
+            $headers
+        );
+        $authorizationParts = explode(":" , $authorizationHeader, 2);
         $headers[$authorizationParts[0]] = ltrim($authorizationParts[1]);
         return $this->client->request($method, $url, $xml, $headers);
     }

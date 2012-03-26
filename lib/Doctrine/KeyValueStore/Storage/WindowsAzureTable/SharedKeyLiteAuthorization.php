@@ -19,7 +19,7 @@
 
 namespace Doctrine\KeyValueStore\Storage\WindowsAzureTable;
 
-class SharedKeyAuthorization implements AuthorizationSchema
+class SharedKeyLiteAuthorization implements AuthorizationSchema
 {
     /**
      * @var string
@@ -43,12 +43,9 @@ class SharedKeyAuthorization implements AuthorizationSchema
     public function signRequest($method, $path, $queryString, $body, array $headers)
     {
         $canonicalResource = "/" . $this->accountName . $path;
-        $stringToSign =  $method . "\n" .
-                        md5($body) . "\n" .
-                        "application/atom+xml\n" .
-                        $headers['x-ms-date'] . "\n" .
+        $stringToSign = $headers['x-ms-date'] . "\n" .
                         $canonicalResource;
-        return "Authorization: SharedKey " . $this->accountName . ":" . base64_encode(hash_hmac('sha256', $stringToSign, $this->accountKey, true));
+        return "Authorization: SharedKeyLite " . $this->accountName . ":" . base64_encode(hash_hmac('sha256', $stringToSign, $this->accountKey, true));
     }
 }
 
