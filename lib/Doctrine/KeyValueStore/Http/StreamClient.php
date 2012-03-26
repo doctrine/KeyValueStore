@@ -72,8 +72,8 @@ class StreamClient implements Client
                     'http' => array(
                         'method'            => $method,
                         'content'           => $body,
-                        'ignore_errors'     => true,
-                        'max_redirects'     => 0,
+                        'max_redirects'     => 2,
+                        'ignore_errors'     => false,
                         'user_agent'        => 'Doctrine KeyValueStore',
                         'timeout'           => $this->options['timeout'],
                         'header'            => $header,
@@ -81,7 +81,7 @@ class StreamClient implements Client
                     ),
                 );
 
-        $httpFilePointer = fopen(
+        $httpFilePointer = @fopen(
             $url,
             'r',
             false,
@@ -91,7 +91,7 @@ class StreamClient implements Client
         // Check if connection has been established successfully
         if ( $httpFilePointer === false ) {
             $error = error_get_last();
-            throw \RuntimeException("Error sending to " . $host . ": " . $error['message']);
+            throw new \RuntimeException("Error sending to " . $host . ": " . $error['message']);
         }
 
         // Read request body

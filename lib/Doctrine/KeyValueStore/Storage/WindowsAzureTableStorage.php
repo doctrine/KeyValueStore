@@ -176,7 +176,6 @@ class WindowsAzureTableStorage implements Storage
     {
         $headers = array(
             'Content-Type' => 'application/atom+xml',
-            'x-ms-version' => '2009-09-19',
         );
 
         $dom = $this->createDomDocumentRequestBody(self::XML_TEMPLATE_TABLE);

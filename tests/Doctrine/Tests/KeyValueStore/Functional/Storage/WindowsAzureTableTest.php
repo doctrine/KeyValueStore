@@ -29,9 +29,9 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
             $auth
         );
 
-        $response = $storage->createTable("test");
-        var_dump($reponse);
-        #$storage->insert("test", array("dist" => "foo", "range" => 100), array("foo" => "bar"));
+        #$response = $storage->createTable("test");
+        #var_dump($reponse);
+        $storage->insert("test", array("dist" => "foo", "range" => 400), array("foo" => "bar"));
     }
 }
 
