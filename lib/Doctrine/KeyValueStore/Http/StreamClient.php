@@ -36,7 +36,7 @@ class StreamClient implements Client
      * @var array
      */
     private $options = array(
-        'timeout' => 5,
+        'timeout' => 2,
     );
 
     /**
@@ -70,13 +70,14 @@ class StreamClient implements Client
         // TODO SSL support?
         $opts = array(
                     'http' => array(
-                        'method'        => $method,
-                        'content'       => $body,
-                        'ignore_errors' => true,
-                        'max_redirects' => 0,
-                        'user_agent'    => 'Doctrine KeyValueStore',
-                        'timeout'       => $this->options['timeout'],
-                        'header'        => $header,
+                        'method'            => $method,
+                        'content'           => $body,
+                        'ignore_errors'     => true,
+                        'max_redirects'     => 0,
+                        'user_agent'        => 'Doctrine KeyValueStore',
+                        'timeout'           => $this->options['timeout'],
+                        'header'            => $header,
+                        'protocol_version'  => '1.1',
                     ),
                 );
 

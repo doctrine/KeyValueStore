@@ -186,6 +186,8 @@ class WindowsAzureTableStorage implements Storage
 
         $url = $this->baseUrl .  '/Tables';
         $response = $this->request('POST', $url, $xml, $headers);
+
+        return $response;
     }
 
     private function serializeKeys($propertiesNode, $key)
