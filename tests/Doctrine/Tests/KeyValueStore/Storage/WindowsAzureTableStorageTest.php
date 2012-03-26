@@ -123,5 +123,73 @@ XML
         );
 
     }
+
+    public function mockDeleteCompositeKey($key)
+    {
+        $expectedHeaders = array(
+            'Content-Type' => 'application/atom+xml',
+            'Content-Length' => 0,
+            'x-ms-date' => '2012-03-26T10:10:10.0000000Z',
+            'If-Match' => '*',
+            'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
+        );
+
+        $this->client->expects($this->at(0))
+                     ->method('request')
+                     ->with(
+                        $this->equalTo('DELETE'),
+                        $this->equalTo("https://teststore.table.core.windows.net/stdClass(PartitionKey='foo', RowKey='100')"),
+                        $this->equalTo(''),
+                        $this->equalTo($expectedHeaders)
+                     )->will($this->returnValue(new Response(204, "", array())));
+    }
+
+    public function mockFindCompositeKey($key)
+    {
+        $expectedHeaders = array(
+            'Content-Type' => 'application/atom+xml',
+            'Content-Length' => 0,
+            'x-ms-date' => '2012-03-26T10:10:10.0000000Z',
+            'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
+        );
+
+        $this->client->expects($this->at(0))
+                     ->method('request')
+                     ->with(
+                        $this->equalTo('GET'),
+                        $this->equalTo("https://teststore.table.core.windows.net/stdClass(PartitionKey='foo', RowKey='100')"),
+                        $this->equalTo(''),
+                        $this->equalTo($expectedHeaders)
+                     )->will($this->returnValue(
+                        new Response(201, <<<XML
+<?xml version="1.0" ?>
+<entry xml:base="http://myaccount.table.core.windows.net/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:etag="W/&quot;datetime'2008-09-18T23%3A46%3A19.4277424Z'&quot;" xmlns="http://www.w3.org/2005/Atom">
+  <id>http://myaccount.table.core.windows.net/mytable(PartitionKey='foo',RowKey='100')</id>
+  <title type="text"></title>
+  <updated>2008-09-18T23:46:19.3857256Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="edit" title="stdClass" href="stdClass(PartitionKey='foo',RowKey='100')" />
+  <category term="myaccount.Tables" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" />
+  <content type="application/xml">
+    <m:properties>
+      <d:PartitionKey>foo</d:PartitionKey>
+      <d:RowKey>100</d:RowKey>
+      <d:timestamp m:type="Edm.DateTime">2008-09-18T23:46:19.000000Z</d:timestamp>
+      <d:name>Test</d:name>
+      <d:value m:type="Edm.Int32">23</d:value>
+      <d:amount m:type="Edm.Double">200.23</d:amount>
+      <d:bool m:type="Edm.Boolean">1</d:bool>
+    </m:properties>
+  </content>
+</entry>
+XML
+, array()
+
+                     ))
+        );
+
+    }
 }
 

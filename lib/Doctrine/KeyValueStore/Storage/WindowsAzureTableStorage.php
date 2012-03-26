@@ -179,7 +179,7 @@ class WindowsAzureTableStorage implements Storage
         $authorizationParts = explode(":" , $authorizationHeader, 2);
         $headers['Content-Length'] = strlen($xml);
         $headers[$authorizationParts[0]] = ltrim($authorizationParts[1]);
-        $response = $this->client->request($method, $url, $xml, $headers);
+        return $this->client->request($method, $url, $xml, $headers);
     }
 
     private function serializeProperties($propertiesNode, array $data)
@@ -249,13 +249,77 @@ class WindowsAzureTableStorage implements Storage
 
     public function delete($className, $key)
     {
+        $headers = array(
+            'Content-Type' => 'application/atom+xml',
+            'x-ms-date' => $this->now(),
+            'Content-Length' => 0,
+            'If-Match' => '*',
+        );
+
+        // TODO: This sucks
+        $tableName = $className;
         $keys = array_values($key);
         $url = $this->baseUrl . '/' . $tableName ."(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')";
+
+        $this->request('DELETE', $url, '', $headers);
     }
 
     public function find($className, $key)
     {
+        $headers = array(
+            'Content-Type' => 'application/atom+xml',
+            'x-ms-date' => $this->now(),
+            'Content-Length' => 0,
+        );
 
+        // TODO: This sucks
+        $tableName = $className;
+        $keys = array_values($key);
+        $url = $this->baseUrl . '/' . $tableName ."(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')";
+
+        $response = $this->request('GET', $url, '', $headers);
+
+        if ($response->getStatusCode() != 200) {
+            // Todo: do stuff
+        }
+
+        $dom = new \DomDocument('1.0', 'UTF-8');
+        $dom->loadXML($response->getBody());
+
+        $xpath = new \DOMXpath($dom);
+        $xpath->registerNamespace('d', 'http://schemas.microsoft.com/ado/2007/08/dataservices');
+        $xpath->registerNamespace('m', 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata');
+        $xpath->registerNamespace('atom', "http://www.w3.org/2005/Atom");
+        $properties = $xpath->evaluate('/atom:entry/atom:content/m:properties/d:*');
+
+        $data = array();
+        list($partitionKey, $rowKey) = array_keys($key);
+        foreach ($properties as $property) {
+            $name = substr($property->tagName, 2);
+            if ($name == "PartitionKey") {
+                $name = $partitionKey;
+            } else if ($name == "RowKey") {
+                $name = $rowKey;
+            }
+
+            $value = $property->nodeValue;
+            if ($property->hasAttributeNS(self::METADATA_NS, 'null')) {
+                $value = null;
+            } else if ($property->hasAttributeNS(self::METADATA_NS, 'type')) {
+                $type = $property->getAttributeNS(self::METADATA_NS, 'type');
+                switch ($type) {
+                    case self::TYPE_BOOLEAN:
+                        $value = ($value == 1);
+                        break;
+                    case self::TYPE_DATETIME:
+                        $value = new \DateTime(substr($value, 0, 19), new \DateTimeZone('UTC'));
+                        break;
+                }
+            }
+            $data[$name] = $value;
+        }
+
+        return $data;
     }
 
     public function getName()
