@@ -4,7 +4,6 @@ namespace Doctrine\Tests\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\Storage\WindowsAzureTable\SharedKeyAuthorization;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTableStorage;
-use Doctrine\KeyValueStore\Http\StreamClient;
 use Doctrine\KeyValueStore\Http\Response;
 
 class WindowsAzureTableStorageTest extends AbstractStorageTestCase
@@ -29,7 +28,8 @@ class WindowsAzureTableStorageTest extends AbstractStorageTestCase
         $expectedHeaders = array(
             'Content-Type' => 'application/atom+xml',
             'Content-Length' => 617,
-            'x-ms-date' => '2012-03-26T10:10:10.0000000Z',
+            'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
         );
 
@@ -91,7 +91,8 @@ XML
         $expectedHeaders = array(
             'Content-Type' => 'application/atom+xml',
             'Content-Length' => 704,
-            'x-ms-date' => '2012-03-26T10:10:10.0000000Z',
+            'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'If-Match' => '*',
             'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
         );
@@ -99,8 +100,8 @@ XML
         $this->client->expects($this->at(0))
                      ->method('request')
                      ->with(
-                        $this->equalTo('POST'),
-                        $this->equalTo("https://teststore.table.core.windows.net/stdClass(PartitionKey='foo', RowKey='100')"),
+                        $this->equalTo('PUT'),
+                        $this->equalTo("https://teststore.table.core.windows.net/stdClass". rawurlencode("(PartitionKey='foo', RowKey='100')")),
                         $this->equalTo(<<<XML
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <entry xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
@@ -129,7 +130,8 @@ XML
         $expectedHeaders = array(
             'Content-Type' => 'application/atom+xml',
             'Content-Length' => 0,
-            'x-ms-date' => '2012-03-26T10:10:10.0000000Z',
+            'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'If-Match' => '*',
             'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
         );
@@ -138,7 +140,7 @@ XML
                      ->method('request')
                      ->with(
                         $this->equalTo('DELETE'),
-                        $this->equalTo("https://teststore.table.core.windows.net/stdClass(PartitionKey='foo', RowKey='100')"),
+                        $this->equalTo("https://teststore.table.core.windows.net/stdClass". rawurlencode("(PartitionKey='foo', RowKey='100')")),
                         $this->equalTo(''),
                         $this->equalTo($expectedHeaders)
                      )->will($this->returnValue(new Response(204, "", array())));
@@ -149,7 +151,8 @@ XML
         $expectedHeaders = array(
             'Content-Type' => 'application/atom+xml',
             'Content-Length' => 0,
-            'x-ms-date' => '2012-03-26T10:10:10.0000000Z',
+            'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
         );
 
@@ -157,7 +160,7 @@ XML
                      ->method('request')
                      ->with(
                         $this->equalTo('GET'),
-                        $this->equalTo("https://teststore.table.core.windows.net/stdClass(PartitionKey='foo', RowKey='100')"),
+                        $this->equalTo("https://teststore.table.core.windows.net/stdClass". rawurlencode("(PartitionKey='foo', RowKey='100')")),
                         $this->equalTo(''),
                         $this->equalTo($expectedHeaders)
                      )->will($this->returnValue(

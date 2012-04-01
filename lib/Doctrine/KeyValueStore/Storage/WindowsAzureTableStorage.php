@@ -31,7 +31,7 @@ use Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema;
  */
 class WindowsAzureTableStorage implements Storage
 {
-    const WINDOWS_AZURE_TABLE_BASEURL = 'http://%s.table.core.windows.net';
+    const WINDOWS_AZURE_TABLE_BASEURL = 'https://%s.table.core.windows.net';
 
     const METADATA_NS = 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata';
     const DATA_NS = 'http://schemas.microsoft.com/ado/2007/08/dataservices';
@@ -127,7 +127,7 @@ class WindowsAzureTableStorage implements Storage
     {
         return $this->isoDate($this->now);
     }
-    
+
     private function isoDate(\DateTime $date)
     {
         return str_replace('+00:00', '.0000000Z', $date->format('c'));
@@ -285,15 +285,16 @@ class WindowsAzureTableStorage implements Storage
         $this->serializeKeys($propertiesNode, $key);
         $this->serializeProperties($propertiesNode, $key, $data);
         $keys = array_values($key);
-        $url = $this->baseUrl . '/' . $tableName ."(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')";
+        $clientUrl = $this->baseUrl . '/' . $tableName . ("(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')");
+        $url = $this->baseUrl . '/' . $tableName . rawurlencode("(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')");
         $idNode = $dom->getElementsByTagName('id')->item(0);
-        $idNode->appendChild($dom->createTextNode($url));
+        $idNode->appendChild($dom->createTextNode($clientUrl));
 
         $contentNodes = $dom->getElementsByTagName('content');
         $contentNodes->item(0)->appendChild($propertiesNode);
         $xml = $dom->saveXML();
 
-        $this->request('POST', $url, $xml, $headers);
+        $response = $this->request('PUT', $url, $xml, $headers);
     }
 
     public function delete($storageName, $key)
@@ -308,7 +309,7 @@ class WindowsAzureTableStorage implements Storage
         // TODO: This sucks
         $tableName = $storageName;
         $keys = array_values($key);
-        $url = $this->baseUrl . '/' . $tableName ."(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')";
+        $url = $this->baseUrl . '/' . $tableName . rawurlencode("(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')");
 
         $this->request('DELETE', $url, '', $headers);
     }
@@ -324,7 +325,7 @@ class WindowsAzureTableStorage implements Storage
         // TODO: This sucks
         $tableName = $storageName;
         $keys = array_values($key);
-        $url = $this->baseUrl . '/' . $tableName ."(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')";
+        $url = $this->baseUrl . '/' . $tableName . rawurlencode("(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')");
 
         $response = $this->request('GET', $url, '', $headers);
 

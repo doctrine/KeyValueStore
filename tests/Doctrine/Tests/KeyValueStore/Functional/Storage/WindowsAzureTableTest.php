@@ -4,7 +4,7 @@ namespace Doctrine\Tests\KeyValueStore\Functional\Storage;
 use Doctrine\Tests\KeyValueStoreTestCase;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTableStorage;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTable\SharedKeyLiteAuthorization;
-use Doctrine\KeyValueStore\Http\StreamClient;
+use Doctrine\KeyValueStore\Http\SocketClient;
 
 class WindowsAzureTableTest extends KeyValueStoreTestCase
 {
@@ -24,12 +24,29 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
         }
 
         $storage = new WindowsAzureTableStorage(
-            new StreamClient(),
+            new SocketClient(),
             $GLOBALS['DOCTRINE_KEYVALUE_AZURE_NAME'],
             $auth
         );
 
-        $storage->insert("test", array("dist" => "foo", "range" => time()), array("foo" => "bar"));
+        $key = array("dist" => "foo", "range" => time());
+        $storage->insert("test", $key, array("foo" => "bar"));
+        $data = $storage->find("test", $key);
+
+        $this->assertInstanceOf('DateTime', $data['Timestamp']);
+        $this->assertEquals('bar', $data['foo']);
+        $this->assertEquals('foo', $data['dist']);
+        $this->assertEquals($key['range'], $data['range']);
+
+        $storage->update("test", $key, array("foo" => "baz", "bar" => "baz"));
+        $data = $storage->find("test", $key);
+
+        $this->assertEquals('baz', $data['foo']);
+        $this->assertEquals('baz', $data['bar']);
+
+        $storage->delete("test", $key);
+        $data = $storage->find("test", $key);
+        $this->assertEquals(array(), $data);
     }
 }
 
