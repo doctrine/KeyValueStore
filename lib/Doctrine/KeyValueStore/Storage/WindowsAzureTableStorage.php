@@ -249,7 +249,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
     private function createRow($keyNames, $xpath, $entry)
     {
-        $properties = $xpath->evaluate('//atom:entry/atom:content/m:properties/d:*', $entry);
+        $properties = $xpath->evaluate('atom:content/m:properties/d:*', $entry);
 
         $data = array();
         list($partitionKey, $rowKey) = $keyNames;
