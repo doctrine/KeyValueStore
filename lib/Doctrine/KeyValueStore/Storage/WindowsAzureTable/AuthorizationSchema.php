@@ -16,25 +16,26 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.doctrine-project.org>.
  */
-
-namespace Doctrine\KeyValueStore\Http;
+namespace Doctrine\KeyValueStore\Storage\WindowsAzureTable;
 
 /**
- * Yet another HTTP client
+ * Abstraction for WindowsAzure Authorization Schemes
  *
+ * @link http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
-interface Client
+interface AuthorizationSchema
 {
     /**
-     * Send HTTP Request
+     * Sign a request by returning a new header to be appended to headers.
      *
      * @param string $method
-     * @param string $url
-     * @param string|null $body
+     * @param string $path
+     * @param string $queryString
+     * @param string $body
      * @param array $headers
-     * @return Response
+     * @return string
      */
-    function request($method, $url, $body = null, array $headers = array());
+    function signRequest($method, $path, $queryString, $body, array $headers);
 }
 

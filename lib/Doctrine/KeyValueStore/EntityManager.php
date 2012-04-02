@@ -21,6 +21,7 @@ namespace Doctrine\KeyValueStore;
 
 use Doctrine\KeyValueStore\Storage\Storage;
 use Doctrine\KeyValueStore\Mapping\ClassMetadataFactory;
+use Doctrine\KeyValueStore\Query\RangeQuery;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Cache\Cache;
 
@@ -64,11 +65,11 @@ class EntityManager
      *
      * @param string $className
      * @param string $partitionKey
-     * @return Iterator
+     * @return \Doctrine\KeyValueStore\Query\RangeQuery
      */
-    public function findRange($className, $partitionKey, array $conditions = array(), array $fields = array(), $limit = null, $offset = null)
+    public function createRangeQuery($className, $partitionKey)
     {
-
+        return new RangeQuery($this, $className, $partitionKey);
     }
 
     public function persist($object)
@@ -94,6 +95,18 @@ class EntityManager
         return $this->storageDriver;
     }
 
+    /**
+     * @return \Doctrine\KeyValueStore\UnitOfWork
+     */
+    public function getUnitOfWork()
+    {
+        return $this->unitOfWork;
+    }
+
+    /**
+     * @param string $className
+     * @return \Doctrine\KeyValueStore\Mapping\ClassMetadata
+     */
     public function getClassMetadata($className)
     {
         return $this->unitOfwork->getClassMetadata($className);

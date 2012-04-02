@@ -32,7 +32,7 @@ class SingleBasicCrudTest extends BasicCrudTestCase
 
     public function find($id)
     {
-        return $this->storage->find($id);
+        return $this->storage->find('', $id);
     }
 }
 

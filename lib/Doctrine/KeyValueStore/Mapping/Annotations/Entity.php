@@ -24,5 +24,9 @@ namespace Doctrine\KeyValueStore\Mapping\Annotations;
  */
 class Entity
 {
+    /**
+     * @var string
+     */
+    public $storageName;
 }
 

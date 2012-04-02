@@ -17,24 +17,35 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\KeyValueStore\Http;
+namespace Doctrine\KeyValueStore\Storage\WindowsAzureTable;
 
-/**
- * Yet another HTTP client
- *
- * @author Benjamin Eberlei <kontakt@beberlei.de>
- */
-interface Client
+class SharedKeyLiteAuthorization implements AuthorizationSchema
 {
     /**
-     * Send HTTP Request
-     *
-     * @param string $method
-     * @param string $url
-     * @param string|null $body
-     * @param array $headers
-     * @return Response
+     * @var string
      */
-    function request($method, $url, $body = null, array $headers = array());
+    private $accountName;
+    /**
+     * @var string
+     */
+    private $accountKey;
+
+    public function __construct($accountName, $accountKey)
+    {
+        $this->accountName = $accountName;
+        $this->accountKey = base64_decode($accountKey);
+    }
+
+    /**
+     * @override
+     * {@inheritDocs}
+     */
+    public function signRequest($method, $path, $queryString, $body, array $headers)
+    {
+        $canonicalResource = "/" . $this->accountName . $path;
+        $stringToSign = $headers['x-ms-date'] . "\n" .
+                        $canonicalResource;
+        return "Authorization: SharedKeyLite " . $this->accountName . ":" . base64_encode(hash_hmac('sha256', $stringToSign, $this->accountKey, true));
+    }
 }
 

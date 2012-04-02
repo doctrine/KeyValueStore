@@ -17,24 +17,25 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\KeyValueStore\Http;
+namespace Doctrine\KeyValueStore\Query;
 
 /**
- * Yet another HTTP client
+ * Interface used by storages that support range queries on composite primary
+ * keys with one partition key and a range key.
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
-interface Client
+interface RangeQueryStorage
 {
     /**
-     * Send HTTP Request
+     * Execute the range query and return a ResultIterator
      *
-     * @param string $method
-     * @param string $url
-     * @param string|null $body
-     * @param array $headers
-     * @return Response
+     * @param RangeQuery $query
+     * @param string $storageName
+     * @param array $key
+     * @param Closure $hydrateRow
+     * @return ResultIterator
      */
-    function request($method, $url, $body = null, array $headers = array());
+    function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null);
 }
 

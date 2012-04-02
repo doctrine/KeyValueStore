@@ -11,4 +11,10 @@
             <directory>lib/Doctrine/KeyValueStore</directory>
         </whitelist>
     </filter>
+
+    <php>
+        <var name="DOCTRINE_KEYVALUE_AZURE_AUTHSCHEMA" value="sharedlite" />
+        <var name="DOCTRINE_KEYVALUE_AZURE_NAME" value="" />
+        <var name="DOCTRINE_KEYVALUE_AZURE_KEY" value="" />
+    </php>
 </phpunit>
