@@ -123,27 +123,6 @@ class WindowsAzureTableStorage implements Storage
         return true;
     }
 
-    private function now()
-    {
-        return $this->isoDate($this->now);
-    }
-
-    private function isoDate(\DateTime $date)
-    {
-        return str_replace('+00:00', '.0000000Z', $date->format('c'));
-    }
-
-    private function createDomDocumentRequestBody($xml = null)
-    {
-        $dom = new \DOMDocument('1.0', 'UTF-8');
-        $dom->loadXML($xml ?: self::XML_TEMPLATE_ENTITY);
-
-        $updatedNodes = $dom->getElementsByTagName('updated');
-        $updatedNodes->item(0)->appendChild($dom->createTextNode($this->now()));
-
-        return $dom;
-    }
-
     public function insert($storageName, $key, array $data)
     {
         $headers = array(
@@ -187,85 +166,6 @@ class WindowsAzureTableStorage implements Storage
         $response = $this->request('POST', $url, $xml, $headers);
 
         return $response;
-    }
-
-    private function serializeKeys($propertiesNode, $key)
-    {
-        $keys = 0;
-        foreach ($key as $keyName => $keyValue) {
-            switch ($keys) {
-                case 0:
-                    $partitionKey = $propertiesNode->ownerDocument->createElementNS(self::DATA_NS, 'PartitionKey', $keyValue);
-                    $propertiesNode->appendChild($partitionKey);
-                    break;
-                case 1:
-                    $rowKey = $propertiesNode->ownerDocument->createElementNS(self::DATA_NS, 'RowKey', $keyValue);
-                    $propertiesNode->appendChild($rowKey);
-                    break;
-                default:
-                    throw new \RuntimeException("Only exactly 2 composite key fields allowed.");
-            }
-            $keys++;
-        }
-    }
-
-    private function request($method, $url, $xml, $headers)
-    {
-        $parts = parse_url($url);
-        $requestDate = $this->now->format('D, d M Y H:i:s') . ' GMT';
-        $headers['Content-Length'] = strlen($xml);
-        $headers['Date'] = $requestDate;
-        $headers['x-ms-date'] = $requestDate;
-        $authorizationHeader = $this->authorization->signRequest(
-            $method,
-            isset($parts['path']) ? $parts['path'] : '/',
-            isset($parts['query']) ? $parts['query'] : '',
-            $xml,
-            $headers
-        );
-        $authorizationParts = explode(":" , $authorizationHeader, 2);
-        $headers[$authorizationParts[0]] = ltrim($authorizationParts[1]);
-        return $this->client->request($method, $url, $xml, $headers);
-    }
-
-    private function serializeProperties($propertiesNode, array $key, array $data)
-    {
-        foreach ($data as $propertyName => $propertyValue) {
-            if ( isset($key[$propertyName])) {
-                continue;
-            }
-
-            $type = $this->getPropertyType($propertyValue);
-            $propertyValue = $this->convertPropertyValue($propertyValue, $type);
-
-            $property = $propertiesNode->ownerDocument->createElementNS(self::DATA_NS, $propertyName, $propertyValue);
-            if ($propertyValue === null) {
-                $property->setAttributeNS(self::METDATA_NS, 'null', 'true');
-            }
-
-            $propertiesNode->appendChild($property);
-        }
-    }
-
-    private function getPropertyType($propertyValue)
-    {
-        if ($propertyValue instanceof \DateTime) {
-            return self::TYPE_DATETIME;
-        }
-        return null;
-    }
-
-    private function convertPropertyValue($propertyValue, $type)
-    {
-        switch ($type) {
-            case self::TYPE_DATETIME:
-                $propertyValue = $this->isoDate($propertyValue);
-                break;
-            case self::TYPE_BOOLEAN:
-                $propertyValue = $propertyValue ? "1" : "0";
-                break;
-        }
-        return $propertyValue;
     }
 
     public function update($storageName, $key, array $data)
@@ -378,6 +278,106 @@ class WindowsAzureTableStorage implements Storage
     public function getName()
     {
         return 'azure_table';
+    }
+
+    private function now()
+    {
+        return $this->isoDate($this->now);
+    }
+
+    private function isoDate(\DateTime $date)
+    {
+        return str_replace('+00:00', '.0000000Z', $date->format('c'));
+    }
+
+    private function createDomDocumentRequestBody($xml = null)
+    {
+        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom->loadXML($xml ?: self::XML_TEMPLATE_ENTITY);
+
+        $updatedNodes = $dom->getElementsByTagName('updated');
+        $updatedNodes->item(0)->appendChild($dom->createTextNode($this->now()));
+
+        return $dom;
+    }
+
+    private function getPropertyType($propertyValue)
+    {
+        if ($propertyValue instanceof \DateTime) {
+            return self::TYPE_DATETIME;
+        }
+        return null;
+    }
+
+    private function convertPropertyValue($propertyValue, $type)
+    {
+        switch ($type) {
+            case self::TYPE_DATETIME:
+                $propertyValue = $this->isoDate($propertyValue);
+                break;
+            case self::TYPE_BOOLEAN:
+                $propertyValue = $propertyValue ? "1" : "0";
+                break;
+        }
+        return $propertyValue;
+    }
+
+    private function serializeKeys($propertiesNode, $key)
+    {
+        $keys = 0;
+        foreach ($key as $keyName => $keyValue) {
+            switch ($keys) {
+                case 0:
+                    $partitionKey = $propertiesNode->ownerDocument->createElementNS(self::DATA_NS, 'PartitionKey', $keyValue);
+                    $propertiesNode->appendChild($partitionKey);
+                    break;
+                case 1:
+                    $rowKey = $propertiesNode->ownerDocument->createElementNS(self::DATA_NS, 'RowKey', $keyValue);
+                    $propertiesNode->appendChild($rowKey);
+                    break;
+                default:
+                    throw new \RuntimeException("Only exactly 2 composite key fields allowed.");
+            }
+            $keys++;
+        }
+    }
+
+    private function request($method, $url, $xml, $headers)
+    {
+        $parts = parse_url($url);
+        $requestDate = $this->now->format('D, d M Y H:i:s') . ' GMT';
+        $headers['Content-Length'] = strlen($xml);
+        $headers['Date'] = $requestDate;
+        $headers['x-ms-date'] = $requestDate;
+        $authorizationHeader = $this->authorization->signRequest(
+            $method,
+            isset($parts['path']) ? $parts['path'] : '/',
+            isset($parts['query']) ? $parts['query'] : '',
+            $xml,
+            $headers
+        );
+        $authorizationParts = explode(":" , $authorizationHeader, 2);
+        $headers[$authorizationParts[0]] = ltrim($authorizationParts[1]);
+        return $this->client->request($method, $url, $xml, $headers);
+    }
+
+    private function serializeProperties($propertiesNode, array $key, array $data)
+    {
+        foreach ($data as $propertyName => $propertyValue) {
+            if ( isset($key[$propertyName])) {
+                continue;
+            }
+
+            $type = $this->getPropertyType($propertyValue);
+            $propertyValue = $this->convertPropertyValue($propertyValue, $type);
+
+            $property = $propertiesNode->ownerDocument->createElementNS(self::DATA_NS, $propertyName, $propertyValue);
+            if ($propertyValue === null) {
+                $property->setAttributeNS(self::METDATA_NS, 'null', 'true');
+            }
+
+            $propertiesNode->appendChild($property);
+        }
     }
 }
 
