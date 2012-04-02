@@ -21,6 +21,8 @@ namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\Http\Client;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema;
+use Doctrine\KeyValueStore\Query\RangeQuery;
+use Doctrine\KeyValueStore\Query\RangeQueryStorage;
 
 /**
  * Storage implementation for Microsoft Windows Azure Table.
@@ -29,7 +31,7 @@ use Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema;
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
-class WindowsAzureTableStorage implements Storage
+class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 {
     const WINDOWS_AZURE_TABLE_BASEURL = 'https://%s.table.core.windows.net';
 
@@ -240,10 +242,18 @@ class WindowsAzureTableStorage implements Storage
         $xpath->registerNamespace('d', 'http://schemas.microsoft.com/ado/2007/08/dataservices');
         $xpath->registerNamespace('m', 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata');
         $xpath->registerNamespace('atom', "http://www.w3.org/2005/Atom");
-        $properties = $xpath->evaluate('/atom:entry/atom:content/m:properties/d:*');
+        $entries = $xpath->evaluate('/atom:entry');
+
+        return $this->createRow(array_keys($key), $xpath, $entries->item(0));
+    }
+
+    private function createRow($keyNames, $xpath, $entry)
+    {
+        $properties = $xpath->evaluate('//atom:entry/atom:content/m:properties/d:*', $entry);
 
         $data = array();
-        list($partitionKey, $rowKey) = array_keys($key);
+        list($partitionKey, $rowKey) = $keyNames;
+
         foreach ($properties as $property) {
             $name = substr($property->tagName, 2);
             if ($name == "PartitionKey") {
@@ -273,6 +283,62 @@ class WindowsAzureTableStorage implements Storage
         }
 
         return $data;
+    }
+
+    public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null)
+    {
+        $headers = array(
+            'Content-Type' => 'application/atom+xml',
+            'x-ms-date' => $this->now(),
+            'Content-Length' => 0,
+        );
+
+        $filters = array("PartitionKey eq " . $this->quoteFilterValue($query->getPartitionKey()));
+        foreach ($query->getConditions() as $condition) {
+            if ( ! in_array($condition[0], array('eq', 'neq', 'le', 'lt', 'ge', 'gt'))) {
+                throw new \InvalidArgumentException("Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions.");
+            }
+            $filters[] = $key[1] . " " . $condition[0] . " " . $this->quoteFilterValue($condition[1]);
+        }
+
+        // TODO: This sucks
+        $tableName = $storageName;
+        $url = $this->baseUrl . '/' . $tableName . '()?$filter=' . rawurlencode(implode(' ', $filters));
+        if ($query->getLimit()) {
+            $url .= '&$top=' . $query->getLimit();
+        }
+
+        $response = $this->request('GET', $url, '', $headers);
+
+        if ($response->getStatusCode() != 200) {
+            // Todo: do stuff
+        }
+
+        $dom = new \DomDocument('1.0', 'UTF-8');
+        $dom->loadXML($response->getBody());
+
+        $xpath = new \DOMXpath($dom);
+        $xpath->registerNamespace('d', 'http://schemas.microsoft.com/ado/2007/08/dataservices');
+        $xpath->registerNamespace('m', 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata');
+        $xpath->registerNamespace('atom', "http://www.w3.org/2005/Atom");
+        $entries = $xpath->evaluate('/atom:feed/atom:entry');
+
+        $results = array();
+        foreach ($entries as $entry) {
+            $data = $this->createRow($key, $xpath, $entry);
+            $results[] = $hydrateRow ? $hydrateRow($data) : $data;
+        }
+
+        return $results;
+    }
+
+    private function quoteFilterValue($value)
+    {
+        if (is_integer($value)) {
+            return $value;
+        }
+
+        return "'" . str_replace("'", "", $value) . "'";
     }
 
     public function getName()

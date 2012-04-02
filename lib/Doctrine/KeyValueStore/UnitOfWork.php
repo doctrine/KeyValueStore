@@ -54,6 +54,11 @@ class UnitOfWork
         $id = $this->idHandler->normalizeId($class, $key);
         $data = $this->storageDriver->find($class->storageName, $id);
 
+        return $this->createEntity($class, $id, $data);
+    }
+
+    public function createEntity($class, $id, $data)
+    {
         $object = $this->tryGetById($id);
         if ( ! $object) {
             $object = $class->newInstance();
@@ -103,7 +108,9 @@ class UnitOfWork
         }
 
         foreach (get_object_vars($object) as $property => $value) {
-            $data[$property] = $value;
+            if ( ! isset($data[$property])) {
+                $data[$property] = $value;
+            }
         }
 
         return $data;

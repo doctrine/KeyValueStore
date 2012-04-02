@@ -3,13 +3,18 @@ namespace Doctrine\Tests\KeyValueStore\Functional\Storage;
 
 use Doctrine\Tests\KeyValueStoreTestCase;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTableStorage;
+use Doctrine\KeyValueStore\Query\RangeQuery;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTable\SharedKeyLiteAuthorization;
 use Doctrine\KeyValueStore\Http\SocketClient;
 
 class WindowsAzureTableTest extends KeyValueStoreTestCase
 {
-    public function testCrud()
+    private $storage;
+
+    public function setUp()
     {
+        parent::setUp();
+
         if (empty($GLOBALS['DOCTRINE_KEYVALUE_AZURE_NAME']) || empty($GLOBALS['DOCTRINE_KEYVALUE_AZURE_KEY'])) {
             $this->markTestSkipped("Missing Azure credentials.");
         }
@@ -23,11 +28,16 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
                 break;
         }
 
-        $storage = new WindowsAzureTableStorage(
+        $this->storage = new WindowsAzureTableStorage(
             new SocketClient(),
             $GLOBALS['DOCTRINE_KEYVALUE_AZURE_NAME'],
             $auth
         );
+    }
+
+    public function testCrud()
+    {
+        $storage = $this->storage;
 
         $key = array("dist" => "foo", "range" => time());
         $storage->insert("test", $key, array("foo" => "bar"));
@@ -47,6 +57,18 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
         $storage->delete("test", $key);
         $data = $storage->find("test", $key);
         $this->assertEquals(array(), $data);
+    }
+
+    public function testQueryRange()
+    {
+        $rangeQuery = new RangeQuery($this->createManager(), 'test', 'foo');
+        $rangeQuery->rangeLessThan(time());
+
+        $data = $this->storage->executeRangeQuery($rangeQuery, 'test', array('dist', 'range'), function($row) {
+            return $row;
+        });
+
+        $this->assertTrue(count($data) > 0);
     }
 }
 
