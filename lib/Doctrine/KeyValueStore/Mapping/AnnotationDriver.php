@@ -50,6 +50,7 @@ class AnnotationDriver implements MappingDriver
         if (!$entityAnnot) {
             throw new \InvalidArgumentException($metadata->name . " is not a valid key-value-store entity.");
         }
+        $metadata->storageName = $entityAnnot->storageName;
 
         // Evaluate annotations on properties/fields
         foreach ($class->getProperties() as $property) {

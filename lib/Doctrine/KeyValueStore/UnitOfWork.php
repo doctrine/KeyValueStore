@@ -52,7 +52,7 @@ class UnitOfWork
     {
         $class = $this->cmf->getMetadataFor($className);
         $id = $this->idHandler->normalizeId($class, $key);
-        $data = $this->storageDriver->find($className, $id);
+        $data = $this->storageDriver->find($class->storageName, $id);
 
         $object = $this->tryGetById($id);
         if ( ! $object) {
@@ -60,10 +60,6 @@ class UnitOfWork
         }
         $oid = spl_object_hash($object);
         $this->originalData[$oid] = $data;
-
-        if ( ! isset($data['php_class']) || ! ($object instanceof $data['php_class'])) {
-            throw new \RuntimeException("Trying to reconstitute " . $data['php_class'] . " but a " . $className . " was requested.");
-        }
 
         foreach ($data as $property => $value) {
             if (isset($class->reflFields[$property])) {
@@ -154,10 +150,11 @@ class UnitOfWork
                 continue;
             }
 
-            $changeSet = $this->computeChangeSet($this->cmf->getMetadataFor(get_class($object)), $object);
+            $metadata = $this->cmf->getMetadataFor(get_class($object));
+            $changeSet = $this->computeChangeSet($metadata, $object);
 
             if ($changeSet) {
-                $this->storageDriver->update(get_class($object), $this->identifiers[$hash], $changeSet);
+                $this->storageDriver->update($metadata->storageName, $this->identifiers[$hash], $changeSet);
 
                 if ($this->storageDriver->supportsPartialUpdates()) {
                     $this->originalData[$hash] = array_merge($this->originalData[$hash], $changeSet);
@@ -183,7 +180,7 @@ class UnitOfWork
             $oid = spl_object_hash($object);
             $idHash = $this->idHandler->hash($id);
 
-            $this->storageDriver->insert(get_class($object), $id, $data);
+            $this->storageDriver->insert($class->storageName, $id, $data);
 
             $this->originalData[$oid] = $data;
             $this->identifiers[$oid] = $id;
@@ -194,11 +191,12 @@ class UnitOfWork
     private function processDeletions()
     {
         foreach ($this->scheduledDeletions as $object) {
+            $class = $this->cmf->getMetadataFor(get_class($object));
             $oid = spl_object_hash($object);
             $id = $this->identifiers[$oid];
             $idHash = $this->idHandler->hash($id);
 
-            $this->storageDriver->delete(get_class($object), $id);
+            $this->storageDriver->delete($class->storageName, $id);
 
             unset($this->identifiers[$oid], $this->originalData[$oid], $this->identityMap[$idHash]);
         }

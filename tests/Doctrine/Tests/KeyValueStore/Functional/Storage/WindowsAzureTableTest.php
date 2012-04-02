@@ -15,7 +15,7 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
         }
 
         switch ($GLOBALS['DOCTRINE_KEYVALUE_AZURE_AUTHSCHEMA']) {
-            case 'shared':
+            case 'sharedlite':
                 $auth = new SharedKeyLiteAuthorization(
                     $GLOBALS['DOCTRINE_KEYVALUE_AZURE_NAME'],
                     $GLOBALS['DOCTRINE_KEYVALUE_AZURE_KEY']

@@ -70,7 +70,7 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
 
     public function testRetrieveItem()
     {
-        $this->populate(1, array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => __NAMESPACE__ . '\\Post'));
+        $this->populate(1, array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => 'post'));
 
         $post = $this->manager->find(__NAMESPACE__ . '\\Post', 1);
 
@@ -80,14 +80,6 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
 
         $post2 = $this->manager->find(__NAMESPACE__ . '\\Post', 1);
         $this->assertSame($post, $post2);
-    }
-
-    public function testRetrieveWrongClass()
-    {
-        $this->populate(1, array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => 'stdClass'));
-
-        $this->setExpectedException("RuntimeException", "Trying to reconstitute");
-        $post = $this->manager->find(__NAMESPACE__ . '\\Post', 1);
     }
 
     public function testUpdateClass()
@@ -105,7 +97,7 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
 
         $this->manager->flush();
 
-        $this->assertEquals(array('id' => 1, 'headline' => 'asdf', 'body' => 'bar', 'text' => 'baz', 'php_class' => __NAMESPACE__ . '\\Post'), $this->find(1));
+        $this->assertEquals(array('id' => 1, 'headline' => 'asdf', 'body' => 'bar', 'text' => 'baz', 'php_class' => 'post'), $this->find(1));
     }
 
     public function testRemoveClass()
@@ -128,7 +120,7 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
 }
 
 /**
- * @KVS\Entity
+ * @KVS\Entity(storageName="post")
  */
 class Post
 {
