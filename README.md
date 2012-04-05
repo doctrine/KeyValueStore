@@ -20,15 +20,15 @@ The Persistence interfaces are rather overkill for many implementations in the N
 Following vendors are targeted:
 
 * Microsoft Azure Table (Implemented)
+* Doctrine\Common\Cache provider (Implemented)
+* RDBMS (Implemented)
+* Couchbase
 * Amazon DynamoDB
 * CouchDB
 * MongoDB
-* Couchbase
 * Riak
-* Doctrine\Common\Cache provider (Implemented)
-* RDBMS (Implemented)
 
-We happly accept contributions for any of the drivers.
+We happily accept contributions for any of the drivers.
 
 ## Example
 

@@ -42,12 +42,12 @@ class EntityManager
      */
     private $storageDriver;
 
-    public function __construct(Storage $storageDriver, Cache $cache, MappingDriver $mappingDriver)
+    public function __construct(Storage $storageDriver, Cache $cache, MappingDriver $mappingDriver, array $idConverters = array())
     {
         $cmf = new ClassMetadataFactory($mappingDriver);
         $cmf->setCacheDriver($cache);
 
-        $this->unitOfWork = new UnitOfWork($cmf, $storageDriver);
+        $this->unitOfWork    = new UnitOfWork($cmf, $storageDriver, $idConverters);
         $this->storageDriver = $storageDriver;
     }
 

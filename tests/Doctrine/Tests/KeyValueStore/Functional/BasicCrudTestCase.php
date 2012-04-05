@@ -97,7 +97,16 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
 
         $this->manager->flush();
 
-        $this->assertEquals(array('id' => 1, 'headline' => 'asdf', 'body' => 'bar', 'text' => 'baz', 'php_class' => __NAMESPACE__ . '\\Post'), $this->find(1));
+        $this->assertEquals(
+            array(
+                'id' => 1,
+                'headline' => 'asdf',
+                'body' => 'bar',
+                'text' => 'baz',
+                'php_class' => __NAMESPACE__ . '\\Post'
+            ),
+            $this->find(1)
+        );
     }
 
     public function testRemoveClass()
