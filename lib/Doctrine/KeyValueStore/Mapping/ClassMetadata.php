@@ -25,6 +25,7 @@ class ClassMetadata implements BaseClassMetadata
 {
     public $name;
     public $storageName;
+    public $rootClassName;
     public $fields = array();
     public $identifier = array();
     public $isCompositeKey = false;
@@ -37,8 +38,6 @@ class ClassMetadata implements BaseClassMetadata
     public function __construct($className)
     {
         $this->name = $className;
-        $parts = explode("\\", $className);
-        $this->storageName = end($parts);
     }
 
     public function mapIdentifier($fieldName)

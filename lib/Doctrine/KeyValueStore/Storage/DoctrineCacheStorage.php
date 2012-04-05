@@ -59,13 +59,13 @@ class DoctrineCacheStorage implements Storage
         return false;
     }
 
-    private function flattenKey($key)
+    private function flattenKey($storageName, $key)
     {
         if ( ! $this->supportsCompositeKeys) {
-            return $key;
+            return $storageName . "-" . $key;
         }
 
-        $hash = "oid:";
+        $hash = $storageName . "-oid:";
         ksort($key);
         foreach ($key as $property => $value) {
             $hash .= "$property=$value;";
@@ -75,27 +75,25 @@ class DoctrineCacheStorage implements Storage
 
     public function insert($storageName, $key, array $data)
     {
-        $key = $this->flattenKey($key);
-        $data['php_class'] = $storageName;
+        $key = $this->flattenKey($storageName, $key);
         $this->cache->save($key, $data);
     }
 
     public function update($storageName, $key, array $data)
     {
-        $key = $this->flattenKey($key);
-        $data['php_class'] = $storageName;
+        $key = $this->flattenKey($storageName, $key);
         $this->cache->save($key, $data);
     }
 
     public function delete($storageName, $key)
     {
-        $key = $this->flattenKey($key);
+        $key = $this->flattenKey($storageName, $key);
         $this->cache->delete($key);
     }
 
     public function find($storageName, $key)
     {
-        $key = $this->flattenKey($key);
+        $key = $this->flattenKey($storageName, $key);
         return $this->cache->fetch($key);
     }
 

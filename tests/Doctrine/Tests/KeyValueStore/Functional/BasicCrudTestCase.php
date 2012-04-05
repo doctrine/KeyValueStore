@@ -70,7 +70,7 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
 
     public function testRetrieveItem()
     {
-        $this->populate(1, array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => 'post'));
+        $this->populate(1, array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => __NAMESPACE__ . '\\Post'));
 
         $post = $this->manager->find(__NAMESPACE__ . '\\Post', 1);
 
@@ -97,7 +97,7 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
 
         $this->manager->flush();
 
-        $this->assertEquals(array('id' => 1, 'headline' => 'asdf', 'body' => 'bar', 'text' => 'baz', 'php_class' => 'post'), $this->find(1));
+        $this->assertEquals(array('id' => 1, 'headline' => 'asdf', 'body' => 'bar', 'text' => 'baz', 'php_class' => __NAMESPACE__ . '\\Post'), $this->find(1));
     }
 
     public function testRemoveClass()

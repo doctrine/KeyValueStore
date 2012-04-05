@@ -59,6 +59,14 @@ class UnitOfWork
 
     public function createEntity($class, $id, $data)
     {
+        if ( isset($data['php_class'])) {
+            if ( $data['php_class'] !== $class->name && ! is_subclass_of($data['php_class'], $class->name)) {
+                throw new \RuntimeException("Row is of class '" . $data['php_class'] . "' which is not a subtype of expected " . $class->name);
+            }
+            $class = $this->cmf->getMetadataFor($data['php_class']);
+        }
+        unset($data['php_class']);
+
         $object = $this->tryGetById($id);
         if ( ! $object) {
             $object = $class->newInstance();
@@ -161,6 +169,7 @@ class UnitOfWork
             $changeSet = $this->computeChangeSet($metadata, $object);
 
             if ($changeSet) {
+                $changeSet['php_class'] = $metadata->name;
                 $this->storageDriver->update($metadata->storageName, $this->identifiers[$hash], $changeSet);
 
                 if ($this->storageDriver->supportsPartialUpdates()) {
@@ -183,6 +192,7 @@ class UnitOfWork
             }
 
             $data = $this->getObjectSnapshot($class, $object);
+            $data['php_class'] = $class->name;
 
             $oid = spl_object_hash($object);
             $idHash = $this->idHandler->hash($id);
@@ -217,6 +227,15 @@ class UnitOfWork
 
         $this->scheduledInsertions = array();
         $this->scheduledDeletions = array();
+    }
+
+    public function clear()
+    {
+        $this->scheduledInsertions = array();
+        $this->scheduledDeletions = array();
+        $this->identifiers = array();
+        $this->originalData = array();
+        $this->identityMap = array();
     }
 }
 

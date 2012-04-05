@@ -17,22 +17,22 @@ class CompositeBasicCrudTest extends BasicCrudTestCase
 
     public function assertKeyExists($id)
     {
-        $this->assertTrue($this->cache->contains("oid:id=".$id.";"));
+        $this->assertTrue($this->cache->contains("post-oid:id=".$id.";"));
     }
 
     public function assertKeyNotExists($id)
     {
-        $this->assertFalse($this->cache->contains("oid:id=".$id.";"));
+        $this->assertFalse($this->cache->contains("post-oid:id=".$id.";"));
     }
 
     public function populate($id, array $data)
     {
-        $this->cache->save("oid:id=".$id.";", $data);
+        $this->cache->save("post-oid:id=".$id.";", $data);
     }
 
     public function find($id)
     {
-        return $this->cache->fetch("oid:id=".$id.";");
+        return $this->cache->fetch("post-oid:id=".$id.";");
     }
 }
 

@@ -40,7 +40,7 @@ class EntityManager
     /**
      * @var Doctrine\KeyValueStore\Storage\Storage
      */
-    private $storgeDriver;
+    private $storageDriver;
 
     public function __construct(Storage $storageDriver, Cache $cache, MappingDriver $mappingDriver)
     {
@@ -48,7 +48,7 @@ class EntityManager
         $cmf->setCacheDriver($cache);
 
         $this->unitOfWork = new UnitOfWork($cmf, $storageDriver);
-        $this->storgeDriver = $storageDriver;
+        $this->storageDriver = $storageDriver;
     }
 
     public function find($className, $key, array $fields = null)
@@ -101,6 +101,11 @@ class EntityManager
     public function getUnitOfWork()
     {
         return $this->unitOfWork;
+    }
+
+    public function clear()
+    {
+        return $this->unitOfWork->clear();
     }
 
     /**

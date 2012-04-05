@@ -13,6 +13,7 @@ The Persistence interfaces are rather overkill for many implementations in the N
 * EventListener for ODM/ORM that allows to manage key-value entities and collections of them as properties (postLoad, postUpdate, postPersist, postRemove)
 * Stripped down Object Manager Interface
 * Data-mapper as any other Doctrine library and persistence and data-objects are seperated.
+* Inheritance (Single- or Multiple-Storage)
 
 ## Implementations
 

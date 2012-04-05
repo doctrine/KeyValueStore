@@ -52,6 +52,16 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
     {
         $this->getDriver()->loadMetadataForClass($class->name, $class);
 
+        if ($parent) {
+            $class->rootClassName = $parent->name;
+            $class->storageName = $parent->storageName;
+        }
+
+        if ( ! $class->storageName) {
+            $parts = explode("\\", $class->name);
+            $class->storageName = end($parts);
+        }
+
         if (!$class->identifier) {
             throw new \InvalidArgumentException("Class " . $class->name . " has no identifier.");
         }

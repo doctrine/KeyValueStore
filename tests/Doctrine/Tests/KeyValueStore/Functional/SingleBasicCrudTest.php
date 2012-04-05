@@ -17,22 +17,22 @@ class SingleBasicCrudTest extends BasicCrudTestCase
 
     public function assertKeyExists($id)
     {
-        $this->assertTrue($this->cache->contains($id));
+        $this->assertTrue($this->cache->contains("post-".$id));
     }
 
     public function assertKeyNotExists($id)
     {
-        $this->assertFalse($this->cache->contains($id));
+        $this->assertFalse($this->cache->contains("post-".$id));
     }
 
     public function populate($id, array $data)
     {
-        $this->cache->save($id, $data);
+        $this->cache->save("post-".$id, $data);
     }
 
     public function find($id)
     {
-        return $this->storage->find('', $id);
+        return $this->storage->find('post', $id);
     }
 }
 
