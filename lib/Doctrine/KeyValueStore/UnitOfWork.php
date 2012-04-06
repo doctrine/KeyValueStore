@@ -32,24 +32,34 @@ class UnitOfWork
     private $cmf;
     private $storageDriver;
     private $idHandler;
+
+    /**
+     * Serialized versions of the identifiers.
+     *
+     * This is the after {@see IdConverterStrategy#serialize} is called on the
+     * entity data.
+     *
+     * @var array
+     */
     private $identifiers;
+
     private $originalData;
     private $scheduledInsertions = array();
     private $scheduledDeletions  = array();
     private $identityMap         = array();
     private $idConverter;
 
-    public function __construct($cmf, $storageDriver, $idConverter = null)
+    public function __construct($cmf, $storageDriver, $config = null)
     {
         $this->cmf           = $cmf;
         $this->storageDriver = $storageDriver;
-        $this->idConverter   = $idConverter ?: new NullIdConverter();
+        $this->idConverter   = $config->getIdConverterStrategy();
         $this->idHandler     = $storageDriver->supportsCompositePrimaryKeys() ?
                                 new Id\CompositeIdHandler() :
                                 new Id\SingleIdHandler();
     }
 
-    public function tryGetById($id)
+    private function tryGetById($id)
     {
         $idHash = $this->idHandler->hash($id);
         if (isset($this->identityMap[$idHash])) {
@@ -78,12 +88,15 @@ class UnitOfWork
         unset($data['php_class']);
 
         $object = $this->tryGetById($id);
-        if ( ! $object) {
-            $object = $class->newInstance();
+        if ( $object) {
+            return $object;
         }
+
+        $object = $class->newInstance();
 
         $oid                      = spl_object_hash($object);
         $this->originalData[$oid] = $data;
+        $data                     = $this->idConverter->unserialize($class, $data);
 
         foreach ($data as $property => $value) {
             if (isset($class->reflFields[$property])) {
@@ -93,7 +106,7 @@ class UnitOfWork
             }
         }
 
-        $idHash = $this->idHandler->hash($id);
+        $idHash                     = $this->idHandler->hash($id);
         $this->identityMap[$idHash] = $object;
         $this->identifiers[$oid]    = $id;
 
@@ -200,6 +213,7 @@ class UnitOfWork
         foreach ($this->scheduledInsertions as $object) {
             $class = $this->cmf->getMetadataFor(get_class($object));
             $id    = $this->idHandler->getIdentifier($class, $object);
+            $id    = $this->idConverter->serialize($class, $id);
 
             if ( ! $id) {
                 throw new \RuntimeException("Trying to persist entity that has no id.");
@@ -208,7 +222,7 @@ class UnitOfWork
             $data              = $this->getObjectSnapshot($class, $object);
             $data['php_class'] = $class->name;
 
-            $oid = spl_object_hash($object);
+            $oid    = spl_object_hash($object);
             $idHash = $this->idHandler->hash($id);
 
             $this->storageDriver->insert($class->storageName, $id, $data);

@@ -95,6 +95,8 @@ interface Storage
     /**
      * Find data at key
      *
+     * Important note: The returned array does contain the identifier (again)!
+     *
      * @param string $storageName
      * @param array|string $key
      * @return array

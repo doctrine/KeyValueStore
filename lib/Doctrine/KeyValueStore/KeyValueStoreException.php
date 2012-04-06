@@ -17,28 +17,13 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Tests;
+namespace Doctrine\KeyValueStore;
 
-use Doctrine\KeyValueStore\EntityManager;
-use Doctrine\KeyValueStore\Configuration;
-use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
-use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
-use Doctrine\Common\Cache\ArrayCache;
-
-abstract class KeyValueStoreTestCase extends \PHPUnit_Framework_TestCase
+class KeyValueStoreException extends \Exception
 {
-    public function createManager($storage = null)
+    static public function mappingDriverMissing()
     {
-        $cache = new ArrayCache;
-        $storage = $storage ?: new DoctrineCacheStorage($cache);
-
-        $reader = new \Doctrine\Common\Annotations\AnnotationReader();
-        $metadata = new AnnotationDriver($reader);
-        $config = new Configuration();
-        $config->setMappingDriverImpl($metadata);
-        $config->setMetadataCache($cache);
-
-        return new EntityManager($storage, $config);
+        return new self("No mapping driver was assigned to the configuration. Use \$config->setMappingDriverImpl()");
     }
 }
 

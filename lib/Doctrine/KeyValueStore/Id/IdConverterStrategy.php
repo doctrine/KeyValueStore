@@ -30,7 +30,7 @@ namespace Doctrine\KeyValueStore\Id;
  */
 interface IdConverterStrategy
 {
-    function serialize($class, $id);
-    function unserialize($class, $id);
+    function serialize($class, $data);
+    function unserialize($class, $data);
 }
 

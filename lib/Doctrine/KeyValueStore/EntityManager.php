@@ -42,16 +42,29 @@ class EntityManager
      */
     private $storageDriver;
 
-    public function __construct(Storage $storageDriver, Cache $cache, MappingDriver $mappingDriver, array $idConverters = array())
+    /**
+     * Create a new EntityManager
+     *
+     * @param Storage $storageDriver
+     * @param Configuration $config
+     */
+    public function __construct(Storage $storageDriver, Configuration $config)
     {
-        $cmf = new ClassMetadataFactory($mappingDriver);
-        $cmf->setCacheDriver($cache);
+        $cmf = new ClassMetadataFactory($config->getMappingDriverImpl());
+        $cmf->setCacheDriver($config->getMetadataCache());
 
-        $this->unitOfWork    = new UnitOfWork($cmf, $storageDriver, $idConverters);
+        $this->unitOfWork    = new UnitOfWork($cmf, $storageDriver, $config);
         $this->storageDriver = $storageDriver;
     }
 
-    public function find($className, $key, array $fields = null)
+    /**
+     * Find objects by key
+     *
+     * @param string $className
+     * @param string|array $key
+     * @return object
+     */
+    public function find($className, $key)
     {
         return $this->unitOfWork->reconsititute($className, $key);
     }
@@ -72,16 +85,34 @@ class EntityManager
         return new RangeQuery($this, $className, $partitionKey);
     }
 
+    /**
+     * Persist new object in key value storage.
+     *
+     * @param object $object
+     * @return void
+     */
     public function persist($object)
     {
         $this->unitOfWork->scheduleForInsert($object);
     }
 
+    /**
+     * Remove object
+     *
+     * @param object $object
+     * @return void
+     */
     public function remove($object)
     {
         $this->unitOfWork->scheduleForDelete($object);
     }
 
+    /**
+     * Flush all outstanding changes from the managed object-graph into the
+     * key-value storage.
+     *
+     * @return void
+     */
     public function flush()
     {
         $this->unitOfWork->commit();

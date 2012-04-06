@@ -21,14 +21,14 @@ namespace Doctrine\KeyValueStore\Id;
 
 class NullIdConverter implements IdConverterStrategy
 {
-    public function serialize($class, $id)
+    public function serialize($class, $data)
     {
-        return $id;
+        return $data;
     }
 
-    public function unserialize($class, $id)
+    public function unserialize($class, $data)
     {
-        return $id;
+        return $data;
     }
 }
 
