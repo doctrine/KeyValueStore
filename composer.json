@@ -3,6 +3,8 @@
     "require": {
         "doctrine/common": "*"
     },
+    "description": "Simple Key-Value Store Abstraction Layer that maps to PHP objects, allowing for many backends.",
+    "license": "MIT",
     "autoload": {
         "psr-0": {
             "Doctrine\\KeyValueStore\\": "lib/"
