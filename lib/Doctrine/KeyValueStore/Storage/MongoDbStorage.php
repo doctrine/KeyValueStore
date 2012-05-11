@@ -61,11 +61,7 @@ class MongoDbStorage implements Storage
     }
 
     /**
-     * Determine if the storage supports updating only a subset of properties,
-     * or if all properties have to be set, even if only a subset of properties
-     * changed.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function supportsPartialUpdates()
     {
@@ -73,9 +69,7 @@ class MongoDbStorage implements Storage
     }
 
     /**
-     * Does this storage support composite primary keys?
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function supportsCompositePrimaryKeys()
     {
@@ -83,9 +77,7 @@ class MongoDbStorage implements Storage
     }
 
     /**
-     * Does this storage require composite primary keys?
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function requiresCompositePrimaryKeys()
     {
@@ -93,12 +85,7 @@ class MongoDbStorage implements Storage
     }
 
     /**
-     * Insert data into the storage key specified.
-     *
-     * @param string $storageName
-     * @param array|string $key
-     * @param array $data
-     * @return void
+     * {@inheritDoc}
      */
     public function insert($storageName, $key, array $data)
     {
@@ -113,12 +100,7 @@ class MongoDbStorage implements Storage
     }
 
     /**
-     * Update data into the given key.
-     *
-     * @param string $storageName
-     * @param array|string $key
-     * @param array $data
-     * @return void
+     * {@inheritDoc}
      */
     public function update($storageName, $key, array $data)
     {
@@ -133,11 +115,7 @@ class MongoDbStorage implements Storage
     }
 
     /**
-     * Delete data at key
-     *
-     * @param string $storageName
-     * @param array|string $key
-     * @return void
+     * {@inheritDoc}
      */
     public function delete($storageName, $key)
     {
@@ -147,13 +125,7 @@ class MongoDbStorage implements Storage
     }
 
     /**
-     * Find data at key
-     *
-     * Important note: The returned array does contain the identifier (again)!
-     *
-     * @param string $storageName
-     * @param array|string $key
-     * @return array
+     * {@inheritDoc}
      */
     public function find($storageName, $key)
     {
