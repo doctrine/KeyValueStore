@@ -55,8 +55,9 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
         $this->assertEquals('baz', $data['bar']);
 
         $storage->delete("test", $key);
-        $data = $storage->find("test", $key);
-        $this->assertEquals(array(), $data);
+
+        $this->setExpectedException("Doctrine\KeyValueStore\NotFoundException");
+        $storage->find("test", $key);
     }
 
     public function testQueryRange()

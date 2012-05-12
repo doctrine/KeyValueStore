@@ -97,6 +97,8 @@ interface Storage
      *
      * Important note: The returned array does contain the identifier (again)!
      *
+     * @throws Doctrine\KeyValueStore\NotFoundException When data with key is not found.
+     *
      * @param string $storageName
      * @param array|string $key
      * @return array

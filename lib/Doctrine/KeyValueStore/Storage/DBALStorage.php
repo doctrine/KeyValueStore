@@ -19,6 +19,8 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
+use Doctrine\KeyValueStore\NotFoundException;
+
 /**
  * Relational databased backed system.
  *
@@ -130,7 +132,7 @@ class DBALStorage implements Storage
         $stmt = $this->conn->executeQuery($sql, array($key));
         $data = $stmt->fetchColumn();
         if (!$data) {
-            return null;
+            throw new NotFoundException();
         }
 
         return unserialize($data);

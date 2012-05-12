@@ -23,6 +23,7 @@ use Doctrine\KeyValueStore\Http\Client;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema;
 use Doctrine\KeyValueStore\Query\RangeQuery;
 use Doctrine\KeyValueStore\Query\RangeQueryStorage;
+use Doctrine\KeyValueStore\NotFoundException;
 
 /**
  * Storage implementation for Microsoft Windows Azure Table.
@@ -231,8 +232,9 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         $response = $this->request('GET', $url, '', $headers);
 
-        if ($response->getStatusCode() != 200) {
-            // Todo: do stuff
+        switch ($response->getStatusCode()) {
+            case 404:
+                throw new NotFoundException();
         }
 
         $dom = new \DomDocument('1.0', 'UTF-8');

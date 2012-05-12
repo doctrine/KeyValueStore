@@ -74,6 +74,10 @@ class UnitOfWork
         $id    = $this->idHandler->normalizeId($class, $key);
         $data  = $this->storageDriver->find($class->storageName, $id);
 
+        if (!$data) {
+            throw new NotFoundException();
+        }
+
         return $this->createEntity($class, $id, $data);
     }
 
