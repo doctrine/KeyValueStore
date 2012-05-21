@@ -19,6 +19,8 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
+use Doctrine\KeyValueStore\NotFoundException;
+
 /**
  * MongoDb storage
  *
@@ -154,7 +156,7 @@ class MongoDbStorage implements Storage
             return $value['value'];
         }
 
-        return array();
+        throw new NotFoundException();
     }
 
     /**
