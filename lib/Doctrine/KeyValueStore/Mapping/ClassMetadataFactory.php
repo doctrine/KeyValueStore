@@ -19,11 +19,12 @@
 
 namespace Doctrine\KeyValueStore\Mapping;
 
-use Doctrine\Common\Persistence\Mapping\AbstractClassMetadataFactory;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+
+use Doctrine\KeyValueStore\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\KeyValueStore\Persistence\Mapping\ReflectionService;
 use Doctrine\KeyValueStore\Mapping\ClassMetadata as KeyValueMetadata;
-use Doctrine\Common\Persistence\Mapping\ReflectionService;
+use Doctrine\KeyValueStore\Persistence\Mapping\AbstractClassMetadataFactory;
 
 /**
  * Load Metadata of an entity.

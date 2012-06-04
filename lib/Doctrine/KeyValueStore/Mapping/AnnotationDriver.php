@@ -20,7 +20,7 @@
 namespace Doctrine\KeyValueStore\Mapping;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\KeyValueStore\Persistence\Mapping\Driver\MappingDriver;
 
 class AnnotationDriver implements MappingDriver
 {

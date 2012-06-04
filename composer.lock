@@ -1,9 +1,18 @@
 {
-    "hash": "09b80610c08784c764e1df9edca9b53f",
+    "hash": "1423c223b88271745223ad54dac71bfc",
     "packages": [
         {
-            "package": "doctrine\/common",
-            "version": "master-dev"
+            "package": "doctrine/common",
+            "version": "2.1.x-dev",
+            "source-reference": "41794945e795e108060eddb3342c9e13524b9b3e"
         }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": [
+
     ]
 }

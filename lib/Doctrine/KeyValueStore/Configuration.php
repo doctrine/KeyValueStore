@@ -19,9 +19,10 @@
 
 namespace Doctrine\KeyValueStore;
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\ArrayCache;
+
+use Doctrine\KeyValueStore\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\KeyValueStore\Id\NullIdConverter;
 
 /**
