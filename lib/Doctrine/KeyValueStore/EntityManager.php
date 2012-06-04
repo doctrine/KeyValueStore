@@ -22,7 +22,6 @@ namespace Doctrine\KeyValueStore;
 use Doctrine\KeyValueStore\Storage\Storage;
 use Doctrine\KeyValueStore\Mapping\ClassMetadataFactory;
 use Doctrine\KeyValueStore\Query\RangeQuery;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Cache\Cache;
 
 /**
@@ -145,7 +144,7 @@ class EntityManager
      */
     public function getClassMetadata($className)
     {
-        return $this->unitOfwork->getClassMetadata($className);
+        return $this->unitOfWork->getClassMetadata($className);
     }
 }
 
