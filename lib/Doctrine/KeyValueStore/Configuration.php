@@ -40,7 +40,7 @@ class Configuration
     /**
      * Get mapping driver implementation used with this configuration.
      *
-     * @return \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
+     * @return \Doctrine\KeyValueStore\Persistence\Mapping\Driver\MappingDriver
      */
     public function getMappingDriverImpl()
     {
@@ -54,7 +54,7 @@ class Configuration
     /**
      * Set the mapping driver implementation.
      *
-     * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $driver
+     * @param \Doctrine\KeyValueStore\Persistence\Mapping\Driver\MappingDriver $driver
      * @return \Doctrine\KeyValueStore\Configuration
      */
     public function setMappingDriverImpl(MappingDriver $driver)

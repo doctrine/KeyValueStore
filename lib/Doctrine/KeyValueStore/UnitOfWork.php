@@ -59,6 +59,11 @@ class UnitOfWork
                                 new Id\SingleIdHandler();
     }
 
+    public function getClassMetadata($name)
+    {
+        return $this->cmf->getMetadataFor($name);
+    }
+
     private function tryGetById($id)
     {
         $idHash = $this->idHandler->hash($id);

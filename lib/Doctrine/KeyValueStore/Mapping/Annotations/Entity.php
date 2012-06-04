@@ -28,5 +28,12 @@ class Entity
      * @var string
      */
     public $storageName;
+
+    public function __construct($values)
+    {
+        if (isset($values['storageName'])) {
+            $this->storageName = $values['storageName'];
+        }
+    }
 }
 
