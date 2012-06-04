@@ -21,6 +21,7 @@ namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\Http\Client;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema;
+use Doctrine\KeyValueStore\Storage\WindowsAzureTable\HttpStorageException;
 use Doctrine\KeyValueStore\Query\RangeQuery;
 use Doctrine\KeyValueStore\Query\RangeQueryStorage;
 use Doctrine\KeyValueStore\NotFoundException;
@@ -149,9 +150,24 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $response = $this->request('POST', $url, $xml, $headers);
 
         if ($response->getStatusCode() == 404) {
+
             $this->createTable($tableName);
             $this->insert($storageName, $key, $data);
+        } else if ($response->getStatusCode() >= 400) {
+
+            $this->convertResponseToException($response);
         }
+    }
+
+    private function convertResponseToException($response)
+    {
+        $dom = new \DomDocument('1.0', 'UTF-8');
+        $dom->loadXML($response->getBody());
+
+        throw new HttpStorageException(
+            $dom->getElementsByTagName('Message')->item(0)->nodeValue
+        );
+
     }
 
     public function createTable($tableName)
@@ -167,6 +183,10 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         $url = $this->baseUrl .  '/Tables';
         $response = $this->request('POST', $url, $xml, $headers);
+
+        if ($response->getStatusCode() != 201) {
+            $this->convertResponseToException($response);
+        }
 
         return $response;
     }
@@ -198,6 +218,10 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $xml = $dom->saveXML();
 
         $response = $this->request('PUT', $url, $xml, $headers);
+
+        if ($response->getStatusCode() >= 400) {
+            $this->convertResponseToException($response);
+        }
     }
 
     public function delete($storageName, $key)
@@ -214,7 +238,11 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $keys = array_values($key);
         $url = $this->baseUrl . '/' . $tableName . rawurlencode("(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')");
 
-        $this->request('DELETE', $url, '', $headers);
+        $response = $this->request('DELETE', $url, '', $headers);
+
+        if ($response->getStatusCode() >= 400) {
+            $this->convertResponseToException($response);
+        }
     }
 
     public function find($storageName, $key)
@@ -232,9 +260,12 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         $response = $this->request('GET', $url, '', $headers);
 
-        switch ($response->getStatusCode()) {
-            case 404:
-                throw new NotFoundException();
+        if ($response->getStatusCode() == 404) {
+            throw new NotFoundException();
+        }
+
+        if ($response->getStatusCode() >= 400) {
+            $this->convertResponseToException($response);
         }
 
         $dom = new \DomDocument('1.0', 'UTF-8');
@@ -312,8 +343,8 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         $response = $this->request('GET', $url, '', $headers);
 
-        if ($response->getStatusCode() != 200) {
-            // Todo: do stuff
+        if ($response->getStatusCode() >= 400) {
+            $this->convertResponseToException($response);
         }
 
         $dom = new \DomDocument('1.0', 'UTF-8');

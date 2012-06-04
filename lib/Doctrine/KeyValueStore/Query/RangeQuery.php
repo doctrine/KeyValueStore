@@ -51,7 +51,7 @@ class RangeQuery
     /**
      * @var array
      */
-    protected $rangeConditions = array();
+    protected $conditions = array();
 
     /**
      * Limit result to only a set of entities.
@@ -205,11 +205,16 @@ class RangeQuery
             throw new \RuntimeException("The storage backend " . $this->storage->getName() . " does not support range queries.");
         }
 
-        $uow = $em->getUnitOfWork();
+        $uow   = $this->em->getUnitOfWork();
         $class = $this->em->getClassMetadata($this->className);
 
-        return $storage>executeRangeQuery($this, $class->storageName, $class->identifiers, function ($row) use($uow, $class) {
-            return $uow->createEntity($class, $data);
+        return $storage->executeRangeQuery($this, $class->storageName, $class->identifier, function ($row) use($uow, $class) {
+            $key = array();
+            foreach ($class->identifier as $id) {
+                $key[$id] = $row[$id];
+            }
+
+            return $uow->createEntity($class, $key, $row);
         });
     }
 }
