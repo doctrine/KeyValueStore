@@ -164,10 +164,20 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $dom = new \DomDocument('1.0', 'UTF-8');
         $dom->loadXML($response->getBody());
 
-        throw new HttpStorageException(
-            $dom->getElementsByTagName('Message')->item(0)->nodeValue
-        );
+        $message = "";
+        $nodeList = $dom->getElementsByTagName('Message');
+        if ($nodeList->length > 0) {
+            $message = $nodeList->item(0)->nodeValue;
+            throw new HttpStorageException($message);
+        }
 
+        $nodeList = $dom->getElementsByTagName('message');
+        if ($nodeList->length > 0) {
+            $message = $nodeList->item(0)->nodeValue;
+            throw new HttpStorageException($message);
+        }
+
+        throw new HttpStorageException($response->getBody());
     }
 
     public function createTable($tableName)
