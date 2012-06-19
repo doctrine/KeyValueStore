@@ -3,6 +3,9 @@
     "require": {
         "doctrine/common": "*"
     },
+    "require-dev": {
+        "riak/riak-client": "*"
+    },
     "description": "Simple Key-Value Store Abstraction Layer that maps to PHP objects, allowing for many backends.",
     "license": "MIT",
     "autoload": {
