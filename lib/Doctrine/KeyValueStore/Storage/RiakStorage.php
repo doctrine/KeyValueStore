@@ -68,7 +68,7 @@ class RiakStorage implements Storage
      *
      * @return bool
      */
-    function supportsCompositePrimaryKeys()
+    public function supportsCompositePrimaryKeys()
     {
         return false;
     }
@@ -78,7 +78,7 @@ class RiakStorage implements Storage
      *
      * @return bool
      */
-    function requiresCompositePrimaryKeys()
+    public function requiresCompositePrimaryKeys()
     {
         return false;
     }
