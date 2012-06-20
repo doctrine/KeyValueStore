@@ -35,28 +35,18 @@ class RiakStorage implements Storage
     protected $client;
 
     /**
-     * @var string
-     */
-    protected $bucketName;
-
-    /**
      * Constructor
      *
      * @param \Riak\Client $riak
      * @param string       $bucketName
      */
-    public function __construct(Client $riak, $bucketName)
+    public function __construct(Client $riak)
     {
         $this->client = $riak;
-        $this->bucketName = $bucketName;
     }
 
     /**
-     * Determine if the storage supports updating only a subset of properties,
-     * or if all properties have to be set, even if only a subset of properties
-     * changed.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function supportsPartialUpdates()
     {
@@ -64,9 +54,7 @@ class RiakStorage implements Storage
     }
 
     /**
-     * Does this storage support composite primary keys?
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function supportsCompositePrimaryKeys()
     {
@@ -74,9 +62,7 @@ class RiakStorage implements Storage
     }
 
     /**
-     * Does this storage require composite primary keys?
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function requiresCompositePrimaryKeys()
     {
@@ -84,31 +70,21 @@ class RiakStorage implements Storage
     }
 
     /**
-     * Insert data into the storage key specified.
-     *
-     * @param string $storageName
-     * @param array|string $key
-     * @param array $data
-     * @return void
+     * {@inheritDoc}
      */
     public function insert($storageName, $key, array $data)
     {
-        $bucket = $this->client->bucket($this->bucketName);
+        $bucket = $this->client->bucket($storageName);
         $object = $bucket->newObject($key, $data);
         $object->store();
     }
 
     /**
-     * Update data into the given key.
-     *
-     * @param string $storageName
-     * @param array|string $key
-     * @param array $data
-     * @return void
+     * {@inheritDoc}
      */
     public function update($storageName, $key, array $data)
     {
-        $bucket = $this->client->bucket($this->bucketName);
+        $bucket = $this->client->bucket($storageName);
         /** @var $object \Riak\Object */
         $object = $bucket->get($key);
 
@@ -117,15 +93,11 @@ class RiakStorage implements Storage
     }
 
     /**
-     * Delete data at key
-     *
-     * @param string $storageName
-     * @param array|string $key
-     * @return void
+     * {@inheritDoc}
      */
     public function delete($storageName, $key)
     {
-        $bucket = $this->client->bucket($this->bucketName);
+        $bucket = $this->client->bucket($storageName);
 
         /** @var $object \Riak\Object */
         $object = $bucket->get($key);
@@ -139,19 +111,11 @@ class RiakStorage implements Storage
     }
 
     /**
-     * Find data at key
-     *
-     * Important note: The returned array does contain the identifier (again)!
-     *
-     * @throws Doctrine\KeyValueStore\NotFoundException When data with key is not found.
-     *
-     * @param string $storageName
-     * @param array|string $key
-     * @return array
+     * {@inheritDoc}
      */
     public function find($storageName, $key)
     {
-        $bucket = $this->client->bucket($this->bucketName);
+        $bucket = $this->client->bucket($storageName);
 
         /** @var $object \Riak\Object */
         $object = $bucket->get($key);
@@ -164,9 +128,7 @@ class RiakStorage implements Storage
     }
 
     /**
-     * Return a name of the underlying storage.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {
