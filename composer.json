@@ -4,7 +4,7 @@
         "doctrine/common": "*"
     },
     "suggest": {
-        "riak/riak-client": "dev-master"
+        "riak/riak-client": "to use the Riak storage"
     },
     "require-dev": {
         "riak/riak-client": "dev-master"
