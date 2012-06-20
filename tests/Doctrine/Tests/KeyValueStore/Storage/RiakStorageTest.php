@@ -22,11 +22,11 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
     protected function setup()
     {
         $this->riak = $this->getMockBuilder('Riak\\Client')
-                           ->disableOriginalConstructor()
-                           ->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
 
 
-        $this->storage = new RiakStorage($this->riak, 'test');
+        $this->storage = new RiakStorage($this->riak);
     }
 
     public function testSupportsPartialUpdates()
@@ -55,21 +55,21 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($bucket));
 
         $objectMock = $this->getMockBuilder('Riak\Object')
-                           ->disableOriginalConstructor()
-                           ->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $objectMock->expects($this->once())
-                   ->method('store');
+            ->method('store');
 
 
         $that = $this;
         $bucket->expects($this->once())
-                   ->method('newObject')
-                   ->will($this->returnCallback(function($key, $data) use ($objectMock, $that) {
-                        $that->assertEquals('foobar', $key);
-                        $that->assertEquals(array('title' => 'Riak test'), $data);
-                        return $objectMock;
-                    }));
+            ->method('newObject')
+            ->will($this->returnCallback(function($key, $data) use ($objectMock, $that) {
+                $that->assertEquals('foobar', $key);
+                $that->assertEquals(array('title' => 'Riak test'), $data);
+                return $objectMock;
+            }));
 
         $this->storage->insert('riak-test', 'foobar', array('title' => 'Riak test'));
     }
@@ -77,8 +77,8 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $objectMock = $this->getMockBuilder('Riak\Object')
-                           ->disableOriginalConstructor()
-                           ->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $bucket = $this->getMockBuilder('Riak\Bucket')
             ->disableOriginalConstructor()
@@ -95,13 +95,13 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
 
         $that = $this;
         $objectMock->expects($this->once())
-                   ->method('setData')
-                   ->will($this->returnCallback(function($data) use ($that) {
-                        $that->assertEquals(array('title' => 'Riak cookbook'), $data);
-                   }));
+            ->method('setData')
+            ->will($this->returnCallback(function($data) use ($that) {
+                $that->assertEquals(array('title' => 'Riak cookbook'), $data);
+            }));
 
         $objectMock->expects($this->once())
-                   ->method('store');
+            ->method('store');
 
         $this->storage->update('riak-test', 'foobar', array('title' => 'Riak cookbook'));
     }
@@ -126,11 +126,11 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($objectMock));
 
         $objectMock->expects($this->once())
-                   ->method('exists')
-                   ->will($this->returnValue(true));
+            ->method('exists')
+            ->will($this->returnValue(true));
 
         $objectMock->expects($this->once())
-                   ->method('delete');
+            ->method('delete');
 
         $this->storage->delete('riak-test', 'foobar');
     }
@@ -184,12 +184,12 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($objectMock));
 
         $objectMock->expects($this->once())
-                   ->method('exists')
-                   ->will($this->returnValue(true));
+            ->method('exists')
+            ->will($this->returnValue(true));
 
         $objectMock->expects($this->once())
-                   ->method('getData')
-                   ->will($this->returnValue(array('title' => 'Riak Test')));
+            ->method('getData')
+            ->will($this->returnValue(array('title' => 'Riak Test')));
 
         $this->assertEquals(array('title' => 'Riak Test'), $this->storage->find('riaktest', 'foobar'));
     }
