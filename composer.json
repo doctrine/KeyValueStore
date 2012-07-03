@@ -3,6 +3,12 @@
     "require": {
         "doctrine/common": "*"
     },
+    "suggest": {
+        "riak/riak-client": "to use the Riak storage"
+    },
+    "require-dev": {
+        "riak/riak-client": "dev-master"
+    },
     "description": "Simple Key-Value Store Abstraction Layer that maps to PHP objects, allowing for many backends.",
     "license": "MIT",
     "autoload": {

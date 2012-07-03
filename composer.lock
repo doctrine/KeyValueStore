@@ -1,9 +1,18 @@
 {
-    "hash": "09b80610c08784c764e1df9edca9b53f",
+    "hash": "a5d60fb3fe6f38269e7733d90fa16eb4",
     "packages": [
         {
-            "package": "doctrine\/common",
-            "version": "master-dev"
+            "package": "doctrine/common",
+            "version": "dev-master",
+            "source-reference": "f0b548aa55bb7dac36d79061270a085dd38635b4"
         }
-    ]
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "riak/riak-client": 20
+    }
 }

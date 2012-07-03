@@ -26,7 +26,7 @@ Following vendors are targeted:
 * Amazon DynamoDB
 * CouchDB
 * MongoDB
-* Riak
+* Riak (Implemented)
 
 We happily accept contributions for any of the drivers.
 
