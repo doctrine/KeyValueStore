@@ -61,11 +61,25 @@ Suppose we track e-mail campaigns based on campaign id and recipients.
         }
     }
 
+### Create
+
     $response = new Response("1234", "kontakt@beberlei.de", Response::RECIEVE);
 
     $entityManager->persist($response);
     //.... persists as much as you can :-)
 
+    $entityManager->flush();
+
+### Read
+
+    // untested, i have not tested composite id's
+    $response = $entityManager->find("Response",array("1234","kontakt@beberlei.de"));
+### Update
+    same as create, just reuse the same id.
+    
+### Delete
+    $response = $entityManager->find("Response",array("1234","kontakt@beberlei.de"));
+    $entityManager->remove($response);
     $entityManager->flush();
 
 ## Configuration
