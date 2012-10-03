@@ -80,10 +80,17 @@ Cache backend:
     use Doctrine\Common\Cache\ArrayCache;
     use Doctrine\Common\Annotations\AnnotationReader;
 
-    $storage = new DoctrineCacheStorage($cache);
     $cache = new ArrayCache;
-    $metadata = new AnnotationDriver(new AnnotationReader);
-    $entityManager = new EntityManager($storage, $cache, $metadata);
+    $storage = $storage ?: new DoctrineCacheStorage($cache);
+
+    $reader = new AnnotationReader();
+    $metadata = new AnnotationDriver($reader);
+    $config = new Configuration();
+    $config->setMappingDriverImpl($metadata);
+    $config->setMetadataCache($cache);
+
+    $entityManager = new EntityManager($storage, $config);
+
 
 If you want to use WindowsAzure Table you can use the following configuration
 to instantiate the storage:
