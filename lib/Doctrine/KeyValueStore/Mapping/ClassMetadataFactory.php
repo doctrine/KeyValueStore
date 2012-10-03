@@ -94,5 +94,13 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
             }
         }
     }
+
+    /**
+     * copied from doctrine/common - tests/Doctrine/Tests/Common/Persistence/Mapping/ClassMetadataFactoryTest.php
+     */ 
+    protected function isEntity(ClassMetadata $class)
+    {
+        return isset($class->isMappedSuperclass) && $class->isMappedSuperclass === false;
+    }
 }
 
