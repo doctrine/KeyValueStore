@@ -100,7 +100,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
      */ 
     protected function isEntity(ClassMetadata $class)
     {
-        return isset($class->isMappedSuperclass) && $class->isMappedSuperclass === false;
+        return true;
     }
 }
 
