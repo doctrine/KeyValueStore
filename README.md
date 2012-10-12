@@ -95,7 +95,7 @@ Cache backend:
     use Doctrine\Common\Annotations\AnnotationReader;
 
     $cache = new ArrayCache;
-    $storage = $storage ?: new DoctrineCacheStorage($cache);
+    $storage = new DoctrineCacheStorage($cache);
 
     $reader = new AnnotationReader();
     $metadata = new AnnotationDriver($reader);
