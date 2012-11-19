@@ -61,11 +61,25 @@ Suppose we track e-mail campaigns based on campaign id and recipients.
         }
     }
 
+### Create
+
     $response = new Response("1234", "kontakt@beberlei.de", Response::RECIEVE);
 
     $entityManager->persist($response);
     //.... persists as much as you can :-)
 
+    $entityManager->flush();
+
+### Read
+
+    // untested, i have not tested composite id's
+    $response = $entityManager->find("Response",array("1234","kontakt@beberlei.de"));
+### Update
+    same as create, just reuse the same id.
+    
+### Delete
+    $response = $entityManager->find("Response",array("1234","kontakt@beberlei.de"));
+    $entityManager->remove($response);
     $entityManager->flush();
 
 ## Configuration
@@ -80,10 +94,17 @@ Cache backend:
     use Doctrine\Common\Cache\ArrayCache;
     use Doctrine\Common\Annotations\AnnotationReader;
 
-    $storage = new DoctrineCacheStorage($cache);
     $cache = new ArrayCache;
-    $metadata = new AnnotationDriver(new AnnotationReader);
-    $entityManager = new EntityManager($storage, $cache, $metadata);
+    $storage = new DoctrineCacheStorage($cache);
+
+    $reader = new AnnotationReader();
+    $metadata = new AnnotationDriver($reader);
+    $config = new Configuration();
+    $config->setMappingDriverImpl($metadata);
+    $config->setMetadataCache($cache);
+
+    $entityManager = new EntityManager($storage, $config);
+
 
 If you want to use WindowsAzure Table you can use the following configuration
 to instantiate the storage:

@@ -48,7 +48,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
         throw new \InvalidArgumentException("aliasing is not supported.");
     }
 
-    protected function doLoadMetadata($class, $parent, $rootEntityFound)
+    protected function doLoadMetadata($class, $parent, $rootEntityFound, array $nonSuperclassParents)
     {
         $this->getDriver()->loadMetadataForClass($class->name, $class);
 
@@ -93,6 +93,14 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
                 $class->mapField(array('fieldName' => $property->getName()));
             }
         }
+    }
+
+    /**
+     * copied from doctrine/common - tests/Doctrine/Tests/Common/Persistence/Mapping/ClassMetadataFactoryTest.php
+     */ 
+    protected function isEntity(ClassMetadata $class)
+    {
+        return true;
     }
 }
 
