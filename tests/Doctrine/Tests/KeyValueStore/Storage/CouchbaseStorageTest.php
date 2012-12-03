@@ -11,41 +11,41 @@ use Doctrine\KeyValueStore\Storage\CouchbaseStorage;
  */
 class CouchbaseStorageTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @var \PHPUnit_Framework_MockObject_MockObject
-	 */
-	private $couchbase;
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $couchbase;
 
-	/**
-	 * @var CouchbaseStorage
-	 */
-	private $storage;
+    /**
+     * @var CouchbaseStorage
+     */
+    private $storage;
 
     protected function setUp()
     {
-		$this->couchbase = $this->getMockBuilder('\Couchbase')
-			->disableOriginalConstructor()
-			->getMock();
+        $this->couchbase = $this->getMockBuilder('\Couchbase')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-		$this->storage = new CouchbaseStorage($this->couchbase);
+        $this->storage = new CouchbaseStorage($this->couchbase);
     }
 
-	public function testSupportsPartialUpdates()
-	{
-		$this->assertFalse($this->storage->supportsPartialUpdates());
-	}
+    public function testSupportsPartialUpdates()
+    {
+        $this->assertFalse($this->storage->supportsPartialUpdates());
+    }
 
-	public function testSupportsCompositePrimaryKeys()
-	{
-		$this->assertFalse($this->storage->supportsCompositePrimaryKeys());
-	}
+    public function testSupportsCompositePrimaryKeys()
+    {
+        $this->assertFalse($this->storage->supportsCompositePrimaryKeys());
+    }
 
-	public function testRequiresCompositePrimaryKeys()
-	{
-		$this->assertFalse($this->storage->requiresCompositePrimaryKeys());
-	}
+    public function testRequiresCompositePrimaryKeys()
+    {
+        $this->assertFalse($this->storage->requiresCompositePrimaryKeys());
+    }
 
-	public function testInsert()
+    public function testInsert()
     {
         $data = array(
             'author' => 'John Doe',
@@ -77,9 +77,9 @@ class CouchbaseStorageTest extends \PHPUnit_Framework_TestCase
 
         $this->couchbase->expects($this->once())
             ->method('replace')
-			->will($this->returnCallback(function($key, $data) use (&$dbDataset) {
-				$dbDataset[$key] = $data;
-			}));
+            ->will($this->returnCallback(function($key, $data) use (&$dbDataset) {
+                $dbDataset[$key] = $data;
+            }));
 
         $this->storage->update('', '1', $data);
 
@@ -90,9 +90,9 @@ class CouchbaseStorageTest extends \PHPUnit_Framework_TestCase
     {
         $dataset = array(
             'foobar' => array(
-				'author' => 'John Doe',
-				'title'  => 'example book',
-			),
+                'author' => 'John Doe',
+                'title'  => 'example book',
+            ),
         );
 
         $this->couchbase->expects($this->once())
@@ -115,18 +115,18 @@ class CouchbaseStorageTest extends \PHPUnit_Framework_TestCase
     {
         $dataset = array(
             'foobar' => array(
-				'author' => 'John Doe',
-				'title'  => 'example book',
-			),
+                'author' => 'John Doe',
+                'title'  => 'example book',
+            ),
         );
 
         $this->couchbase->expects($this->once())
             ->method('get')
             ->will($this->returnCallback(function($key) use (&$dataset) {
-				if (isset($dataset[$key])) {
-					return $dataset[$key];
-				}
-				return null;
+                if (isset($dataset[$key])) {
+                    return $dataset[$key];
+                }
+                return null;
             }
         ));
 
