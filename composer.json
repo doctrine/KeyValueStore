@@ -4,7 +4,8 @@
         "doctrine/common": "*"
     },
     "suggest": {
-        "riak/riak-client": "to use the Riak storage"
+        "riak/riak-client": "to use the Riak storage",
+        "ext-couchbase": "to use the Couchbase storage"
     },
     "require-dev": {
         "riak/riak-client": "dev-master"
