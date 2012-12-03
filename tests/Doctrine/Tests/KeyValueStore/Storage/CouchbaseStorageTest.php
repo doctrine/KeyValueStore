@@ -23,6 +23,9 @@ class CouchbaseStorageTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+		if (!class_exists('\Couchbase'))
+			$this->markTestSkipped("The PHP extension 'couchbase' is not installed");
+
         $this->couchbase = $this->getMockBuilder('\Couchbase')
             ->disableOriginalConstructor()
             ->getMock();
