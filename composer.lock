@@ -1,18 +1,752 @@
 {
-    "hash": "a5d60fb3fe6f38269e7733d90fa16eb4",
+    "hash": "bf53cb71537abb0dbed5002bbc4411f1",
     "packages": [
         {
-            "package": "doctrine/common",
+            "name": "doctrine/annotations",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/annotations.git",
+                "reference": "v1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/doctrine/annotations/archive/v1.0.zip",
+                "reference": "v1.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "doctrine/lexer": "1.*"
+            },
+            "require-dev": {
+                "doctrine/cache": "1.*"
+            },
+            "time": "2013-01-12 19:23:32",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Annotations\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Docblock Annotations Parser",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "annotations",
+                "parser",
+                "docblock"
+            ]
+        },
+        {
+            "name": "doctrine/cache",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/cache.git",
+                "reference": "v1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/doctrine/cache/archive/v1.0.zip",
+                "reference": "v1.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "time": "2013-01-10 22:43:46",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Cache\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Caching library offering an object-oriented API for many cache backends",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "cache",
+                "caching"
+            ]
+        },
+        {
+            "name": "doctrine/collections",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/collections.git",
+                "reference": "v1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/doctrine/collections/archive/v1.0.zip",
+                "reference": "v1.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "time": "2013-01-12 16:36:50",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Collections\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Collections Abstraction library",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "collections",
+                "iterator",
+                "array"
+            ]
+        },
+        {
+            "name": "doctrine/common",
             "version": "dev-master",
-            "source-reference": "f0b548aa55bb7dac36d79061270a085dd38635b4"
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/common",
+                "reference": "f0b548aa55bb7dac36d79061270a085dd38635b4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/doctrine/common/archive/a5482b347530bb8522e355b399e5ff4983433a40.zip",
+                "reference": "a5482b347530bb8522e355b399e5ff4983433a40",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "doctrine/inflector": "1.*",
+                "doctrine/cache": "1.*",
+                "doctrine/collections": "1.*",
+                "doctrine/lexer": "1.*",
+                "doctrine/annotations": "1.*"
+            },
+            "time": "2012-06-18 14:14:07",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Common Library for Doctrine projects",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "collections",
+                "spl",
+                "eventmanager",
+                "annotations",
+                "persistence"
+            ]
+        },
+        {
+            "name": "doctrine/inflector",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/inflector.git",
+                "reference": "v1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/doctrine/inflector/archive/v1.0.zip",
+                "reference": "v1.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "time": "2013-01-10 21:49:15",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Inflector\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Common String Manipulations with regard to casing and singular/plural rules.",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "string",
+                "inflection",
+                "singuarlize",
+                "pluarlize"
+            ]
+        },
+        {
+            "name": "doctrine/lexer",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/lexer.git",
+                "reference": "v1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/doctrine/lexer/archive/v1.0.zip",
+                "reference": "v1.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "time": "2013-01-12 18:59:04",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Lexer\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Base library for a lexer that can be used in Top-Down, Recursive Descent Parsers.",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "parser",
+                "lexer"
+            ]
         }
     ],
-    "packages-dev": null,
+    "packages-dev": [
+        {
+            "name": "microsoft/windowsazure",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/WindowsAzure/azure-sdk-for-php",
+                "reference": "d8daa05ad1852e0c70a85d15a6db88f7e3b23405"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/WindowsAzure/azure-sdk-for-php/archive/d8daa05ad1852e0c70a85d15a6db88f7e3b23405.zip",
+                "reference": "d8daa05ad1852e0c70a85d15a6db88f7e3b23405",
+                "shasum": ""
+            },
+            "require": {
+                "pear-pear/http_request2": "*",
+                "pear-pear/mail_mime": "*",
+                "pear-pear/mail_mimedecode": "*"
+            },
+            "time": "2012-12-17 23:41:42",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "WindowsAzure\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Azure PHP SDK",
+                    "email": "azurephpsdk@microsoft.com"
+                }
+            ],
+            "description": "This project provides a set of PHP client libraries that make it easy to access Windows Azure tables, blobs, queues, service runtime and service management APIs.",
+            "keywords": [
+                "php",
+                "sdk",
+                "azure"
+            ]
+        },
+        {
+            "name": "pear-pear.php.net/Archive_Tar",
+            "version": "1.3.10",
+            "dist": {
+                "type": "file",
+                "url": "http://pear.php.net/get/Archive_Tar-1.3.10.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=4.3.0.0"
+            },
+            "replace": {
+                "pear-pear/archive_tar": "== 1.3.10.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "description": "This class provides handling of tar files in PHP.\nIt supports creating, listing, extracting and adding to tar files.\nGzip support is available if PHP has the zlib extension built-in or\nloaded. Bz2 compression is also supported with the bz2 extension loaded."
+        },
+        {
+            "name": "pear-pear.php.net/Console_Getopt",
+            "version": "1.3.1",
+            "dist": {
+                "type": "file",
+                "url": "http://pear.php.net/get/Console_Getopt-1.3.1.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=4.3.0.0"
+            },
+            "replace": {
+                "pear-pear/console_getopt": "== 1.3.1.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "description": "This is a PHP implementation of &quot;getopt&quot; supporting both\nshort and long options."
+        },
+        {
+            "name": "pear-pear.php.net/HTTP_Request2",
+            "version": "2.1.1",
+            "dist": {
+                "type": "file",
+                "url": "http://pear.php.net/get/HTTP_Request2-2.1.1.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=5.2.0.0",
+                "pear-pear.php.net/net_url2": ">=2.0.0.0",
+                "pear-pear.php.net/pear": ">=1.9.2.0"
+            },
+            "replace": {
+                "pear-pear/http_request2": "== 2.1.1.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "description": "PHP5 rewrite of HTTP_Request package (with parts of HTTP_Client). Provides\ncleaner API and pluggable Adapters:\n  * Socket adapter, based on old HTTP_Request code,\n  * Curl adapter, wraps around PHP's cURL extension,\n  * Mock adapter, to use for testing packages dependent on HTTP_Request2.\nSupports POST requests with data and file uploads, basic and digest\nauthentication, cookies, managing cookies across requests, proxies, gzip and\ndeflate encodings, redirects, monitoring the request progress with Observers..."
+        },
+        {
+            "name": "pear-pear.php.net/Mail_Mime",
+            "version": "1.8.7",
+            "dist": {
+                "type": "file",
+                "url": "http://pear.php.net/get/Mail_Mime-1.8.7.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=4.3.0.0"
+            },
+            "replace": {
+                "pear-pear/mail_mime": "== 1.8.7.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "description": "Mail_Mime provides classes to deal with the creation and manipulation of MIME messages.\nIt allows people to create e-mail messages consisting of:\n* Text Parts\n* HTML Parts\n* Inline HTML Images\n* Attachments\n* Attached messages\n\nIt supports big messages, base64 and quoted-printable encodings and\nnon-ASCII characters in filenames, subjects, recipients, etc. encoded\nusing RFC2047 and/or RFC2231."
+        },
+        {
+            "name": "pear-pear.php.net/Mail_mimeDecode",
+            "version": "1.5.5",
+            "dist": {
+                "type": "file",
+                "url": "http://pear.php.net/get/Mail_mimeDecode-1.5.5.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=4.3.0.0",
+                "pear-pear.php.net/mail_mime": ">1.4.0.0"
+            },
+            "replace": {
+                "pear-pear/mail_mimedecode": "== 1.5.5.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "description": "Provides a class to deal with the decoding and interpreting of mime messages.\n This package used to be part of the Mail_Mime package, but has been split off."
+        },
+        {
+            "name": "pear-pear.php.net/Net_URL2",
+            "version": "2.0.0",
+            "dist": {
+                "type": "file",
+                "url": "http://pear.php.net/get/Net_URL2-2.0.0.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=5.0.0.0"
+            },
+            "replace": {
+                "pear-pear/net_url2": "== 2.0.0.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "description": "Provides parsing of URLs into their constituent parts (scheme, host, path etc.), URL generation, and resolving of relative URLs."
+        },
+        {
+            "name": "pear-pear.php.net/PEAR",
+            "version": "1.9.4",
+            "dist": {
+                "type": "file",
+                "url": "http://pear.php.net/get/PEAR-1.9.4.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=4.4.0.0,!=5.0.0.0,!=5.1.0.0,!=5.1.1.0,!=5.1.2.0,!=5.1.3.0,!=5.1.4.0,!=5.1.5.0",
+                "pear-pear.php.net/archive_tar": ">=1.3.7.0",
+                "pear-pear.php.net/structures_graph": ">=1.0.2.0",
+                "pear-pear.php.net/console_getopt": ">=1.2.0.0",
+                "pear-pear.php.net/xml_util": ">=1.2.0.0",
+                "ext-xml": "*",
+                "ext-pcre": "*"
+            },
+            "conflict": {
+                "pear-pear.php.net/pear_frontend_web": "<=0.4.0.0",
+                "pear-pear.php.net/pear_frontend_gtk": "<0.4.0.0"
+            },
+            "replace": {
+                "pear-pear/pear": "== 1.9.4.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "description": "The PEAR package contains:\n * the PEAR installer, for creating, distributing\n   and installing packages\n * the PEAR_Exception PHP5 error handling mechanism\n * the PEAR_ErrorStack advanced error handling mechanism\n * the PEAR_Error error handling mechanism\n * the OS_Guess class for retrieving info about the OS\n   where PHP is running on\n * the System class for quick handling of common operations\n   with files and directories\n * the PEAR base class\n  Features in a nutshell:\n  * full support for channels\n  * pre-download dependency validation\n  * new package.xml 2.0 format allows tremendous flexibility while maintaining BC\n  * support for optional dependency groups and limited support for sub-packaging\n  * robust dependency support\n  * full dependency validation on uninstall\n  * remote install for hosts with only ftp access - no more problems with\n    restricted host installation\n  * full support for mirroring\n  * support for bundling several packages into a single tarball\n  * support for static dependencies on a url-based package\n  * support for custom file roles and installation tasks"
+        },
+        {
+            "name": "pear-pear.php.net/Structures_Graph",
+            "version": "1.0.4",
+            "dist": {
+                "type": "file",
+                "url": "http://pear.php.net/get/Structures_Graph-1.0.4.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=4.2.0.0"
+            },
+            "replace": {
+                "pear-pear/structures_graph": "== 1.0.4.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "description": "Structures_Graph is a package for creating and manipulating graph datastructures. It allows building of directed\nand undirected graphs, with data and metadata stored in nodes. The library provides functions for graph traversing\nas well as for characteristic extraction from the graph topology."
+        },
+        {
+            "name": "pear-pear.php.net/XML_Util",
+            "version": "1.2.1",
+            "dist": {
+                "type": "file",
+                "url": "http://pear.php.net/get/XML_Util-1.2.1.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=4.3.0.0",
+                "ext-pcre": "*"
+            },
+            "replace": {
+                "pear-pear/xml_util": "== 1.2.1.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "description": "Selection of methods that are often needed when working with XML documents.  Functionality includes creating of attribute lists from arrays, creation of tags, validation of XML names and more."
+        },
+        {
+            "name": "riak/riak-client",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nacmartin/riak-client",
+                "reference": "cea446f04d759caaef44020a2064a38b41cbdfab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/nacmartin/riak-client/archive/cea446f04d759caaef44020a2064a38b41cbdfab.zip",
+                "reference": "cea446f04d759caaef44020a2064a38b41cbdfab",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "time": "2012-04-29 11:47:45",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Riak": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Nacho Martín",
+                    "email": "nitram.ohcan@gmail.com"
+                },
+                {
+                    "name": "Kevin Burns"
+                },
+                {
+                    "name": "Jeffrey Massung"
+                },
+                {
+                    "name": "Mark Phillips"
+                },
+                {
+                    "name": "Bryank Fink"
+                },
+                {
+                    "name": "Abel Perez"
+                },
+                {
+                    "name": "Scoyy Lystig Fritchie"
+                },
+                {
+                    "name": "Jon Meredith"
+                },
+                {
+                    "name": "dreverri"
+                },
+                {
+                    "name": "fakepop"
+                }
+            ],
+            "description": "Riak client",
+            "homepage": "http://wiki.basho.com/Riak.html",
+            "keywords": [
+                "persistence",
+                "riak"
+            ]
+        }
+    ],
     "aliases": [
 
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": {
-        "riak/riak-client": 20
+        "riak/riak-client": 20,
+        "microsoft/windowsazure": 20
     }
 }

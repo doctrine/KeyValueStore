@@ -32,6 +32,7 @@ use Doctrine\KeyValueStore\NotFoundException;
  * Using a HTTP client to communicate with the REST API of Azure Table.
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
+ * @deprecated Use the AzureSdkTableStorage instead, this will be unmaintained.
  */
 class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 {
@@ -164,10 +165,11 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $dom = new \DomDocument('1.0', 'UTF-8');
         $dom->loadXML($response->getBody());
 
-        throw new HttpStorageException(
-            $dom->getElementsByTagName('Message')->item(0)->nodeValue
-        );
+        $node = $dom->getElementsByTagName('Message')->item(0);
 
+        throw new HttpStorageException(
+            $node ? $node->nodeValue : "An error has occured"
+        );
     }
 
     public function createTable($tableName)

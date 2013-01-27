@@ -3,11 +3,18 @@
     "require": {
         "doctrine/common": "*"
     },
+    "require-dev": {
+        "riak/riak-client": "dev-master",
+        "microsoft/windowsazure": "dev-master"
+    },          
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.php.net"
+        }
+    ],
     "suggest": {
         "riak/riak-client": "to use the Riak storage"
-    },
-    "require-dev": {
-        "riak/riak-client": "dev-master"
     },
     "description": "Simple Key-Value Store Abstraction Layer that maps to PHP objects, allowing for many backends.",
     "license": "MIT",
