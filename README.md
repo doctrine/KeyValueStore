@@ -1,7 +1,5 @@
 # Doctrine Key Value Stores
 
-    This is a work in progress design document for this component
-
 The Persistence interfaces are rather overkill for many implementations in the NoSQL world that are only key-value stores with some additional features on top. Doctrine Key Value Store for the rescue. This project offers a much simpler lightweight API that is centered on a key-value API to fetch/save objects.
 
 * Single- or multi-value primary keys
@@ -25,8 +23,9 @@ Following vendors are targeted:
 * Couchbase (Implemented)
 * Amazon DynamoDB
 * CouchDB
-* MongoDB
+* MongoDB (Implemented)
 * Riak (Implemented)
+* Redis
 
 We happily accept contributions for any of the drivers.
 
@@ -105,19 +104,17 @@ Cache backend:
 
     $entityManager = new EntityManager($storage, $config);
 
-
 If you want to use WindowsAzure Table you can use the following configuration
 to instantiate the storage:
 
-    use Doctrine\KeyValueStore\Storage\WindowsAzureTableStorage;
-    use Doctrine\KeyValueStore\Storage\WindowsAzureTable\SharedKeyLiteAuthorization;
-    use Doctrine\KeyValueStore\Http\SocketClient;
+    use Doctrine\KeyValueStore\Storage\AzureSdkTableStorage;
+    use WindowsAzure\Common\ServicesBuilder;
 
-    $name = ""; // Windows Azure Storage Account Name
-    $key = ""; // Windows Azure Storage Account Key
+    $connectionString = ""; // Windows Azure Connection string
+    $builder = ServicesBuilder::getInstance();
+    $client = $builder->createTableService($connectionString);
 
-    $auth = new SharedKeyLiteAuthorization($name, $key);
-    $storage = new WindowsAzureTableStorage(new SocketClient(), $name, $auth);
+    $storage = new WindowsAzureTableStorage($client);
 
 If you want to use Doctrine DBAL as backend:
 
