@@ -13,6 +13,10 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
+        if ( ! extension_loaded('mongodb')) {
+            $this->markTestSkipped('MongoDB Extension is not installed.');
+        }
+
         $this->mongo = $this->getMock('\Mongo');
 
         $this->mongodb = $this->getMockBuilder('\MongoDB')->disableOriginalConstructor()->getMock();
