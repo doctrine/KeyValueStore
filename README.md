@@ -114,7 +114,7 @@ to instantiate the storage:
     $builder = ServicesBuilder::getInstance();
     $client = $builder->createTableService($connectionString);
 
-    $storage = new WindowsAzureTableStorage($client);
+    $storage = new AzureSdkTableStorage($client);
 
 If you want to use Doctrine DBAL as backend:
 
