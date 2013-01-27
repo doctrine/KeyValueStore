@@ -22,7 +22,7 @@ Following vendors are targeted:
 * Microsoft Azure Table (Implemented)
 * Doctrine\Common\Cache provider (Implemented)
 * RDBMS (Implemented)
-* Couchbase
+* Couchbase (Implemented)
 * Amazon DynamoDB
 * CouchDB
 * MongoDB
