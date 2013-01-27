@@ -126,4 +126,17 @@ as a storage layer through the Windows Azure PHP SDK:
 
    $storage = new AzureSdkTableStorage($client);
 
+Couchbase
+^^^^^^^^^
 
+To be written
+
+MongoDB
+^^^^^^^
+
+To be written
+
+Riak
+^^^^
+
+to be written
