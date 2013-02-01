@@ -61,6 +61,7 @@ class Response
         $this->status = $status;
     }
 }
+```
 
 ### Create
 
@@ -72,6 +73,7 @@ $entityManager->persist($response);
 //.... persists as much as you can :-)
 
 $entityManager->flush();
+```
 
 ### Read
 
@@ -118,28 +120,30 @@ $config->setMappingDriverImpl($metadata);
 $config->setMetadataCache($cache);
 
 $entityManager = new EntityManager($storage, $config);
+```
 
 If you want to use WindowsAzure Table you can use the following configuration
 to instantiate the storage:
 
 ```php
-    use Doctrine\KeyValueStore\Storage\AzureSdkTableStorage;
-    use WindowsAzure\Common\ServicesBuilder;
+use Doctrine\KeyValueStore\Storage\AzureSdkTableStorage;
+use WindowsAzure\Common\ServicesBuilder;
 
-    $connectionString = ""; // Windows Azure Connection string
-    $builder = ServicesBuilder::getInstance();
-    $client = $builder->createTableService($connectionString);
+$connectionString = ""; // Windows Azure Connection string
+$builder = ServicesBuilder::getInstance();
+$client = $builder->createTableService($connectionString);
 
-    $storage = new AzureSdkTableStorage($client);
+$storage = new AzureSdkTableStorage($client);
+```
 
 If you want to use Doctrine DBAL as backend:
 
 ```php
-    $params = array();
-    $tableName = "storage";
-    $idColumnName = "id";
-    $dataColumnName = "serialized_data";
+$params = array();
+$tableName = "storage";
+$idColumnName = "id";
+$dataColumnName = "serialized_data";
 
-    $conn = DriverManager::getConnection($params);
-    $storage = new DBALStorage($conn, $tableName, $idColumnName, $dataColumnName);
-
+$conn = DriverManager::getConnection($params);
+$storage = new DBALStorage($conn, $tableName, $idColumnName, $dataColumnName);
+```
