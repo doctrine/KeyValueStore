@@ -33,53 +33,66 @@ We happily accept contributions for any of the drivers.
 
 Suppose we track e-mail campaigns based on campaign id and recipients.
 
-    use Doctrine\KeyValueStore\Mapping\Annotations as KeyValue;
+```php
+<?php
+use Doctrine\KeyValueStore\Mapping\Annotations as KeyValue;
 
-    /**
-     * @KeyValue\Entity(storageName="responses")
-     */
-    class Response
+/**
+ * @KeyValue\Entity(storageName="responses")
+ */
+class Response
+{
+    const RECIEVE = 0;
+    const OPEN = 10;
+    const CLICK = 20;
+    const ACTION = 30;
+
+    /** @KeyValue\Id */
+    private $campaign;
+    /** @KeyValue\Id */
+    private $recipient;
+    private $status;
+    private $date;
+
+    public function __construct($campaign, $recipient, $status)
     {
-        const RECIEVE = 0;
-        const OPEN = 10;
-        const CLICK = 20;
-        const ACTION = 30;
-
-        /** @KeyValue\Id */
-        private $campaign;
-        /** @KeyValue\Id */
-        private $recipient;
-        private $status;
-        private $date;
-
-        public function __construct($campaign, $recipient, $status)
-        {
-            $this->campaign = $campaign;
-            $this->recipient = $recipient;
-            $this->status = $status;
-        }
+        $this->campaign = $campaign;
+        $this->recipient = $recipient;
+        $this->status = $status;
     }
+}
 
 ### Create
 
-    $response = new Response("1234", "kontakt@beberlei.de", Response::RECIEVE);
+```php
+<?php
+$response = new Response("1234", "kontakt@beberlei.de", Response::RECIEVE);
 
-    $entityManager->persist($response);
-    //.... persists as much as you can :-)
+$entityManager->persist($response);
+//.... persists as much as you can :-)
 
-    $entityManager->flush();
+$entityManager->flush();
 
 ### Read
 
-    // untested, i have not tested composite id's
-    $response = $entityManager->find("Response",array("1234","kontakt@beberlei.de"));
+```php
+<?php
+// untested, i have not tested composite id's
+$response = $entityManager->find("Response",array("1234","kontakt@beberlei.de"));
+```
+
 ### Update
-    same as create, just reuse the same id.
+
+same as create, just reuse the same id.
     
 ### Delete
-    $response = $entityManager->find("Response",array("1234","kontakt@beberlei.de"));
-    $entityManager->remove($response);
-    $entityManager->flush();
+
+```php
+<?php
+$response = $entityManager->find("Response",array("1234","kontakt@beberlei.de"));
+$entityManager->remove($response);
+$entityManager->flush();
+```
 
 ## Configuration
 
@@ -87,26 +100,29 @@ There is no factory yet that simplifies the creation process, here is the
 full code necessary to instantiate a KeyValue EntityManager with a Doctrine
 Cache backend:
 
-    use Doctrine\KeyValueStore\EntityManager;
-    use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
-    use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
-    use Doctrine\Common\Cache\ArrayCache;
-    use Doctrine\Common\Annotations\AnnotationReader;
+```php
+<?php
+use Doctrine\KeyValueStore\EntityManager;
+use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
+use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Annotations\AnnotationReader;
 
-    $cache = new ArrayCache;
-    $storage = new DoctrineCacheStorage($cache);
+$cache = new ArrayCache;
+$storage = new DoctrineCacheStorage($cache);
 
-    $reader = new AnnotationReader();
-    $metadata = new AnnotationDriver($reader);
-    $config = new Configuration();
-    $config->setMappingDriverImpl($metadata);
-    $config->setMetadataCache($cache);
+$reader = new AnnotationReader();
+$metadata = new AnnotationDriver($reader);
+$config = new Configuration();
+$config->setMappingDriverImpl($metadata);
+$config->setMetadataCache($cache);
 
-    $entityManager = new EntityManager($storage, $config);
+$entityManager = new EntityManager($storage, $config);
 
 If you want to use WindowsAzure Table you can use the following configuration
 to instantiate the storage:
 
+```php
     use Doctrine\KeyValueStore\Storage\AzureSdkTableStorage;
     use WindowsAzure\Common\ServicesBuilder;
 
@@ -118,6 +134,7 @@ to instantiate the storage:
 
 If you want to use Doctrine DBAL as backend:
 
+```php
     $params = array();
     $tableName = "storage";
     $idColumnName = "id";
