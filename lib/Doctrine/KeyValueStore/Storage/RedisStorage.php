@@ -50,7 +50,7 @@ class RedisStorage implements Storage
      * @param \Redis $redis
      * @param array $dbOptions
      */
-    public function __construct(\Redis $redis, $dbOptions = array())
+    public function __construct($redis, $dbOptions = array())
     {
         $this->client = $redis;
 
@@ -84,7 +84,7 @@ class RedisStorage implements Storage
     }
 
     /**
-     * {@inheritDoc}
+     * Insert data into Redis storage by key identifier
      */
     public function insert($storageName, $key, array $data)
     {
@@ -92,7 +92,7 @@ class RedisStorage implements Storage
     }
 
     /**
-     * {@inheritDoc}
+     * Update the data into Redis storage by key identifier
      */
     public function update($storageName, $key, array $data)
     {
@@ -100,25 +100,28 @@ class RedisStorage implements Storage
     }
 
     /**
-     * {@inheritDoc}
+     * Remove the data from Redis storage if key identifier exists.
      */
     public function delete($storageName, $key)
     {
-        $this->client->delete($this->getKeyName($key));
+        $key = $this->getKeyName($key);
+        if($this->client->exists($key) === true) {
+            $this->client->delete($key);
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * If key didn't exist, a not found exception will be throw.
      */
     public function find($storageName, $key)
     {
-        $value = $this->client->get($this->getKeyName($key));
+        $key = $this->getKeyName($key);
 
-        if ($value === null) {
+        if($this->client->exists($key) === false) {
             throw new NotFoundException();
         }
 
-        return json_decode($value);
+        return json_decode($this->client->get($key));
     }
 
     /**
