@@ -84,7 +84,7 @@ class RedisStorage implements Storage
     }
 
     /**
-     * Insert data into Redis storage by key identifier
+     * {@inheritDoc}
      */
     public function insert($storageName, $key, array $data)
     {
@@ -92,7 +92,7 @@ class RedisStorage implements Storage
     }
 
     /**
-     * Update the data into Redis storage by key identifier
+     * {@inheritDoc}
      */
     public function update($storageName, $key, array $data)
     {
@@ -100,18 +100,18 @@ class RedisStorage implements Storage
     }
 
     /**
-     * Remove the data from Redis storage if key identifier exists.
+     * {@inheritDoc}
      */
     public function delete($storageName, $key)
     {
         $key = $this->getKeyName($key);
         if($this->client->exists($key) === true) {
-            $this->client->delete($key);
+            $this->client->del($key);
         }
     }
 
     /**
-     * If key didn't exist, a not found exception will be throw.
+     * {@inheritDoc}
      */
     public function find($storageName, $key)
     {
