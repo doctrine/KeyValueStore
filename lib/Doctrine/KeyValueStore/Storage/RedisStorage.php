@@ -106,7 +106,7 @@ class RedisStorage implements Storage
     {
         $key = $this->getKeyName($key);
         if($this->client->exists($key) === true) {
-            $this->client->del($key);
+            $this->client->delete($key);
         }
     }
 
@@ -140,7 +140,7 @@ class RedisStorage implements Storage
      * @param string $id
      * @return string
      */
-    protected function getKeyName($key)
+    public function getKeyName($key)
     {
         return $this->keyPrefix . $key;
     }
