@@ -25,7 +25,7 @@ Following vendors are targeted:
 * CouchDB
 * MongoDB (Implemented)
 * Riak (Implemented)
-* Redis
+* Redis (Implemented)
 
 We happily accept contributions for any of the drivers.
 
@@ -86,7 +86,7 @@ $response = $entityManager->find("Response",array("1234","kontakt@beberlei.de"))
 ### Update
 
 same as create, just reuse the same id.
-    
+
 ### Delete
 
 ```php
@@ -105,6 +105,7 @@ Cache backend:
 ```php
 <?php
 use Doctrine\KeyValueStore\EntityManager;
+use Doctrine\KeyValueStore\Configuration;
 use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
 use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
 use Doctrine\Common\Cache\ArrayCache;
