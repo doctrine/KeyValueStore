@@ -48,6 +48,7 @@ class RedisStorage implements Storage
      * Constructor
      *
      * @param \Redis $redis
+     * @param array $dbOptions
      */
     public function __construct(\Redis $redis, $dbOptions = array())
     {
@@ -131,11 +132,13 @@ class RedisStorage implements Storage
     }
 
     /**
-     * Add prefix to session name
+     * Add prefix to Redis key space name
+     *
      * @param string $id
      * @return string
      */
-    protected function getKeyName($key) {
+    protected function getKeyName($key)
+    {
         return $this->keyPrefix . $key;
     }
 }
