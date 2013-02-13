@@ -105,7 +105,7 @@ class RedisStorage implements Storage
     public function delete($storageName, $key)
     {
         $key = $this->getKeyName($key);
-        if($this->client->exists($key) === true) {
+        if ($this->client->exists($key) === true) {
             $this->client->delete($key);
         }
     }
@@ -117,7 +117,7 @@ class RedisStorage implements Storage
     {
         $key = $this->getKeyName($key);
 
-        if($this->client->exists($key) === false) {
+        if ($this->client->exists($key) === false) {
             throw new NotFoundException();
         }
 
