@@ -79,10 +79,14 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
         try {
             $this->client->insertEntity($storageName, $entity);
         } catch(ServiceException $e){
-            throw new StorageException(
-                "Could not save entity in table, WindowsAzure SDK client reported error: " . $e->getMessage(),
-                $e->getCode(), $e
-            );
+            if ($e->getCode() == 404) {
+                $this->client->createTable($storageName);
+            } else {
+                throw new StorageException(
+                    "Could not save entity in table, WindowsAzure SDK client reported error: " . $e->getMessage(),
+                    $e->getCode(), $e
+                );
+            }
         }
     }
 
