@@ -108,7 +108,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
      */
     public function delete($storageName, $key)
     {
-        list ($partitonKey, $rowKey) = array($key['dist'], $key['range']);;
+        list ($partitonKey, $rowKey) = $key;
 
         try {
             $this->client->deleteEntity($storageName, $partitonKey, $rowKey);
@@ -125,7 +125,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
      */
     public function find($storageName, $key)
     {
-        list ($partitonKey, $rowKey) = array($key['dist'], $key['range']);;
+        list ($partitonKey, $rowKey) = $key;
 
         try {
             $result     = $this->client->getEntity($storageName, $partitonKey, $rowKey);
@@ -209,7 +209,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
      */
     private function createEntity(array $key, array $data)
     {
-        list ($partitonKey, $rowKey) = array($key['dist'], $key['range']);;
+        list ($partitonKey, $rowKey) = $key;
 
         $entity = new Entity();
         $entity->setPartitionKey((string)$partitonKey);
