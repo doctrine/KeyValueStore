@@ -20,6 +20,7 @@
 namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\DBAL\Connection;
 
 /**
  * Relational databased backed system.
@@ -127,10 +128,17 @@ class DBALStorage implements Storage
      */
     public function find($storageName, $key)
     {
-        $sql = "SELECT " . $this->dataColumn . " FROM " . $this->table . " " .
-               $this->keyColumn = " = ?";
-        $stmt = $this->conn->executeQuery($sql, array($key));
+        $qb = $this->conn->createQueryBuilder();
+
+        $qb->select("s.{$this->dataColumn}")
+            ->from($this->table, 's')
+            ->where("{$this->keyColumn} = ?")
+            ->setParameters(array($key));
+
+        $stmt = $qb->execute();
+
         $data = $stmt->fetchColumn();
+
         if (!$data) {
             throw new NotFoundException();
         }
