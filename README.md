@@ -79,8 +79,7 @@ $entityManager->flush();
 
 ```php
 <?php
-// untested, i have not tested composite id's
-$response = $entityManager->find("Response",array("1234","kontakt@beberlei.de"));
+$response = $entityManager->find("Response",array("campaign" => "1234","recipient" => "kontakt@beberlei.de"));
 ```
 
 ### Update
@@ -107,6 +106,8 @@ Cache backend:
 use Doctrine\KeyValueStore\EntityManager;
 use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
 use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
+use Doctrine\KeyValueStore\Configuration;
+use Doctrine\KeyValueStore\EntityManager;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Annotations\AnnotationReader;
 
