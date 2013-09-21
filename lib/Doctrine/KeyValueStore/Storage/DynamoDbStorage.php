@@ -40,9 +40,8 @@ class DynamoDbStorage implements Storage
      * Constructor
      *
      * @param \DynamoDbClient $client
-     * @param string $tableName
      */
-    public function __construct(DynamoDbClient $client, $tableName)
+    public function __construct(DynamoDbClient $client)
     {
         $this->client = $client;
     }
