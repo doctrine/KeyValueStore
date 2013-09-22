@@ -32,14 +32,14 @@ use Aws\DynamoDb\Iterator\ItemIterator;
 class DynamoDbStorage implements Storage
 {
     /**
-     * @var Aws\DynamoDb\DynamoDbClient
+     * @var \Aws\DynamoDb\DynamoDbClient
      */
     protected $client;
 
     /**
      * Constructor
      *
-     * @param \DynamoDbClient $client
+     * @param \Aws\DynamoDb\DynamoDbClient $client
      */
     public function __construct(DynamoDbClient $client)
     {
