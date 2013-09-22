@@ -33,14 +33,14 @@ use Aws\SimpleDb\Exception\SimpleDbException;
 class SimpleDbStorage implements Storage
 {
     /**
-     * @var use Aws\SimpleDb\SimpleDbClient
+     * @var \Aws\SimpleDb\SimpleDbClient
      */
     protected $client;
 
     /**
      * Constructor
      *
-     * @param \DynamoDbClient $client
+     * @param \Aws\SimpleDb\SimpleDbClient $client
      */
     public function __construct(SimpleDbClient $client)
     {
