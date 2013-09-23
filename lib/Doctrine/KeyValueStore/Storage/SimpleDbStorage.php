@@ -48,24 +48,6 @@ class SimpleDbStorage implements Storage
     }
 
     /**
-     * @param string $tableName
-     */
-    protected function createDomain($domainName)
-    {
-        try {
-            $domain = $this->client->domainMetadata(array('DomainName' => $domainName));
-        } catch (NoSuchDomainException $e) {
-            $this->client->createDomain(array('DomainName' => $domainName));
-    
-            $domain = $this->client->domainMetadata(array('DomainName' => $domainName));
-        } catch (SimpleDbException $e) {
-            throw new KeyValueStoreException($e->getMessage(), 0, $e);
-        }
-        
-        return $domain;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function supportsPartialUpdates()
@@ -87,27 +69,6 @@ class SimpleDbStorage implements Storage
     public function requiresCompositePrimaryKeys()
     {
         return false;
-    }
-
-    /**
-     * @param string $key 
-     * @param array $data 
-     */
-    protected function makeAttributes($data)
-    {
-        $attributes = array();
-
-        foreach ($data as $name => $value) {
-            if ($value !== null && $value !== array() && $value !== '') {
-                $attributes[] = array(
-                    'Name' => $name,
-                    'Value' => $value,
-                    'Replace' => true,
-                );
-            }
-        }
-        
-        return $attributes;
     }
 
     /**
@@ -179,5 +140,44 @@ class SimpleDbStorage implements Storage
     public function getName()
     {
         return 'simpledb';
+    }
+
+    /**
+     * @param string $tableName
+     */
+    protected function createDomain($domainName)
+    {
+        try {
+            $domain = $this->client->domainMetadata(array('DomainName' => $domainName));
+        } catch (NoSuchDomainException $e) {
+            $this->client->createDomain(array('DomainName' => $domainName));
+
+            $domain = $this->client->domainMetadata(array('DomainName' => $domainName));
+        } catch (SimpleDbException $e) {
+            throw new KeyValueStoreException($e->getMessage(), 0, $e);
+        }
+
+        return $domain;
+    }
+
+    /**
+     * @param string $key 
+     * @param array $data 
+     */
+    protected function makeAttributes($data)
+    {
+        $attributes = array();
+
+        foreach ($data as $name => $value) {
+            if ($value !== null && $value !== array() && $value !== '') {
+                $attributes[] = array(
+                    'Name' => $name,
+                    'Value' => $value,
+                    'Replace' => true,
+                );
+            }
+        }
+
+        return $attributes;
     }
 }
