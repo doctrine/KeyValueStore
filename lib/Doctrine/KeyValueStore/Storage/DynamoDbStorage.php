@@ -47,38 +47,6 @@ class DynamoDbStorage implements Storage
     }
 
     /**
-     * @param string $tableName
-     */
-    protected function createTable($tableName)
-    {
-        try {
-            $this->client->describeTable(array(
-                'TableName' => $tableName,
-            ));
-        } catch(ResourceNotFoundException $e) {
-            $this->client->createTable(array(
-                'AttributeDefinitions' => array(
-                    array(
-                        'AttributeName' => 'id',
-                        'AttributeType' => 'S',
-                    ),
-                ),
-                'TableName' => $tableName,
-                'KeySchema' => array(
-                    array(
-                        'AttributeName' => 'id',
-                        'KeyType' => 'HASH',
-                    ),
-                ),
-                'ProvisionedThroughput' => array(
-                    'ReadCapacityUnits' => 1,
-                    'WriteCapacityUnits' => 1,
-                ),
-            ));
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function supportsPartialUpdates()
@@ -100,23 +68,6 @@ class DynamoDbStorage implements Storage
     public function requiresCompositePrimaryKeys()
     {
         return false;
-    }
-
-    /**
-     * @param string $key 
-     * @param array $data 
-     */
-    protected function prepareData($key, &$data)
-    {
-        $data = array_merge($data, array(
-            'id' => $key,
-        ));
-
-        foreach ($data as $key => $value) {
-            if ($value === null || $value === array() || $value === '') {
-                unset($data[$key]);
-            }
-        }
     }
 
     /**
@@ -201,5 +152,55 @@ class DynamoDbStorage implements Storage
     public function getName()
     {
         return 'dynamodb';
+    }
+    
+
+    /**
+     * @param string $tableName
+     */
+    protected function createTable($tableName)
+    {
+        try {
+            $this->client->describeTable(array(
+                'TableName' => $tableName,
+            ));
+        } catch(ResourceNotFoundException $e) {
+            $this->client->createTable(array(
+                'AttributeDefinitions' => array(
+                    array(
+                        'AttributeName' => 'id',
+                        'AttributeType' => 'S',
+                    ),
+                ),
+                'TableName' => $tableName,
+                'KeySchema' => array(
+                    array(
+                        'AttributeName' => 'id',
+                        'KeyType' => 'HASH',
+                    ),
+                ),
+                'ProvisionedThroughput' => array(
+                    'ReadCapacityUnits' => 1,
+                    'WriteCapacityUnits' => 1,
+                ),
+            ));
+        }
+    }
+
+    /**
+     * @param string $key 
+     * @param array $data 
+     */
+    protected function prepareData($key, &$data)
+    {
+        $data = array_merge($data, array(
+            'id' => $key,
+        ));
+
+        foreach ($data as $key => $value) {
+            if ($value === null || $value === array() || $value === '') {
+                unset($data[$key]);
+            }
+        }
     }
 }
