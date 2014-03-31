@@ -15,7 +15,8 @@
     ],
     "suggest": {
         "riak/riak-client": "to use the Riak storage",
-        "ext-couchbase": "to use the Couchbase storage"
+        "ext-couchbase": "to use the Couchbase storage",
+        "aws/aws-sdk-php": "to use the DynamoDB storage"
     },
     "description": "Simple Key-Value Store Abstraction Layer that maps to PHP objects, allowing for many backends.",
     "license": "MIT",
