@@ -107,7 +107,6 @@ use Doctrine\KeyValueStore\EntityManager;
 use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
 use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
 use Doctrine\KeyValueStore\Configuration;
-use Doctrine\KeyValueStore\EntityManager;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Annotations\AnnotationReader;
 
