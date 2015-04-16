@@ -105,7 +105,8 @@ class RedisStorage implements Storage
     public function delete($storageName, $key)
     {
         $key = $this->getKeyName($key);
-        if ($this->client->exists($key) === true) {
+
+        if ($this->client->exists($key)) {
             $this->client->delete($key);
         }
     }
@@ -117,11 +118,11 @@ class RedisStorage implements Storage
     {
         $key = $this->getKeyName($key);
 
-        if ($this->client->exists($key) === false) {
+        if (! $this->client->exists($key)) {
             throw new NotFoundException();
         }
 
-        return json_decode($this->client->get($key));
+        return json_decode($this->client->get($key), true);
     }
 
     /**
@@ -137,7 +138,7 @@ class RedisStorage implements Storage
     /**
      * Add prefix to Redis key space name
      *
-     * @param string $id
+     * @param  string $key
      * @return string
      */
     public function getKeyName($key)
