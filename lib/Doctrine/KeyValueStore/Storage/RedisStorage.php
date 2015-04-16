@@ -138,7 +138,7 @@ class RedisStorage implements Storage
     /**
      * Add prefix to Redis key space name
      *
-     * @param string $id
+     * @param  string $key
      * @return string
      */
     public function getKeyName($key)
