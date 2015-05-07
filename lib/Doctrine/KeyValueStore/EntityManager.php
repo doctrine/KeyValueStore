@@ -145,7 +145,7 @@ class EntityManager
      */
     public function getClassMetadata($className)
     {
-        return $this->unitOfwork->getClassMetadata($className);
+        return $this->unitOfWork->getClassMetadata($className);
     }
 }
 
