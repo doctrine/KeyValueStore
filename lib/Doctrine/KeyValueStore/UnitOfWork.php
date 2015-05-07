@@ -19,7 +19,9 @@
 
 namespace Doctrine\KeyValueStore;
 
-use Doctrine\KeyValueStore\Id\NullIdConverter;
+use Doctrine\KeyValueStore\Id\IdHandlingStrategy;
+use Doctrine\KeyValueStore\Mapping\ClassMetadataFactory;
+use Doctrine\KeyValueStore\Storage\Storage;
 
 /**
  * UnitOfWork to handle all KeyValueStore entities based on the configured
@@ -29,8 +31,17 @@ use Doctrine\KeyValueStore\Id\NullIdConverter;
  */
 class UnitOfWork
 {
+    /**
+     * @var ClassMetadataFactory
+     */
     private $cmf;
+    /**
+     * @var Storage
+     */
     private $storageDriver;
+    /**
+     * @var IdHandlingStrategy
+     */
     private $idHandler;
 
     /**
@@ -49,7 +60,7 @@ class UnitOfWork
     private $identityMap         = array();
     private $idConverter;
 
-    public function __construct($cmf, $storageDriver, $config = null)
+    public function __construct(ClassMetadataFactory $cmf, Storage $storageDriver, Configuration $config = null)
     {
         $this->cmf           = $cmf;
         $this->storageDriver = $storageDriver;
@@ -57,6 +68,11 @@ class UnitOfWork
         $this->idHandler     = $storageDriver->supportsCompositePrimaryKeys() ?
                                 new Id\CompositeIdHandler() :
                                 new Id\SingleIdHandler();
+    }
+
+    public function getClassMetadata($className)
+    {
+        return $this->cmf->getMetadataFor($className);
     }
 
     private function tryGetById($id)
