@@ -22,8 +22,6 @@ namespace Doctrine\KeyValueStore;
 use Doctrine\KeyValueStore\Storage\Storage;
 use Doctrine\KeyValueStore\Mapping\ClassMetadataFactory;
 use Doctrine\KeyValueStore\Query\RangeQuery;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
-use Doctrine\Common\Cache\Cache;
 
 /**
  * EntityManager for KeyValue stored objects.
@@ -33,12 +31,12 @@ use Doctrine\Common\Cache\Cache;
 class EntityManager
 {
     /**
-     * @var Doctrine\KeyValueStore\UnitOfWork
+     * @var UnitOfWork
      */
     private $unitOfWork;
 
     /**
-     * @var Doctrine\KeyValueStore\Storage\Storage
+     * @var Storage
      */
     private $storageDriver;
 
@@ -119,7 +117,7 @@ class EntityManager
     }
 
     /**
-     * @return Doctrine\KeyValueStore\Storage\Storage
+     * @return Storage
      */
     public function unwrap()
     {
@@ -141,11 +139,11 @@ class EntityManager
 
     /**
      * @param string $className
-     * @return \Doctrine\KeyValueStore\Mapping\ClassMetadata
+     * @return Mapping\ClassMetadata
      */
     public function getClassMetadata($className)
     {
-        return $this->unitOfwork->getClassMetadata($className);
+        return $this->unitOfWork->getClassMetadata($className);
     }
 }
 
