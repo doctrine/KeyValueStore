@@ -21,10 +21,19 @@ namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\Query\RangeQuery;
 use Doctrine\KeyValueStore\Query\RangeQueryStorage;
+use Doctrine\KeyValueStore\NotFoundException;
 
 use Cassandra\Session;
 use Cassandra\ExecutionOptions;
 
+/**
+ * Cassandra Storage Engine for KeyValueStore.
+ *
+ * Uses the new PHP Driver from Datastax {@link
+ * https://github.com/datastax/php-driver}. Cassandra supports range queries
+ * over a partition key, so we are using the RangeQueryStorage here to
+ * implement more complex queries.
+ */
 class CassandraStorage implements Storage, RangeQueryStorage
 {
     /**
@@ -92,6 +101,26 @@ class CassandraStorage implements Storage, RangeQueryStorage
      */
     public function update($storageName, $key, array $data)
     {
+        $where = array();
+        $set = array();
+
+        foreach ($key as $name => $value) {
+            $where[] = $name . ' = ?';
+        }
+
+        foreach ($data as $name => $value) {
+            $set[] = $name . ' = ?';
+        }
+
+        $cql = "UPDATE " . $storageName . " SET " . implode(', ', $set) . " WHERE " . implode(' AND ', $where);
+        $stmt = $this->session->prepare($cql);
+
+        $values = array_merge(array_values($data), array_values($key));
+
+        $options = new ExecutionOptions();
+        $options->arguments = $values;
+
+        $this->session->execute($stmt, $options);
     }
 
     /**
@@ -99,6 +128,19 @@ class CassandraStorage implements Storage, RangeQueryStorage
      */
     public function delete($storageName, $key)
     {
+        $where = array();
+
+        foreach ($key as $name => $value) {
+            $where[] = $name . ' = ?';
+        }
+
+        $cql = "DELETE FROM " . $storageName . " WHERE " . implode(' AND ', $where);
+        $stmt = $this->session->prepare($cql);
+
+        $options = new ExecutionOptions();
+        $options->arguments = array_values($key);
+
+        $this->session->execute($stmt, $options);
     }
 
     /**
@@ -106,6 +148,35 @@ class CassandraStorage implements Storage, RangeQueryStorage
      */
     public function find($storageName, $key)
     {
+        $where = array();
+
+        foreach ($key as $name => $value) {
+            $where[] = $name . ' = ?';
+        }
+
+        $cql = "SELECT * FROM " . $storageName . " WHERE " . implode(' AND ', $where);
+        $stmt = $this->session->prepare($cql);
+
+        $options = new ExecutionOptions();
+        $options->arguments = array_values($key);
+
+        $result = $this->session->execute($stmt, $options);
+        $rows = iterator_to_array($result);
+
+        if (!isset($rows[0])) {
+            throw new NotFoundException();
+        }
+
+        $data = array();
+        foreach ($rows[0] as $column => $value) {
+            if (isset($key[$column])) {
+                continue;
+            }
+
+            $data[$column] = $value;
+        }
+
+        return $data;
     }
 
     /**
@@ -113,6 +184,7 @@ class CassandraStorage implements Storage, RangeQueryStorage
      */
     public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null)
     {
+        throw new \RuntimeException("TODO: Implement");
     }
 
     /**

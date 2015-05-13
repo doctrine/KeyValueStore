@@ -53,4 +53,47 @@ class CassandraTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("John Doe", $rows[0]['author']);
         $this->assertEquals("example book", $rows[0]['title']);
     }
+
+    public function testFind()
+    {
+        $data = array(
+            'author' => 'John Doe',
+            'title'  => 'example book',
+        );
+
+        $this->storage->insert('books', array('id' => 2), $data);
+
+        $this->assertEquals($data, $this->storage->find('books', array('id' => 2)));
+    }
+
+    public function testUpdate()
+    {
+        $data = array(
+            'author' => 'John Doe',
+            'title'  => 'example book',
+        );
+
+        $this->storage->insert('books', array('id' => 3), $data);
+        $this->storage->update('books', array('id' => 3), array('author' => 'Jane Doe'));
+
+        $this->assertEquals(
+            array('author' => 'Jane Doe', 'title' => 'example book'),
+            $this->storage->find('books', array('id' => 3))
+        );
+    }
+
+    public function testDelete()
+    {
+        $data = array(
+            'author' => 'John Doe',
+            'title'  => 'example book',
+        );
+
+        $this->storage->insert('books', array('id' => 4), $data);
+        $this->storage->delete('books', array('id' => 4));
+
+        $this->setExpectedException('Doctrine\KeyValueStore\NotFoundException');
+
+        $this->storage->find('books', array('id' => 4));
+    }
 }
