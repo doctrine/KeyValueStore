@@ -42,7 +42,7 @@ use Doctrine\KeyValueStore\Mapping\Annotations as KeyValue;
  */
 class Response
 {
-    const RECIEVE = 0;
+    const RECEIVE = 0;
     const OPEN = 10;
     const CLICK = 20;
     const ACTION = 30;
@@ -67,7 +67,7 @@ class Response
 
 ```php
 <?php
-$response = new Response("1234", "kontakt@beberlei.de", Response::RECIEVE);
+$response = new Response("1234", "kontakt@beberlei.de", Response::RECEIVE);
 
 $entityManager->persist($response);
 //.... persists as much as you can :-)
