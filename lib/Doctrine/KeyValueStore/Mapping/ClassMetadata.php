@@ -75,7 +75,7 @@ class ClassMetadata implements BaseClassMetadata
 
     public function __sleep()
     {
-        return array('fields', 'isCompositeKey', 'identifier', 'name');
+        return array('fields', 'isCompositeKey', 'identifier', 'name', 'storageName');
     }
 
     public function getIdentifierValues($object)
