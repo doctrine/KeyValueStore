@@ -56,6 +56,9 @@ class ClassMetadata implements BaseClassMetadata
 
     public function skipTransientField($fieldName)
     {
+        // it's necessary to unset because ClassMetadataFactory::initializeReflection has already run
+        // and the fields have all been mapped -- even the transient ones
+        unset($this->fields[$fieldName]);
         $this->transientFields[$fieldName] = true;
     }
 
