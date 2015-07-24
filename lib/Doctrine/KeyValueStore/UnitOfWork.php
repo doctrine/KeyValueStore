@@ -75,11 +75,11 @@ class UnitOfWork
         return $this->cmf->getMetadataFor($className);
     }
 
-    private function tryGetById($id)
+    private function tryGetById($className, $id)
     {
         $idHash = $this->idHandler->hash($id);
-        if (isset($this->identityMap[$idHash])) {
-            return $this->identityMap[$idHash];
+        if (isset($this->identityMap[$className][$idHash])) {
+            return $this->identityMap[$className][$idHash];
         }
         return null;
     }
@@ -107,7 +107,7 @@ class UnitOfWork
         }
         unset($data['php_class']);
 
-        $object = $this->tryGetById($id);
+        $object = $this->tryGetById($class->name, $id);
         if ( $object) {
             return $object;
         }
@@ -126,9 +126,9 @@ class UnitOfWork
             }
         }
 
-        $idHash                     = $this->idHandler->hash($id);
-        $this->identityMap[$idHash] = $object;
-        $this->identifiers[$oid]    = $id;
+        $idHash                                   = $this->idHandler->hash($id);
+        $this->identityMap[$class->name][$idHash] = $object;
+        $this->identifiers[$oid]                  = $id;
 
         return $object;
     }
@@ -186,12 +186,12 @@ class UnitOfWork
 
         $idHash = $this->idHandler->hash($id);
 
-        if (isset($this->identityMap[$idHash])) {
+        if (isset($this->identityMap[$class->name][$idHash])) {
             throw new \RuntimeException("Object with ID already exists.");
         }
 
-        $this->scheduledInsertions[$oid] = $object;
-        $this->identityMap[$idHash]      = $object;
+        $this->scheduledInsertions[$oid]          = $object;
+        $this->identityMap[$class->name][$idHash] = $object;
     }
 
     public function scheduleForDelete($object)
@@ -205,24 +205,26 @@ class UnitOfWork
 
     private function processIdentityMap()
     {
-        foreach ($this->identityMap as $object) {
-            $hash = spl_object_hash($object);
+        foreach ($this->identityMap as $className => $entities) {
+            foreach ($entities as $object) {
+                $hash = spl_object_hash($object);
 
-            if ( isset($this->scheduledInsertions[$hash])) {
-                continue;
-            }
+                if ( isset($this->scheduledInsertions[$hash])) {
+                    continue;
+                }
 
-            $metadata  = $this->cmf->getMetadataFor(get_class($object));
-            $changeSet = $this->computeChangeSet($metadata, $object);
+                $metadata  = $this->cmf->getMetadataFor($className);
+                $changeSet = $this->computeChangeSet($metadata, $object);
 
-            if ($changeSet) {
-                $changeSet['php_class'] = $metadata->name;
-                $this->storageDriver->update($metadata->storageName, $this->identifiers[$hash], $changeSet);
+                if ($changeSet) {
+                    $changeSet['php_class'] = $metadata->name;
+                    $this->storageDriver->update($metadata->storageName, $this->identifiers[$hash], $changeSet);
 
-                if ($this->storageDriver->supportsPartialUpdates()) {
-                    $this->originalData[$hash] = array_merge($this->originalData[$hash], $changeSet);
-                } else {
-                    $this->originalData[$hash] = $changeSet;
+                    if ($this->storageDriver->supportsPartialUpdates()) {
+                        $this->originalData[$hash] = array_merge($this->originalData[$hash], $changeSet);
+                    } else {
+                        $this->originalData[$hash] = $changeSet;
+                    }
                 }
             }
         }
@@ -247,9 +249,9 @@ class UnitOfWork
 
             $this->storageDriver->insert($class->storageName, $id, $data);
 
-            $this->originalData[$oid]   = $data;
-            $this->identifiers[$oid]    = $id;
-            $this->identityMap[$idHash] = $object;
+            $this->originalData[$oid]                 = $data;
+            $this->identifiers[$oid]                  = $id;
+            $this->identityMap[$class->name][$idHash] = $object;
         }
     }
 
@@ -263,7 +265,7 @@ class UnitOfWork
 
             $this->storageDriver->delete($class->storageName, $id);
 
-            unset($this->identifiers[$oid], $this->originalData[$oid], $this->identityMap[$idHash]);
+            unset($this->identifiers[$oid], $this->originalData[$oid], $this->identityMap[$class->name][$idHash]);
         }
     }
 
