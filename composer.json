@@ -1,9 +1,10 @@
 {
     "name": "doctrine/key-value-store",
     "require": {
-        "doctrine/common": "*"
+        "doctrine/common": "^2.4"
     },
     "require-dev": {
+        "phpunit/phpunit": "^4.8",
         "riak/riak-client": "dev-master",
         "microsoft/windowsazure": "dev-master"
     },          
