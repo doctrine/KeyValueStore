@@ -24,5 +24,10 @@
         "psr-0": {
             "Doctrine\\KeyValueStore\\": "lib/"
         }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Doctrine\\Tests\\": "tests/"
+        }
     }
 }
