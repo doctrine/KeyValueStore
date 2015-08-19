@@ -5,15 +5,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
-        "riak/riak-client": "dev-master",
-        "microsoft/windowsazure": "dev-master"
-    },          
-    "repositories": [
-        {
-            "type": "pear",
-            "url": "http://pear.php.net"
-        }
-    ],
+        "riak/riak-client": "dev-master"
+    },
     "suggest": {
         "riak/riak-client": "to use the Riak storage",
         "ext-couchbase": "to use the Couchbase storage",
