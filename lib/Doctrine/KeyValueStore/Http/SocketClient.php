@@ -151,7 +151,11 @@ class SocketClient implements Client
         );
 
         // Remove leading newlines, should not accur at all, actually.
-        while ((($line = fgets($this->connection)) !== false) && (($lineContent = rtrim($line)) === ''));
+        while (true) {
+            if (!(($line = fgets($this->connection)) !== false) || !(($lineContent = rtrim($line)) === '')) {
+                break;
+            }
+        }
 
         // Throw exception, if connection has been aborted by the server, and
         // leave handling to the user for now.
