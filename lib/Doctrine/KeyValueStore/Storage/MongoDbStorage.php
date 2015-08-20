@@ -51,7 +51,7 @@ class MongoDbStorage implements Storage
      */
     public function __construct(\Mongo $mongo, array $dbOptions = array())
     {
-        $this->mongo = $mongo;
+        $this->mongo     = $mongo;
         $this->dbOptions = array_merge(array(
             'database' => '',
             'collection' => '',
@@ -76,7 +76,11 @@ class MongoDbStorage implements Storage
             throw new \RuntimeException('The option "collection" must be set');
         }
 
-        $this->collection = $this->mongo->selectDB($this->dbOptions['database'])->selectCollection($this->dbOptions['collection']);
+        $this->collection = $this
+            ->mongo
+            ->selectDB($this->dbOptions['database'])
+            ->selectCollection($this->dbOptions['collection'])
+        ;
     }
 
     /**

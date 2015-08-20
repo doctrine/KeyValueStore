@@ -33,7 +33,7 @@ class SharedKeyAuthorization implements AuthorizationSchema
     public function __construct($accountName, $accountKey)
     {
         $this->accountName = $accountName;
-        $this->accountKey = base64_decode($accountKey);
+        $this->accountKey  = base64_decode($accountKey);
     }
 
     /**
@@ -43,12 +43,12 @@ class SharedKeyAuthorization implements AuthorizationSchema
     public function signRequest($method, $path, $queryString, $body, array $headers)
     {
         $canonicalResource = "/" . $this->accountName . $path;
-        $stringToSign =  $method . "\n" .
+        $stringToSign      = $method . "\n" .
                         md5($body) . "\n" .
                         "application/atom+xml\n" .
                         $headers['x-ms-date'] . "\n" .
                         $canonicalResource;
-        return "Authorization: SharedKey " . $this->accountName . ":" . base64_encode(hash_hmac('sha256', $stringToSign, $this->accountKey, true));
+        return "Authorization: SharedKey " . $this->accountName . ":" .
+            base64_encode(hash_hmac('sha256', $stringToSign, $this->accountKey, true));
     }
 }
-

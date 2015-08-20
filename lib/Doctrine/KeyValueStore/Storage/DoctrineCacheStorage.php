@@ -40,7 +40,7 @@ class DoctrineCacheStorage implements Storage
 
     public function __construct(Cache $cache, $supportsCompositeKeys = true)
     {
-        $this->cache = $cache;
+        $this->cache                 = $cache;
         $this->supportsCompositeKeys = $supportsCompositeKeys;
     }
 
@@ -61,7 +61,7 @@ class DoctrineCacheStorage implements Storage
 
     private function flattenKey($storageName, $key)
     {
-        if ( ! $this->supportsCompositeKeys) {
+        if (!$this->supportsCompositeKeys) {
             return $storageName . "-" . $key;
         }
 
@@ -102,4 +102,3 @@ class DoctrineCacheStorage implements Storage
         return 'doctrine_cache';
     }
 }
-

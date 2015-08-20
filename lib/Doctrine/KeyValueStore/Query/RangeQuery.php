@@ -29,14 +29,14 @@ use Doctrine\KeyValueStore\EntityManager;
  */
 class RangeQuery
 {
-    const CONDITION_EQ          = 'eq';
-    const CONDITION_LE          = 'le';
-    const CONDITION_LT          = 'lt';
-    const CONDITION_GT          = 'gt';
-    const CONDITION_GE          = 'ge';
-    const CONDITION_NEQ         = 'neq';
-    const CONDITION_BETWEEN     = 'between';
-    const CONDITION_STARTSWITH  = 'startswith';
+    const CONDITION_EQ         = 'eq';
+    const CONDITION_LE         = 'le';
+    const CONDITION_LT         = 'lt';
+    const CONDITION_GT         = 'gt';
+    const CONDITION_GE         = 'ge';
+    const CONDITION_NEQ        = 'neq';
+    const CONDITION_BETWEEN    = 'between';
+    const CONDITION_STARTSWITH = 'startswith';
 
     /**
      * @param string
@@ -74,8 +74,8 @@ class RangeQuery
 
     public function __construct(EntityManager $em, $className, $partitionKey)
     {
-        $this->em = $em;
-        $this->className = $className;
+        $this->em           = $em;
+        $this->className    = $className;
         $this->partitionKey = $partitionKey;
     }
 
@@ -201,21 +201,23 @@ class RangeQuery
     {
         $storage = $this->em->unwrap();
 
-        if ( ! ($storage instanceof RangeQueryStorage)) {
-            throw new \RuntimeException("The storage backend " . $this->storage->getName() . " does not support range queries.");
+        if (!($storage instanceof RangeQueryStorage)) {
+            throw new \RuntimeException(
+                "The storage backend " . $this->storage->getName() . " does not support range queries."
+            );
         }
 
         $uow   = $this->em->getUnitOfWork();
         $class = $this->em->getClassMetadata($this->className);
 
-        return $storage->executeRangeQuery($this, $class->storageName, $class->identifier, function ($row) use($uow, $class) {
+        $rowHydration = function ($row) use ($uow, $class) {
             $key = array();
             foreach ($class->identifier as $id) {
                 $key[$id] = $row[$id];
             }
 
             return $uow->createEntity($class, $key, $row);
-        });
+        };
+        return $storage->executeRangeQuery($this, $class->storageName, $class->identifier, $rowHydration);
     }
 }
-

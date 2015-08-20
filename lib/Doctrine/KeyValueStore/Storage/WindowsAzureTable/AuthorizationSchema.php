@@ -36,6 +36,5 @@ interface AuthorizationSchema
      * @param array $headers
      * @return string
      */
-    function signRequest($method, $path, $queryString, $body, array $headers);
+    public function signRequest($method, $path, $queryString, $body, array $headers);
 }
-

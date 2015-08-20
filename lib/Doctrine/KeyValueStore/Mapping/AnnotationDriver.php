@@ -37,7 +37,7 @@ class AnnotationDriver implements MappingDriver
      * @param string $className
      * @param ClassMetadata $metadata
      */
-    function loadMetadataForClass($className, ClassMetadata $metadata)
+    public function loadMetadataForClass($className, ClassMetadata $metadata)
     {
         $class = $metadata->getReflectionClass();
         if (!$class) {
@@ -54,11 +54,17 @@ class AnnotationDriver implements MappingDriver
 
         // Evaluate annotations on properties/fields
         foreach ($class->getProperties() as $property) {
-            $idAnnot = $this->reader->getPropertyAnnotation($property, 'Doctrine\KeyValueStore\Mapping\Annotations\Id');
-            $transientAnnot = $this->reader->getPropertyAnnotation($property, 'Doctrine\KeyValueStore\Mapping\Annotations\Transient');
+            $idAnnot        = $this->reader->getPropertyAnnotation(
+                $property,
+                'Doctrine\KeyValueStore\Mapping\Annotations\Id'
+            );
+            $transientAnnot = $this->reader->getPropertyAnnotation(
+                $property,
+                'Doctrine\KeyValueStore\Mapping\Annotations\Transient'
+            );
             if ($idAnnot) {
                 $metadata->mapIdentifier($property->getName());
-            } else if ($transientAnnot) {
+            } elseif ($transientAnnot) {
                 $metadata->skipTransientField($property->getName());
             } else {
                 $metadata->mapField(array('fieldName' => $property->getName()));
@@ -71,7 +77,7 @@ class AnnotationDriver implements MappingDriver
      *
      * @return array The names of all mapped classes known to this driver.
      */
-    function getAllClassNames()
+    public function getAllClassNames()
     {
     }
 
@@ -83,9 +89,8 @@ class AnnotationDriver implements MappingDriver
      * @param string $className
      * @return boolean
      */
-    function isTransient($className)
+    public function isTransient($className)
     {
         return false;
     }
 }
-

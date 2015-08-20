@@ -47,21 +47,21 @@ interface Storage
      *
      * @return bool
      */
-    function supportsPartialUpdates();
+    public function supportsPartialUpdates();
 
     /**
      * Does this storage support composite primary keys?
      *
      * @return bool
      */
-    function supportsCompositePrimaryKeys();
+    public function supportsCompositePrimaryKeys();
 
     /**
      * Does this storage require composite primary keys?
      *
      * @return bool
      */
-    function requiresCompositePrimaryKeys();
+    public function requiresCompositePrimaryKeys();
 
     /**
      * Insert data into the storage key specified.
@@ -71,7 +71,7 @@ interface Storage
      * @param array $data
      * @return void
      */
-    function insert($storageName, $key, array $data);
+    public function insert($storageName, $key, array $data);
 
     /**
      * Update data into the given key.
@@ -81,7 +81,7 @@ interface Storage
      * @param array $data
      * @return void
      */
-    function update($storageName, $key, array $data);
+    public function update($storageName, $key, array $data);
 
     /**
      * Delete data at key
@@ -90,7 +90,7 @@ interface Storage
      * @param array|string $key
      * @return void
      */
-    function delete($storageName, $key);
+    public function delete($storageName, $key);
 
     /**
      * Find data at key
@@ -103,14 +103,12 @@ interface Storage
      * @param array|string $key
      * @return array
      */
-    function find($storageName, $key);
+    public function find($storageName, $key);
 
     /**
      * Return a name of the underlying storage.
      *
      * @return string
      */
-    function getName();
+    public function getName();
 }
-
-
