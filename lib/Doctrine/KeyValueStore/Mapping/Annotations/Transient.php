@@ -25,4 +25,3 @@ namespace Doctrine\KeyValueStore\Mapping\Annotations;
 class Transient
 {
 }
-

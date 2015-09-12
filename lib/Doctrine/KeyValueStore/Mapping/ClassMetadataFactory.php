@@ -54,11 +54,11 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
 
         if ($parent) {
             $class->rootClassName = $parent->name;
-            $class->storageName = $parent->storageName;
+            $class->storageName   = $parent->storageName;
         }
 
-        if ( ! $class->storageName) {
-            $parts = explode("\\", $class->name);
+        if (!$class->storageName) {
+            $parts              = explode("\\", $class->name);
             $class->storageName = end($parts);
         }
 
@@ -97,10 +97,9 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
 
     /**
      * copied from doctrine/common - tests/Doctrine/Tests/Common/Persistence/Mapping/ClassMetadataFactoryTest.php
-     */ 
+     */
     protected function isEntity(ClassMetadata $class)
     {
         return true;
     }
 }
-

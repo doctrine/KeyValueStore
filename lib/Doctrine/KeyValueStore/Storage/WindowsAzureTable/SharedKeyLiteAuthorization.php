@@ -33,7 +33,7 @@ class SharedKeyLiteAuthorization implements AuthorizationSchema
     public function __construct($accountName, $accountKey)
     {
         $this->accountName = $accountName;
-        $this->accountKey = base64_decode($accountKey);
+        $this->accountKey  = base64_decode($accountKey);
     }
 
     /**
@@ -43,9 +43,9 @@ class SharedKeyLiteAuthorization implements AuthorizationSchema
     public function signRequest($method, $path, $queryString, $body, array $headers)
     {
         $canonicalResource = "/" . $this->accountName . $path;
-        $stringToSign = $headers['x-ms-date'] . "\n" .
+        $stringToSign      = $headers['x-ms-date'] . "\n" .
                         $canonicalResource;
-        return "Authorization: SharedKeyLite " . $this->accountName . ":" . base64_encode(hash_hmac('sha256', $stringToSign, $this->accountKey, true));
+        return "Authorization: SharedKeyLite " . $this->accountName . ":" .
+            base64_encode(hash_hmac('sha256', $stringToSign, $this->accountKey, true));
     }
 }
-

@@ -44,4 +44,3 @@ class SingleIdHandler implements IdHandlingStrategy
         return $key;
     }
 }
-

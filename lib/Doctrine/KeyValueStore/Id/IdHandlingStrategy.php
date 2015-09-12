@@ -35,7 +35,7 @@ interface IdHandlingStrategy
      * @param string|array $key
      * @return string|array
      */
-    function normalizeId(ClassMetadata $metadata, $key);
+    public function normalizeId(ClassMetadata $metadata, $key);
 
     /**
      * Extract identifier from an object
@@ -44,7 +44,7 @@ interface IdHandlingStrategy
      * @param object $object
      * @return string|array
      */
-    function getIdentifier(ClassMetadata $metadata, $object);
+    public function getIdentifier(ClassMetadata $metadata, $object);
 
     /**
      * Given a normalized key, generate a hash version for it.
@@ -52,6 +52,5 @@ interface IdHandlingStrategy
      * @param array|string $key
      * @return string
      */
-    function hash($key);
+    public function hash($key);
 }
-

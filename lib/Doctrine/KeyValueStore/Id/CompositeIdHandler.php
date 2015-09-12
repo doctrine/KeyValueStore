@@ -27,13 +27,15 @@ class CompositeIdHandler implements IdHandlingStrategy
     {
         if (!$metadata->isCompositeKey && !is_array($key)) {
             $id = array($metadata->identifier[0] => $key);
-        } else if (!is_array($key)) {
+        } elseif (!is_array($key)) {
             throw new \InvalidArgumentException("Array of identifier key-value pairs is expected!");
         } else {
             $id = array();
             foreach ($metadata->identifier as $field) {
                 if (!isset($key[$field])) {
-                    throw new \InvalidArgumentException("Missing identifier field $field in request for the primary key.");
+                    throw new \InvalidArgumentException(
+                        "Missing identifier field $field in request for the primary key."
+                    );
                 }
                 $id[$field] = $key[$field];
             }
@@ -52,4 +54,3 @@ class CompositeIdHandler implements IdHandlingStrategy
         return implode('__##__', (array)$key);
     }
 }
-

@@ -164,7 +164,7 @@ class DynamoDbStorage implements Storage
             $this->client->describeTable(array(
                 'TableName' => $tableName,
             ));
-        } catch(ResourceNotFoundException $e) {
+        } catch (ResourceNotFoundException $e) {
             $this->client->createTable(array(
                 'AttributeDefinitions' => array(
                     array(
