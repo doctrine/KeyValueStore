@@ -21,9 +21,8 @@ namespace Doctrine\KeyValueStore;
 
 class KeyValueStoreException extends \Exception
 {
-    static public function mappingDriverMissing()
+    public static function mappingDriverMissing()
     {
         return new self("No mapping driver was assigned to the configuration. Use \$config->setMappingDriverImpl()");
     }
 }
-

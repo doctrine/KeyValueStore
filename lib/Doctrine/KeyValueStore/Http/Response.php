@@ -33,8 +33,8 @@ class Response
 
     public function __construct($code, $body, array $headers)
     {
-        $this->code = $code;
-        $this->body = $body;
+        $this->code    = $code;
+        $this->body    = $body;
         $this->headers = $headers;
     }
 
@@ -66,10 +66,9 @@ class Response
      */
     public function getHeader($name)
     {
-        if ( ! isset($this->headers[$name])) {
+        if (!isset($this->headers[$name])) {
             return null;
         }
         return $this->headers[$name];
     }
 }
-

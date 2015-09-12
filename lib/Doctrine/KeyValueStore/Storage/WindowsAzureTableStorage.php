@@ -39,7 +39,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
     const WINDOWS_AZURE_TABLE_BASEURL = 'https://%s.table.core.windows.net';
 
     const METADATA_NS = 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata';
-    const DATA_NS = 'http://schemas.microsoft.com/ado/2007/08/dataservices';
+    const DATA_NS     = 'http://schemas.microsoft.com/ado/2007/08/dataservices';
 
     /**
      * @var string
@@ -73,12 +73,12 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
   </content>
 </entry>';
 
-    const TYPE_INT32 = 'Edm.Int32';
-    const TYPE_INT64 = 'Edm.Int64';
+    const TYPE_INT32    = 'Edm.Int32';
+    const TYPE_INT64    = 'Edm.Int64';
     const TYPE_DATETIME = 'Edm.DateTime';
-    const TYPE_BOOLEAN = 'Edm.Boolean';
-    const TYPE_DOUBLE = 'Edm.Double';
-    const TYPE_BINARY = 'Edm.Binary';
+    const TYPE_BOOLEAN  = 'Edm.Boolean';
+    const TYPE_DOUBLE   = 'Edm.Double';
+    const TYPE_BINARY   = 'Edm.Binary';
 
     /**
      * @var \Doctrine\KeyValueStore\Http\Client
@@ -106,10 +106,10 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
      */
     public function __construct(Client $client, $accountName, AuthorizationSchema $authorization, \DateTime $now = null)
     {
-        $this->client = $client;
+        $this->client        = $client;
         $this->authorization = $authorization;
-        $this->baseUrl = sprintf(self::WINDOWS_AZURE_TABLE_BASEURL, $accountName);
-        $this->now = $now ? clone $now : new \DateTime();
+        $this->baseUrl       = sprintf(self::WINDOWS_AZURE_TABLE_BASEURL, $accountName);
+        $this->now           = $now ? clone $now : new \DateTime();
         $this->now->setTimeZone(new \DateTimeZone("UTC"));
     }
 
@@ -147,14 +147,14 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $contentNodes->item(0)->appendChild($propertiesNode);
         $xml = $dom->saveXML();
 
-        $url = $this->baseUrl . '/' . $tableName;
+        $url      = $this->baseUrl . '/' . $tableName;
         $response = $this->request('POST', $url, $xml, $headers);
 
         if ($response->getStatusCode() == 404) {
 
             $this->createTable($tableName);
             $this->insert($storageName, $key, $data);
-        } else if ($response->getStatusCode() >= 400) {
+        } elseif ($response->getStatusCode() >= 400) {
 
             $this->convertResponseToException($response);
         }
@@ -178,12 +178,12 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
             'Content-Type' => 'application/atom+xml',
         );
 
-        $dom = $this->createDomDocumentRequestBody(self::XML_TEMPLATE_TABLE);
+        $dom       = $this->createDomDocumentRequestBody(self::XML_TEMPLATE_TABLE);
         $tableNode = $dom->getElementsByTagNameNS(self::DATA_NS, 'TableName')->item(0);
         $tableNode->appendChild($dom->createTextNode($tableName));
         $xml = $dom->saveXML();
 
-        $url = $this->baseUrl .  '/Tables';
+        $url      = $this->baseUrl .  '/Tables';
         $response = $this->request('POST', $url, $xml, $headers);
 
         if ($response->getStatusCode() != 201) {
@@ -209,10 +209,14 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         $this->serializeKeys($propertiesNode, $key);
         $this->serializeProperties($propertiesNode, $key, $data);
-        $keys = array_values($key);
-        $clientUrl = $this->baseUrl . '/' . $tableName . ("(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')");
-        $url = $this->baseUrl . '/' . $tableName . rawurlencode("(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')");
-        $idNode = $dom->getElementsByTagName('id')->item(0);
+        $keys      = array_values($key);
+        $clientUrl = $this->baseUrl . '/' . $tableName . (
+            "(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')"
+        );
+        $url       = $this->baseUrl . '/' . $tableName . rawurlencode(
+            "(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')"
+        );
+        $idNode    = $dom->getElementsByTagName('id')->item(0);
         $idNode->appendChild($dom->createTextNode($clientUrl));
 
         $contentNodes = $dom->getElementsByTagName('content');
@@ -237,8 +241,10 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         // TODO: This sucks
         $tableName = $storageName;
-        $keys = array_values($key);
-        $url = $this->baseUrl . '/' . $tableName . rawurlencode("(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')");
+        $keys      = array_values($key);
+        $url       = $this->baseUrl . '/' . $tableName . rawurlencode(
+            "(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')"
+        );
 
         $response = $this->request('DELETE', $url, '', $headers);
 
@@ -257,8 +263,10 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         // TODO: This sucks
         $tableName = $storageName;
-        $keys = array_values($key);
-        $url = $this->baseUrl . '/' . $tableName . rawurlencode("(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')");
+        $keys      = array_values($key);
+        $url       = $this->baseUrl . '/' . $tableName . rawurlencode(
+            "(PartitionKey='" . $keys[0] . "', RowKey='" . $keys[1] . "')"
+        );
 
         $response = $this->request('GET', $url, '', $headers);
 
@@ -286,21 +294,21 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
     {
         $properties = $xpath->evaluate('atom:content/m:properties/d:*', $entry);
 
-        $data = array();
+        $data                        = array();
         list($partitionKey, $rowKey) = $keyNames;
 
         foreach ($properties as $property) {
             $name = substr($property->tagName, 2);
             if ($name == "PartitionKey") {
                 $name = $partitionKey;
-            } else if ($name == "RowKey") {
+            } elseif ($name == "RowKey") {
                 $name = $rowKey;
             }
 
             $value = $property->nodeValue;
             if ($property->hasAttributeNS(self::METADATA_NS, 'null')) {
                 $value = null;
-            } else if ($property->hasAttributeNS(self::METADATA_NS, 'type')) {
+            } elseif ($property->hasAttributeNS(self::METADATA_NS, 'type')) {
                 $type = $property->getAttributeNS(self::METADATA_NS, 'type');
                 switch ($type) {
                     case self::TYPE_BOOLEAN:
@@ -330,15 +338,17 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         $filters = array("PartitionKey eq " . $this->quoteFilterValue($query->getPartitionKey()));
         foreach ($query->getConditions() as $condition) {
-            if ( ! in_array($condition[0], array('eq', 'neq', 'le', 'lt', 'ge', 'gt'))) {
-                throw new \InvalidArgumentException("Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions.");
+            if (!in_array($condition[0], array('eq', 'neq', 'le', 'lt', 'ge', 'gt'))) {
+                throw new \InvalidArgumentException(
+                    "Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions."
+                );
             }
             $filters[] = $key[1] . " " . $condition[0] . " " . $this->quoteFilterValue($condition[1]);
         }
 
         // TODO: This sucks
         $tableName = $storageName;
-        $url = $this->baseUrl . '/' . $tableName . '()?$filter=' . rawurlencode(implode(' ', $filters));
+        $url       = $this->baseUrl . '/' . $tableName . '()?$filter=' . rawurlencode(implode(' ', $filters));
         if ($query->getLimit()) {
             $url .= '&$top=' . $query->getLimit();
         }
@@ -360,7 +370,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         $results = array();
         foreach ($entries as $entry) {
-            $data = $this->createRow($key, $xpath, $entry);
+            $data      = $this->createRow($key, $xpath, $entry);
             $results[] = $hydrateRow ? $hydrateRow($data) : $data;
         }
 
@@ -429,7 +439,11 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         foreach ($key as $keyName => $keyValue) {
             switch ($keys) {
                 case 0:
-                    $partitionKey = $propertiesNode->ownerDocument->createElementNS(self::DATA_NS, 'PartitionKey', $keyValue);
+                    $partitionKey = $propertiesNode->ownerDocument->createElementNS(
+                        self::DATA_NS,
+                        'PartitionKey',
+                        $keyValue
+                    );
                     $propertiesNode->appendChild($partitionKey);
                     break;
                 case 1:
@@ -445,19 +459,19 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
     private function request($method, $url, $xml, $headers)
     {
-        $parts = parse_url($url);
-        $requestDate = $this->now->format('D, d M Y H:i:s') . ' GMT';
-        $headers['Content-Length'] = strlen($xml);
-        $headers['Date'] = $requestDate;
-        $headers['x-ms-date'] = $requestDate;
-        $authorizationHeader = $this->authorization->signRequest(
+        $parts                           = parse_url($url);
+        $requestDate                     = $this->now->format('D, d M Y H:i:s') . ' GMT';
+        $headers['Content-Length']       = strlen($xml);
+        $headers['Date']                 = $requestDate;
+        $headers['x-ms-date']            = $requestDate;
+        $authorizationHeader             = $this->authorization->signRequest(
             $method,
             isset($parts['path']) ? $parts['path'] : '/',
             isset($parts['query']) ? $parts['query'] : '',
             $xml,
             $headers
         );
-        $authorizationParts = explode(":" , $authorizationHeader, 2);
+        $authorizationParts              = explode(":", $authorizationHeader, 2);
         $headers[$authorizationParts[0]] = ltrim($authorizationParts[1]);
         return $this->client->request($method, $url, $xml, $headers);
     }
@@ -465,11 +479,11 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
     private function serializeProperties($propertiesNode, array $key, array $data)
     {
         foreach ($data as $propertyName => $propertyValue) {
-            if ( isset($key[$propertyName])) {
+            if (isset($key[$propertyName])) {
                 continue;
             }
 
-            $type = $this->getPropertyType($propertyValue);
+            $type          = $this->getPropertyType($propertyValue);
             $propertyValue = $this->convertPropertyValue($propertyValue, $type);
 
             $property = $propertiesNode->ownerDocument->createElementNS(self::DATA_NS, $propertyName, $propertyValue);
@@ -481,4 +495,3 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         }
     }
 }
-

@@ -146,4 +146,3 @@ class EntityManager
         return $this->unitOfWork->getClassMetadata($className);
     }
 }
-

@@ -29,4 +29,3 @@ class Entity
      */
     public $storageName;
 }
-

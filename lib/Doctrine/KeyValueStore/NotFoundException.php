@@ -21,6 +21,4 @@ namespace Doctrine\KeyValueStore;
 
 class NotFoundException extends KeyValueStoreException
 {
-    
 }
-

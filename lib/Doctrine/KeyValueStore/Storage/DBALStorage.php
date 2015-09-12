@@ -36,11 +36,15 @@ class DBALStorage implements Storage
     private $keyColumn;
     private $dataColumn;
 
-    public function __construct(Connection $conn, $table = 'storage', $keyColumn = 'id', $dataColumn = 'serialized_data')
-    {
-        $this->conn = $conn;
-        $this->table = $table;
-        $this->keyColumn = $keyColumn;
+    public function __construct(
+        Connection $conn,
+        $table = 'storage',
+        $keyColumn = 'id',
+        $dataColumn = 'serialized_data'
+    ) {
+        $this->conn       = $conn;
+        $this->table      = $table;
+        $this->keyColumn  = $keyColumn;
         $this->dataColumn = $dataColumn;
     }
 
@@ -76,14 +80,14 @@ class DBALStorage implements Storage
      * @param array $data
      * @return void
      */
-    function insert($storageName, $key, array $data)
+    public function insert($storageName, $key, array $data)
     {
         try {
             $this->conn->insert($this->table, array(
                 $this->keyColumn => $key,
                 $this->dataColumn => serialize($data)
             ));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
         }
     }
 
@@ -102,7 +106,7 @@ class DBALStorage implements Storage
             ), array(
                 $this->keyColumn => $key
             ));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
         }
     }
 
@@ -116,7 +120,7 @@ class DBALStorage implements Storage
     {
         try {
             $this->conn->delete($this->table, array($this->keyColumn => $key));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
         }
     }
 
@@ -156,4 +160,3 @@ class DBALStorage implements Storage
         return 'dbal';
     }
 }
-

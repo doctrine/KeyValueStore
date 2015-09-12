@@ -31,4 +31,3 @@ class NullIdConverter implements IdConverterStrategy
         return $data;
     }
 }
-

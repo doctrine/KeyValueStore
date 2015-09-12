@@ -18,4 +18,3 @@ use Doctrine\KeyValueStore\KeyValueStoreException;
 class StorageException extends KeyValueStoreException
 {
 }
-
