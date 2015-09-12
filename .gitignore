@@ -1,3 +1,4 @@
 vendor
 *phpunit.xml
 docs/_build
+/composer.lock

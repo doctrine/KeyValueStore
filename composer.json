@@ -1,18 +1,12 @@
 {
     "name": "doctrine/key-value-store",
     "require": {
-        "doctrine/common": "*"
+        "doctrine/common": "^2.4"
     },
     "require-dev": {
-        "riak/riak-client": "dev-master",
-        "microsoft/windowsazure": "dev-master"
-    },          
-    "repositories": [
-        {
-            "type": "pear",
-            "url": "http://pear.php.net"
-        }
-    ],
+        "phpunit/phpunit": "^4.8",
+        "riak/riak-client": "dev-master"
+    },
     "suggest": {
         "riak/riak-client": "to use the Riak storage",
         "ext-couchbase": "to use the Couchbase storage",
@@ -23,6 +17,11 @@
     "autoload": {
         "psr-0": {
             "Doctrine\\KeyValueStore\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Doctrine\\Tests\\": "tests/"
         }
     }
 }
