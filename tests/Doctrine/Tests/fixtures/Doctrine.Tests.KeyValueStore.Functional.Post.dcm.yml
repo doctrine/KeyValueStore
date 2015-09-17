@@ -1,0 +1,4 @@
+Doctrine\Tests\KeyValueStore\Functional\Post:
+  storageName: post
+  id:
+  - id

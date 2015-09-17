@@ -21,19 +21,27 @@ namespace Doctrine\Tests;
 
 use Doctrine\KeyValueStore\EntityManager;
 use Doctrine\KeyValueStore\Configuration;
-use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
+use Doctrine\KeyValueStore\Mapping\Driver;
 use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
 use Doctrine\Common\Cache\ArrayCache;
 
 abstract class KeyValueStoreTestCase extends \PHPUnit_Framework_TestCase
 {
-    public function createManager($storage = null)
+    public function createManager($storage = null, $driver = 'annotation')
     {
         $cache = new ArrayCache;
         $storage = $storage ?: new DoctrineCacheStorage($cache);
 
-        $reader = new \Doctrine\Common\Annotations\AnnotationReader();
-        $metadata = new AnnotationDriver($reader);
+        switch ($driver) {
+            case 'annotation':
+                $reader = new \Doctrine\Common\Annotations\AnnotationReader();
+                $metadata = new Driver\AnnotationDriver($reader);
+
+                break;
+            case 'yaml':
+                $metadata = new Driver\YamlDriver(__DIR__.'/fixtures');
+        }
+
         $config = new Configuration();
         $config->setMappingDriverImpl($metadata);
         $config->setMetadataCache($cache);
