@@ -17,11 +17,16 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\KeyValueStore\Mapping\Annotations;
+namespace Doctrine\KeyValueStore\Mapping;
 
 /**
  * @Annotation
+ * @Target("CLASS")
  */
-class Transient
+final class Entity
 {
+    /**
+     * @var string
+     */
+    public $storageName;
 }

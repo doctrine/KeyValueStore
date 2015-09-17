@@ -17,15 +17,12 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\KeyValueStore\Mapping\Annotations;
+namespace Doctrine\KeyValueStore\Mapping;
 
 /**
  * @Annotation
+ * @Target("PROPERTY")
  */
-class Entity
+final class Id
 {
-    /**
-     * @var string
-     */
-    public $storageName;
 }

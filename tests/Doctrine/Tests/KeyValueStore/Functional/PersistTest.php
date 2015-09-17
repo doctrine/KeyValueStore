@@ -20,7 +20,7 @@
 namespace Doctrine\Tests\KeyValueStore\Functional;
 
 use Doctrine\Tests\KeyValueStoreTestCase;
-use Doctrine\KeyValueStore\Mapping\Annotations as KVS;
+use Doctrine\KeyValueStore\Mapping as KVS;
 
 class PersistTest extends KeyValueStoreTestCase
 {

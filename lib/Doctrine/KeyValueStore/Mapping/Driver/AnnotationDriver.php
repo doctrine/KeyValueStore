@@ -17,16 +17,27 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\KeyValueStore\Mapping;
+namespace Doctrine\KeyValueStore\Mapping\Driver;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 
 class AnnotationDriver implements MappingDriver
 {
+    /**
+     * Doctrine common annotations reader.
+     *
+     * @var AnnotationReader
+     */
     private $reader;
 
-    public function __construct($reader)
+    /**
+     * Constructor with required dependencies.
+     *
+     * @param $reader AnnotationReader Doctrine common annotations reader.
+     */
+    public function __construct(AnnotationReader $reader)
     {
         $this->reader = $reader;
     }
@@ -46,7 +57,7 @@ class AnnotationDriver implements MappingDriver
             $class = new \ReflectionClass($metadata->name);
         }
 
-        $entityAnnot = $this->reader->getClassAnnotation($class, 'Doctrine\KeyValueStore\Mapping\Annotations\Entity');
+        $entityAnnot = $this->reader->getClassAnnotation($class, 'Doctrine\KeyValueStore\Mapping\Entity');
         if (!$entityAnnot) {
             throw new \InvalidArgumentException($metadata->name . " is not a valid key-value-store entity.");
         }
@@ -56,11 +67,11 @@ class AnnotationDriver implements MappingDriver
         foreach ($class->getProperties() as $property) {
             $idAnnot        = $this->reader->getPropertyAnnotation(
                 $property,
-                'Doctrine\KeyValueStore\Mapping\Annotations\Id'
+                'Doctrine\KeyValueStore\Mapping\Id'
             );
             $transientAnnot = $this->reader->getPropertyAnnotation(
                 $property,
-                'Doctrine\KeyValueStore\Mapping\Annotations\Transient'
+                'Doctrine\KeyValueStore\Mapping\Transient'
             );
             if ($idAnnot) {
                 $metadata->mapIdentifier($property->getName());
