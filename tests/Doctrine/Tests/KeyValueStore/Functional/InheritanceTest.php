@@ -11,15 +11,15 @@ class InheritanceTest extends KeyValueStoreTestCase
     private $manager;
     protected $storage;
 
-    public function setUp()
+    /**
+     * @dataProvider mappingDrivers
+     */
+    public function testInheritance($mappingDriver)
     {
         $cache = new ArrayCache();
         $storage = new DoctrineCacheStorage($cache);
-        $this->manager = $this->createManager($storage);
-    }
+        $this->manager = $this->createManager($storage, $mappingDriver);
 
-    public function testInheritance()
-    {
         $parent = new ParentEntity;
         $parent->id = 1;
         $parent->foo = "foo";
@@ -44,6 +44,14 @@ class InheritanceTest extends KeyValueStoreTestCase
         $this->assertEquals(2, $child->id);
         $this->assertEquals('bar', $child->foo);
         $this->assertEquals('baz', $child->bar);
+    }
+
+    public function mappingDrivers()
+    {
+        return [
+            ['annotation'],
+            ['yaml'],
+        ];
     }
 }
 
