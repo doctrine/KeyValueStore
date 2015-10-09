@@ -1,7 +1,7 @@
 <?php
 namespace Doctrine\Tests\KeyValueStore\Functional;
 
-use Doctrine\KeyValueStore\Mapping as KVS;
+use Doctrine\KeyValueStore\Mapping\Annotations as KVS;
 use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Tests\KeyValueStoreTestCase;

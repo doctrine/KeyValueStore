@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\KeyValueStore\Mapping;
+namespace Doctrine\KeyValueStore\Mapping\Annotations;
 
 /**
  * @Annotation

@@ -57,7 +57,7 @@ class AnnotationDriver implements MappingDriver
             $class = new \ReflectionClass($metadata->name);
         }
 
-        $entityAnnot = $this->reader->getClassAnnotation($class, 'Doctrine\KeyValueStore\Mapping\Entity');
+        $entityAnnot = $this->reader->getClassAnnotation($class, 'Doctrine\KeyValueStore\Mapping\Annotations\Entity');
         if (!$entityAnnot) {
             throw new \InvalidArgumentException($metadata->name . " is not a valid key-value-store entity.");
         }
@@ -67,11 +67,11 @@ class AnnotationDriver implements MappingDriver
         foreach ($class->getProperties() as $property) {
             $idAnnot        = $this->reader->getPropertyAnnotation(
                 $property,
-                'Doctrine\KeyValueStore\Mapping\Id'
+                'Doctrine\KeyValueStore\Mapping\Annotations\Id'
             );
             $transientAnnot = $this->reader->getPropertyAnnotation(
                 $property,
-                'Doctrine\KeyValueStore\Mapping\Transient'
+                'Doctrine\KeyValueStore\Mapping\Annotations\Transient'
             );
             if ($idAnnot) {
                 $metadata->mapIdentifier($property->getName());
