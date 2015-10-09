@@ -39,7 +39,13 @@ abstract class KeyValueStoreTestCase extends \PHPUnit_Framework_TestCase
 
                 break;
             case 'yaml':
-                $metadata = new Driver\YamlDriver(__DIR__.'/fixtures');
+                $metadata = new Driver\YamlDriver(__DIR__.'/fixtures/yaml');
+
+                break;
+            case 'xml':
+                $metadata = new Driver\XmlDriver(__DIR__.'/fixtures/xml');
+
+                break;
         }
 
         $config = new Configuration();

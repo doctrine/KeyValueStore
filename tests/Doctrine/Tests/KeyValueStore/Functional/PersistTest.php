@@ -70,6 +70,7 @@ class PersistTest extends KeyValueStoreTestCase
         return [
             ['annotation'],
             ['yaml'],
+            ['xml'],
         ];
     }
 }

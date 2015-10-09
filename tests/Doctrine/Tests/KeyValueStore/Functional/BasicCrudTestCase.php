@@ -156,6 +156,7 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
         return [
             ['annotation'],
             ['yaml'],
+            ['xml'],
         ];
     }
 }

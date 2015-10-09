@@ -51,6 +51,7 @@ class InheritanceTest extends KeyValueStoreTestCase
         return [
             ['annotation'],
             ['yaml'],
+            ['xml'],
         ];
     }
 }
