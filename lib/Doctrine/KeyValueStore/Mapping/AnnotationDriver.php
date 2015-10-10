@@ -19,7 +19,7 @@
 
 namespace Doctrine\KeyValueStore\Mapping;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata as CommonClassMetadata;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 
@@ -46,9 +46,9 @@ class AnnotationDriver implements MappingDriver
      * Loads the metadata for the specified class into the provided container.
      *
      * @param string $className
-     * @param CommonClassMetadata $metadata
+     * @param ClassMetadata $metadata
      */
-    public function loadMetadataForClass($className, CommonClassMetadata $metadata)
+    public function loadMetadataForClass($className, ClassMetadata $metadata)
     {
         $class = $metadata->getReflectionClass();
         if (!$class) {
