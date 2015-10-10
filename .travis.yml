@@ -14,4 +14,4 @@ install:
   - composer --prefer-source --dev install
 
 script:
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit --verbose

@@ -23,6 +23,7 @@ Following vendors are targeted:
 * Couchbase (Implemented)
 * Amazon DynamoDB
 * CouchDB
+- Cassandra
 * MongoDB (Implemented)
 * Riak (Implemented)
 * Redis (Implemented)
