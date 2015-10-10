@@ -21,7 +21,8 @@ namespace Doctrine\KeyValueStore\Mapping\Annotations;
 
 /**
  * @Annotation
+ * @Target("PROPERTY")
  */
-class Transient
+final class Transient
 {
 }

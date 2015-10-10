@@ -21,7 +21,8 @@ namespace Doctrine\KeyValueStore\Mapping\Annotations;
 
 /**
  * @Annotation
+ * @Target("PROPERTY")
  */
-class Id
+final class Id
 {
 }

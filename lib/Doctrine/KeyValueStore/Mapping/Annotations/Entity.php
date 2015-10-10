@@ -21,8 +21,9 @@ namespace Doctrine\KeyValueStore\Mapping\Annotations;
 
 /**
  * @Annotation
+ * @Target("CLASS")
  */
-class Entity
+final class Entity
 {
     /**
      * @var string

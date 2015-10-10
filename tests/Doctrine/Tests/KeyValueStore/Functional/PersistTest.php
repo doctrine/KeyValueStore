@@ -24,26 +24,35 @@ use Doctrine\KeyValueStore\Mapping\Annotations as KVS;
 
 class PersistTest extends KeyValueStoreTestCase
 {
-    public function testPersistUnmappedThrowsException()
+    /**
+     * @dataProvider mappingDrivers
+     */
+    public function testPersistUnmappedThrowsException($mappingDriver)
     {
-        $manager = $this->createManager();
+        $manager = $this->createManager(null, $mappingDriver);
 
         $this->setExpectedException('InvalidArgumentException', 'stdClass is not a valid key-value-store entity.');
         $manager->persist(new \stdClass());
     }
 
-    public function testPersistWithoutIdThrowsException()
+    /**
+     * @dataProvider mappingDrivers
+     */
+    public function testPersistWithoutIdThrowsException($mappingDriver)
     {
-        $manager = $this->createManager();
+        $manager = $this->createManager(null, $mappingDriver);
         $persist = new PersistEntity();
 
         $this->setExpectedException('RuntimeException', 'Trying to persist entity that has no id.');
         $manager->persist($persist);
     }
 
-    public function testPersistKnownIdThrowsException()
+    /**
+     * @dataProvider mappingDrivers
+     */
+    public function testPersistKnownIdThrowsException($mappingDriver)
     {
-        $manager = $this->createManager();
+        $manager = $this->createManager(null, $mappingDriver);
         $persist = new PersistEntity();
         $persist->id = 1;
 
@@ -54,6 +63,15 @@ class PersistTest extends KeyValueStoreTestCase
 
         $this->setExpectedException('RuntimeException', 'Object with ID already exists.');
         $manager->persist($persist2);
+    }
+
+    public function mappingDrivers()
+    {
+        return [
+            ['annotation'],
+            ['yaml'],
+            ['xml'],
+        ];
     }
 }
 

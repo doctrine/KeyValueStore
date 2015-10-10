@@ -20,13 +20,24 @@
 namespace Doctrine\KeyValueStore\Mapping;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 
 class AnnotationDriver implements MappingDriver
 {
+    /**
+     * Doctrine common annotations reader.
+     *
+     * @var AnnotationReader
+     */
     private $reader;
 
-    public function __construct($reader)
+    /**
+     * Constructor with required dependencies.
+     *
+     * @param $reader AnnotationReader Doctrine common annotations reader.
+     */
+    public function __construct(AnnotationReader $reader)
     {
         $this->reader = $reader;
     }

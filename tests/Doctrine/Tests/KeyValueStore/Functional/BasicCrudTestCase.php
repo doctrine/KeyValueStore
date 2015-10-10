@@ -30,7 +30,6 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
     public function setUp()
     {
         $this->storage = $this->createStorage();
-        $this->manager = $this->createManager($this->storage);
     }
 
     abstract protected function createStorage();
@@ -41,8 +40,13 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
 
     abstract protected function find($id);
 
-    public function testPersistItem()
+    /**
+     * @dataProvider mappingDrivers
+     */
+    public function testPersistItem($mappingDriver)
     {
+        $this->manager = $this->createManager($this->storage, $mappingDriver);
+
         $post = new Post();
         $post->id = "1";
         $post->headline = "asdf";
@@ -54,8 +58,13 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
         $this->assertKeyExists($post->id);
     }
 
-    public function testPersistAndRetrieveItem()
+    /**
+     * @dataProvider mappingDrivers
+     */
+    public function testPersistAndRetrieveItem($mappingDriver)
     {
+        $this->manager = $this->createManager($this->storage, $mappingDriver);
+
         $post = new Post();
         $post->id = "1";
         $post->headline = "asdf";
@@ -68,8 +77,13 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
         $this->assertSame($post, $post2);
     }
 
-    public function testRetrieveItem()
+    /**
+     * @dataProvider mappingDrivers
+     */
+    public function testRetrieveItem($mappingDriver)
     {
+        $this->manager = $this->createManager($this->storage, $mappingDriver);
+
         $this->populate(1, array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => __NAMESPACE__ . '\\Post'));
 
         $post = $this->manager->find(__NAMESPACE__ . '\\Post', 1);
@@ -82,8 +96,13 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
         $this->assertSame($post, $post2);
     }
 
-    public function testUpdateClass()
+    /**
+     * @dataProvider mappingDrivers
+     */
+    public function testUpdateClass($mappingDriver)
     {
+        $this->manager = $this->createManager($this->storage, $mappingDriver);
+
         $post = new Post();
         $post->id = "1";
         $post->headline = "asdf";
@@ -109,8 +128,13 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
         );
     }
 
-    public function testRemoveClass()
+    /**
+     * @dataProvider mappingDrivers
+     */
+    public function testRemoveClass($mappingDriver)
     {
+        $this->manager = $this->createManager($this->storage, $mappingDriver);
+
         $post = new Post();
         $post->id = "1";
         $post->headline = "asdf";
@@ -125,6 +149,15 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
         $this->manager->flush();
 
         $this->assertKeyNotExists($post->id);
+    }
+
+    public function mappingDrivers()
+    {
+        return [
+            ['annotation'],
+            ['yaml'],
+            ['xml'],
+        ];
     }
 }
 

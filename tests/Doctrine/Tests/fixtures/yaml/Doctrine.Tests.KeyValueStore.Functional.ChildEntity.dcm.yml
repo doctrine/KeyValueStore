@@ -1,0 +1,3 @@
+Doctrine\Tests\KeyValueStore\Functional\ChildEntity:
+  id:
+  - id
