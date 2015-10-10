@@ -1,5 +1,7 @@
 # Doctrine Key Value Stores
 
+[![Build Status](https://travis-ci.org/doctrine/KeyValueStore.svg?branch=master)](https://travis-ci.org/doctrine/KeyValueStore)
+
 The Persistence interfaces are rather overkill for many implementations in the NoSQL world that are only key-value stores with some additional features on top. Doctrine Key Value Store to the rescue. This project offers a much simpler lightweight API that is centered on a key-value API to fetch/save objects.
 
 * Single- or multi-value primary keys
