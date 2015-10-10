@@ -1,6 +1,7 @@
 {
     "name": "doctrine/key-value-store",
     "require": {
+        "php": ">=5.5",
         "doctrine/common": "^2.4"
     },
     "require-dev": {
