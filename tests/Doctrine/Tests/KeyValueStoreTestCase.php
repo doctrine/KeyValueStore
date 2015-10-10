@@ -21,7 +21,7 @@ namespace Doctrine\Tests;
 
 use Doctrine\KeyValueStore\EntityManager;
 use Doctrine\KeyValueStore\Configuration;
-use Doctrine\KeyValueStore\Mapping\Driver;
+use Doctrine\KeyValueStore\Mapping;
 use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
 use Doctrine\Common\Cache\ArrayCache;
 
@@ -35,15 +35,15 @@ abstract class KeyValueStoreTestCase extends \PHPUnit_Framework_TestCase
         switch ($driver) {
             case 'annotation':
                 $reader = new \Doctrine\Common\Annotations\AnnotationReader();
-                $metadata = new Driver\AnnotationDriver($reader);
+                $metadata = new Mapping\AnnotationDriver($reader);
 
                 break;
             case 'yaml':
-                $metadata = new Driver\YamlDriver(__DIR__.'/fixtures/yaml');
+                $metadata = new Mapping\YamlDriver(__DIR__.'/fixtures/yaml');
 
                 break;
             case 'xml':
-                $metadata = new Driver\XmlDriver(__DIR__.'/fixtures/xml');
+                $metadata = new Mapping\XmlDriver(__DIR__.'/fixtures/xml');
 
                 break;
         }

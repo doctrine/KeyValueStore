@@ -17,16 +17,15 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\KeyValueStore\Mapping\Driver;
+namespace Doctrine\KeyValueStore\Mapping;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata as CommonClassMetadata;
 use Doctrine\Common\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Common\Persistence\Mapping\MappingException;
-use Symfony\Component\Yaml\Yaml;
 
-class YamlDriver extends FileDriver
+class XmlDriver extends FileDriver
 {
-    const DEFAULT_FILE_EXTENSION = '.dcm.yml';
+    const DEFAULT_FILE_EXTENSION = '.dcm.xml';
 
     /**
      * {@inheritDoc}
@@ -46,40 +45,57 @@ class YamlDriver extends FileDriver
      */
     protected function loadMappingFile($file)
     {
-        return Yaml::parse(file_get_contents($file));
+        $result = array();
+        $xmlElement = simplexml_load_file($file);
+
+        if (isset($xmlElement->entity)) {
+            foreach ($xmlElement->entity as $entityElement) {
+                $entityName = (string)$entityElement['name'];
+                $result[$entityName] = $entityElement;
+            }
+        }
+
+        return $result;
     }
 
     /**
      * Loads the metadata for the specified class into the provided container.
      *
      * @param string $className
-     * @param ClassMetadata $metadata
+     * @param CommonClassMetadata $metadata
      *
      * @return void
      */
-    public function loadMetadataForClass($className, ClassMetadata $metadata)
+    public function loadMetadataForClass($className, CommonClassMetadata $metadata)
     {
-        /** @var \Doctrine\KeyValueStore\Mapping\ClassMetadata $metadata */
         try {
-            $element = $this->getElement($className);
+            $xmlRoot = $this->getElement($className);
         } catch (MappingException $exception) {
+            throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
+        }
+
+        if ($xmlRoot->getName() != 'entity') {
             throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
         }
 
         $class = new \ReflectionClass($className);
 
-        if (isset($element['storageName'])) {
-            $metadata->storageName = $element['storageName'];
+        if (isset($xmlRoot['storage-name'])) {
+            $metadata->storageName = $xmlRoot['storage-name'];
         }
 
         $ids = [];
-        if (isset($element['id'])) {
-            $ids = $element['id'];
+        if (isset($xmlRoot->id)) {
+            foreach ($xmlRoot->id as $id) {
+                $ids[] = (string) $id;
+            }
         }
 
         $transients = [];
-        if (isset($element['transient'])) {
-            $transients = $element['transient'];
+        if (isset($xmlRoot->transient)) {
+            foreach ($xmlRoot->transient as $transient) {
+                $transients[] = (string) $transient;
+            }
         }
 
         foreach ($class->getProperties() as $property) {
