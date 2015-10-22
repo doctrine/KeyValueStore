@@ -16,13 +16,13 @@
     "description": "Simple Key-Value Store Abstraction Layer that maps to PHP objects, allowing for many backends.",
     "license": "MIT",
     "autoload": {
-        "psr-0": {
-            "Doctrine\\KeyValueStore\\": "lib/"
+        "psr-4": {
+            "Doctrine\\KeyValueStore\\": "lib/Doctrine/KeyValueStore"
         }
     },
     "autoload-dev": {
-        "psr-0": {
-            "Doctrine\\Tests\\": "tests/"
+        "psr-4": {
+            "Doctrine\\Tests\\": "tests/Doctrine/Tests"
         }
     }
 }
