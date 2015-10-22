@@ -23,7 +23,7 @@ use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Doctrine\KeyValueStore\NotFoundException;
 
-class AmazonDynamoDbStorage implements  Storage
+class AmazonDynamoDbStorage implements Storage
 {
     /**
      * @var DynamoDbClient

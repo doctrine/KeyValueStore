@@ -6,7 +6,7 @@ use Aws\DynamoDb\DynamoDbClient;
 use Aws\Result;
 use Doctrine\KeyValueStore\Storage\AmazonDynamoDbStorage;
 
-class AmazonDynamoDbTest /*extends AbstractStorageTestCase */extends \PHPUnit_Framework_TestCase
+class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
 {
     private function getDynamoDbMock($methods = [])
     {
