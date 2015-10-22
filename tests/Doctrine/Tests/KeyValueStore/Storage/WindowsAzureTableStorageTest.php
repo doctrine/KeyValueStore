@@ -2,7 +2,6 @@
 
 namespace Doctrine\Tests\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\Storage\WindowsAzureTable\SharedKeyAuthorization;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTableStorage;
 use Doctrine\KeyValueStore\Http\Response;
 
