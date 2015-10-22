@@ -2,7 +2,9 @@
     "name": "doctrine/key-value-store",
     "require": {
         "php": "^5.5|^7.0",
-        "doctrine/common": "^2.4"
+        "doctrine/common": "^2.4",
+        "doctrine/couchdb": "^1.0.0-beta4",
+        "aws/aws-sdk-php": "^3.8"
     },
     "require-dev": {
         "datastax/php-driver": "^1.0",

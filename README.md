@@ -23,7 +23,7 @@ Following vendors are targeted:
 * Doctrine\Common\Cache provider (Implemented)
 * RDBMS (Implemented)
 * Couchbase (Implemented)
-* Amazon DynamoDB
+* Amazon DynamoDB (Implemented)
 * CouchDB (Implemented)
 * Cassandra
 * MongoDB (Implemented)
