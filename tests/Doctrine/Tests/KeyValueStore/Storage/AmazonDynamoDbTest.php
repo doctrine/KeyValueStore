@@ -2,15 +2,13 @@
 
 namespace Doctrine\Tests\KeyValueStore\Storage;
 
-use Aws\DynamoDb\DynamoDbClient;
-use Aws\Result;
 use Doctrine\KeyValueStore\Storage\AmazonDynamoDbStorage;
 
 class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
 {
     private function getDynamoDbMock($methods = [])
     {
-        $client = $this->getMockBuilder(DynamoDbClient::class)->disableOriginalConstructor();
+        $client = $this->getMockBuilder('Aws\DynamoDb\DynamoDbClient')->disableOriginalConstructor();
 
         if (count($methods)) {
             $client->setMethods($methods);
@@ -21,7 +19,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
 
     private function getDynamoDbResultMock($methods = [])
     {
-        $result = $this->getMockBuilder(Result::class)->disableOriginalConstructor();
+        $result = $this->getMockBuilder('Aws\Result')->disableOriginalConstructor();
 
         if (count($methods)) {
             $result->setMethods($methods);
@@ -35,37 +33,134 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
         $client = $this->getDynamoDbMock();
 
         $storage = new AmazonDynamoDbStorage($client);
-        $this->assertSame('amazondynamodb', $storage->getName());
+        $this->assertSame('amazon_dynamodb', $storage->getName());
     }
 
-    public function testOptionsMergedCorrectly()
+    public function testDefaultKeyName()
     {
-        $options = [
-            'storage_keys' => ['this' => 'that', 'yolo' => 'now']
-        ];
-
-        $shouldBe = [
-            'default_key_name' => 'Id',
-            'storage_keys' => ['this' => 'that', 'yolo' => 'now']
-        ];
-
         $client = $this->getDynamoDbMock();
+        $storage = new AmazonDynamoDbStorage($client);
+        $this->assertAttributeSame('Id', 'defaultKeyName', $storage);
+    }
 
-        $storage = new AmazonDynamoDbStorage($client, null, $options);
+    public function testThatTableKeysInitiallyEmpty()
+    {
+        $client = $this->getDynamoDbMock();
+        $storage = new AmazonDynamoDbStorage($client);
+        $this->assertAttributeSame([], 'tableKeys', $storage);
+    }
 
-        $this->assertAttributeSame($shouldBe, 'options', $storage);
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The key must be a string, got "array" instead.
+     */
+    public function testDefaultKeyCannotBeSomethingOtherThanString()
+    {
+        $client = $this->getDynamoDbMock();
+        new AmazonDynamoDbStorage($client, null, []);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The key must be a string, got "object" instead.
+     */
+    public function testTableKeysMustAllBeStringsOrElse()
+    {
+        $client = $this->getDynamoDbMock();
+        new AmazonDynamoDbStorage($client, null, null, ['mytable' => 'hello', 'yourtable' => new \stdClass()]);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The name must not exceed 255 bytes.
+     */
+    public function testKeyNameMustBeUnder255Bytes()
+    {
+        $client = $this->getDynamoDbMock();
+        $storage = new AmazonDynamoDbStorage($client);
+        $storage->setDefaultKeyName(str_repeat('a', 256));
+    }
+
+    public function invalidTableNames()
+    {
+        return [
+            ['a2'],
+            ['yo%'],
+            ['что'],
+            ['h@llo']
+        ];
+    }
+
+    public function validTableNames()
+    {
+        return [
+            ['MyTable'],
+            ['This_is0k-...'],
+            ['hello_world'],
+            ['...........00....']
+        ];
+    }
+
+    /**
+     * @dataProvider invalidTableNames
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Invalid DynamoDB table name.
+     */
+    public function testTableNameValidatesAgainstInvalidTableNames($tableName)
+    {
+        $client = $this->getDynamoDbMock();
+        $storage = new AmazonDynamoDbStorage($client);
+        $storage->setKeyForTable($tableName, 'Id');
+    }
+
+    /**
+     * @dataProvider validTableNames
+     */
+    public function testTableNameValidatesAgainstValidTableNames($tableName)
+    {
+        $client = $this->getDynamoDbMock();
+        $storage = new AmazonDynamoDbStorage($client);
+        $storage->setKeyForTable($tableName, 'Id');
+
+        $this->assertAttributeSame([$tableName => 'Id'], 'tableKeys', $storage);
+    }
+
+    public function testThatYouCanHaveMultipleTablesWithOverrides()
+    {
+        $client = $this->getDynamoDbMock();
+        $storage = new AmazonDynamoDbStorage($client);
+        $storage->setKeyForTable('Aaa', '2');
+        $storage->setKeyForTable('Bbb', '1');
+
+        $this->assertAttributeSame(['Aaa' => '2', 'Bbb' => '1'], 'tableKeys', $storage);
+    }
+
+    public function testGetterForDefaultKeyName()
+    {
+        $client = $this->getDynamoDbMock();
+        $storage = new AmazonDynamoDbStorage($client, null, 'CustomKey');
+        $this->assertSame('CustomKey', $storage->getDefaultKeyName());
+    }
+
+    public function testGetWillReturnDefaultKeyForUnrecognizedTableName()
+    {
+        $client = $this->getDynamoDbMock();
+        $storage = new AmazonDynamoDbStorage($client, null, 'CustomKey');
+        $this->assertSame('CustomKey', $storage->getKeyNameForTable('whatever_this_is'));
+    }
+
+    public function testGetWillReturnCorrectKeyForRecognizedTableName()
+    {
+        $client = $this->getDynamoDbMock();
+        $storage = new AmazonDynamoDbStorage($client, null, 'CustomKey', ['MyTable' => 'Yesss']);
+        $this->assertSame('Yesss', $storage->getKeyNameForTable('MyTable'));
     }
 
     public function testThatSomeStorageHasDifferentKey()
     {
-        $options = [
-            'default_key_name' => 'sauce',
-            'storage_keys' => ['this' => 'that', 'yolo' => 'now']
-        ];
-
         $client = $this->getDynamoDbMock();
 
-        $storage = new AmazonDynamoDbStorage($client, null, $options);
+        $storage = new AmazonDynamoDbStorage($client, null, 'sauce', ['this' => 'that', 'yolo' => 'now']);
 
         $r = new \ReflectionObject($storage);
         $method = $r->getMethod('prepareKey');
@@ -75,14 +170,9 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
 
     public function testThatSomeStorageUsesDefaultKey()
     {
-        $options = [
-            'default_key_name' => 'sauce',
-            'storage_keys' => ['this' => 'that', 'yolo' => 'now']
-        ];
-
         $client = $this->getDynamoDbMock();
 
-        $storage = new AmazonDynamoDbStorage($client, null, $options);
+        $storage = new AmazonDynamoDbStorage($client, null, 'sauce', ['this' => 'that', 'yolo' => 'now']);
 
         $r = new \ReflectionObject($storage);
         $method = $r->getMethod('prepareKey');

@@ -36,37 +36,138 @@ class AmazonDynamoDbStorage implements Storage
     private $marshaler;
 
     /**
+     * @var string
+     */
+    private $defaultKeyName = 'Id';
+
+    /**
+     * A associative array where the key is the table name and the value is the name of the key.
+     *
      * @var array
      */
-    private $options = [
-        'default_key_name' => 'Id',
-        'storage_keys' => [],
-    ];
+    private $tableKeys = [];
 
     /**
      * @param DynamoDbClient $client    The client for connecting to AWS DynamoDB.
      * @param Marshaler|null $marshaler (optional) Marshaller for converting data to/from DynamoDB format.
-     * @param array          $options   (optional) Options to set which names to use for keys for the key/val store.
+     * @param string         $defaultKeyName   (optional) Default name to use for keys.
+     * @param array $tableKeys $tableKeys (optional) An associative array for keys representing table names and values
+     * representing key names for those tables.
      */
-    public function __construct(DynamoDbClient $client, Marshaler $marshaler = null, array $options = [])
-    {
+    public function __construct(
+        DynamoDbClient $client,
+        Marshaler $marshaler = null,
+        $defaultKeyName = null,
+        array $tableKeys = []
+    ) {
         $this->client = $client;
         $this->marshaler = $marshaler ?: new Marshaler();
-        $this->options = array_merge($this->options, $options);
+
+        if ($defaultKeyName !== null) {
+            $this->setDefaultKeyName($defaultKeyName);
+        }
+
+        if (!empty($tableKeys)) {
+            foreach ($tableKeys as $table => $keyName) {
+                $this->setKeyForTable($table, $keyName);
+            }
+        }
     }
 
     /**
-     * Retrieves a specific name for a key for a given storage name defaulting to 'default_key_name' option.
+     * Validates a DynamoDB key name.
      *
-     * @param string $storageName The name of the storage (i.e. table).
+     * @param $name mixed The name to validate.
+     *
+     * @throws \InvalidArgumentException When the key name is invalid.
+     */
+    protected function validateKeyName($name)
+    {
+        if (!is_string($name)) {
+            throw new \InvalidArgumentException(
+                sprintf('The key must be a string, got "%s" instead.', gettype($name))
+            );
+        }
+
+        $len = strlen($name);
+        if ($len > 255 || $len < 1) {
+            throw new \InvalidArgumentException('The name must not exceed 255 bytes.');
+        }
+    }
+
+    /**
+     * Validates a DynamoDB table name.
+     *
+     * @see http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html
+     *
+     * @param $name string The table name to validate.
+     *
+     * @throws \InvalidArgumentException When the name is invalid.
+     */
+    protected function validateTableName($name)
+    {
+        if (!is_string($name)) {
+            throw new \InvalidArgumentException(
+                sprintf('The key must be a string, got "%s" instead.', gettype($name))
+            );
+        }
+
+        if (!preg_match('/^[a-z0-9_.-]{3,255}$/i', $name)) {
+            throw new \InvalidArgumentException('Invalid DynamoDB table name.');
+        }
+    }
+
+    /**
+     * Sets the default key name for storage tables.
+     *
+     * @param $name string The default name to use for the key.
+     *
+     * @throws \InvalidArgumentException When the key name is invalid.
+     */
+    public function setDefaultKeyName($name)
+    {
+        $this->validateKeyName($name);
+        $this->defaultKeyName = $name;
+    }
+
+    /**
+     * Retrieves the default key name.
+     *
+     * @return string The default key name.
+     */
+    public function getDefaultKeyName()
+    {
+        return $this->defaultKeyName;
+    }
+
+    /**
+     * Sets a key name for a specific table.
+     *
+     * @param $table string The name of the table.
+     * @param $key string The name of the string.
+     *
+     * @throws \InvalidArgumentException When the key or table name is invalid.
+     */
+    public function setKeyForTable($table, $key)
+    {
+        $this->validateTableName($table);
+        $this->validateKeyName($key);
+        $this->tableKeys[$table] = $key;
+    }
+
+    /**
+     * Retrieves a specific name for a key for a given table. The default is returned if this table does not have
+     * an actual override.
+     *
+     * @param string $tableName The name of the table.
      *
      * @return string
      */
-    protected function getKeyNameForStorage($storageName)
+    public function getKeyNameForTable($tableName)
     {
-        return isset($this->options['storage_keys'][$storageName]) ?
-            $this->options['storage_keys'][$storageName] :
-            $this->options['default_key_name'];
+        return isset($this->tableKeys[$tableName]) ?
+            $this->tableKeys[$tableName] :
+            $this->defaultKeyName;
     }
 
     /**
@@ -84,7 +185,7 @@ class AmazonDynamoDbStorage implements Storage
             $keyName = key($key);
         } else {
             $keyValue = $key;
-            $keyName = $this->getKeyNameForStorage($storageName);
+            $keyName = $this->getKeyNameForTable($storageName);
         }
 
         return $this->marshaler->marshalItem([$keyName => $keyValue]);
@@ -205,6 +306,6 @@ class AmazonDynamoDbStorage implements Storage
      */
     public function getName()
     {
-        return 'amazondynamodb';
+        return 'amazon_dynamodb';
     }
 }
