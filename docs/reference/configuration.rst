@@ -12,10 +12,11 @@ Mapping Configuration
 .. code-block:: php
 
     <?php
+
+    use Doctrine\Common\Annotations\AnnotationReader;
+    use Doctrine\Common\Cache\ArrayCache;
     use Doctrine\KeyValueStore\Configuration;
     use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
-    use Doctrine\Common\Cache\ArrayCache;
-    use Doctrine\Common\Annotations\AnnotationReader;
 
     // 1. create Configuration instance
     $config = new Configuration();
@@ -62,7 +63,7 @@ Also all those storage backends obviously have different dependencies in terms
 of PHP libraries or PHP PECL extensions.
 
 Doctrine Cache Backend
-^^^^^^^^^^^^^^^^^^^^^^
+----------------------
 
 The Doctrine Cache Backend uses the `Caching Framework
 <https://github.com/doctrine/cache>`_ from Doctrine as a backend. Depending on
@@ -76,6 +77,7 @@ Here is an example of configurating the Cache Storage using Redis:
 .. code-block:: php
 
    <?php
+
    use Doctrine\Common\Cache\RedisCache;
    use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
    use Redis;
@@ -86,7 +88,7 @@ Here is an example of configurating the Cache Storage using Redis:
    $storage = new DoctrineCacheStorage($cache);
 
 Doctrine DBAL Backend
-^^^^^^^^^^^^^^^^^^^^^
+---------------------
 
 You can use a relational database as backend. It uses a very simple
 table as storage with one primary key and a blob field that stores
@@ -95,8 +97,9 @@ the properties.
 .. code-block:: php
 
     <?php
-    use Doctrine\KeyValueStore\Storage\DBALStorage;
+
     use Doctrine\DBAL\DriverManager;
+    use Doctrine\KeyValueStore\Storage\DBALStorage;
 
     $tableName = 'storage';
     $keyColumn = 'id';
@@ -108,7 +111,7 @@ the properties.
     $storage = new DBALStorage($conn, $tableName, $keyColumn, $dataColumn);
 
 Microsoft Windows Azure Table
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------
 
 Microsoft offers a NoSQL solution as part of their `Windows Azure
 <http://www.windowsazure.com/en-us/>`_ service. You can use that
@@ -117,26 +120,64 @@ as a storage layer through the Windows Azure PHP SDK:
 .. code-block:: php
 
    <?php
+
    use Doctrine\KeyValueStore\Storage\AzureSdkTableStorage;
    use WindowsAzure\Common\ServicesBuilder;
 
-   $connectionString = ""; // Windows Azure Connection string
+   $connectionString = ''; // Windows Azure Connection string
    $builder = ServicesBuilder::getInstance();
    $client = $builder->createTableService($connectionString);
 
    $storage = new AzureSdkTableStorage($client);
 
 Couchbase
-^^^^^^^^^
+---------
 
-To be written
+Until the version 1.2 also Couchbase is supported:
+
+.. code-block:: php
+
+    <?php
+
+    use Doctrine\KeyValueStore\Storage\CouchbaseStorage;
+
+    $conn = new Couchbase(/* connection parameters */);
+
+    $storage = new CouchbaseStorage($conn);
 
 MongoDB
-^^^^^^^
+-------
 
-To be written
+Mongo support is provided using a `Mongo <http://php.net/manual/en/class.mongo.php>`_ 
+instance, the collection name and the database name.
+
+Both the options ``collection`` and ``database`` are required.
+
+.. code-block:: php
+
+    <?php
+
+    use Doctrine\KeyValueStore\Storage\MongoDbStorage;
+
+    $conn = new \Mongo(/* connection parameters and options */);
+
+    $storage = new MongoDbStorage($conn, array(
+        'collection' => 'your_collection',
+        'database'   => 'your_database',
+    ));
 
 Riak
-^^^^
+----
 
-to be written
+Riak support is provided through the library `riak/riak-client <https://github.com/nacmartin/riak-client>`_ :
+
+.. code-block:: php
+
+    <?php
+
+    use Doctrine\KeyValueStore\Storage\RiakStorage;
+    use Riak\Client;
+
+    $conn = new Riak(/* connection parameters */);
+
+    $storage = new RiakStorage($conn);
