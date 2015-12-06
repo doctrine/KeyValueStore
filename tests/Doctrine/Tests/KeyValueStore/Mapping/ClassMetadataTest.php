@@ -25,7 +25,7 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
 
         $this->metadata->mapIdentifier("id2");
 
-        $this->assertEquals(array("id", "id2"), $this->metadata->identifier);
+        $this->assertEquals(["id", "id2"], $this->metadata->identifier);
         $this->assertTrue($this->metadata->isCompositeKey);
     }
 
@@ -33,21 +33,21 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
     {
         $this->metadata->mapIdentifier("id");
 
-        $this->assertEquals(array('id' => array('fieldName' => 'id', 'id' => true)), $this->metadata->fields);
+        $this->assertEquals(['id' => ['fieldName' => 'id', 'id' => true]], $this->metadata->fields);
     }
 
     public function testMapField()
     {
-        $this->metadata->mapField(array('fieldName' => 'metadata'));
-        $this->assertEquals(array('metadata' => array('fieldName' => 'metadata')), $this->metadata->fields);
+        $this->metadata->mapField(['fieldName' => 'metadata']);
+        $this->assertEquals(['metadata' => ['fieldName' => 'metadata']], $this->metadata->fields);
     }
 
     public function testSkipTransientColumns()
     {
         $this->metadata->skipTransientField('metadata');
-        $this->metadata->mapField(array('fieldName' => 'metadata'));
+        $this->metadata->mapField(['fieldName' => 'metadata']);
 
-        $this->assertEquals(array(), $this->metadata->fields);
+        $this->assertEquals([], $this->metadata->fields);
     }
 }
 

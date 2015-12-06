@@ -42,11 +42,11 @@ class SocketClient implements Client
     /**
      * @var array
      */
-    private $options = array(
+    private $options = [
         'keep-alive' => true,
-    );
+    ];
 
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         $this->options = array_merge($this->options, $options);
     }
@@ -126,7 +126,7 @@ class SocketClient implements Client
      * @param bool $raw
      * @return Response
      */
-    public function request($method, $url, $data = null, array $headers = array())
+    public function request($method, $url, $data = null, array $headers = [])
     {
         // Try establishing the connection to the server
         $parts = parse_url($url);
@@ -146,9 +146,9 @@ class SocketClient implements Client
 
         // Read server response headers
         $rawHeaders = '';
-        $headers    = array(
+        $headers    = [
             'connection' => ( $this->options['keep-alive'] ? 'Keep-Alive' : 'Close' ),
-        );
+        ];
 
         // Remove leading newlines, should not accur at all, actually.
         while (true) {

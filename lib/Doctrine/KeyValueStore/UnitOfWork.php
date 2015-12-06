@@ -55,9 +55,9 @@ class UnitOfWork
     private $identifiers;
 
     private $originalData;
-    private $scheduledInsertions = array();
-    private $scheduledDeletions  = array();
-    private $identityMap         = array();
+    private $scheduledInsertions = [];
+    private $scheduledDeletions  = [];
+    private $identityMap         = [];
     private $idConverter;
 
     public function __construct(ClassMetadataFactory $cmf, Storage $storageDriver, Configuration $config = null)
@@ -138,7 +138,7 @@ class UnitOfWork
     private function computeChangeSet($class, $object)
     {
         $snapshot     = $this->getObjectSnapshot($class, $object);
-        $changeSet    = array();
+        $changeSet    = [];
         $originalData = $this->originalData[spl_object_hash($object)];
 
         foreach ($snapshot as $field => $value) {
@@ -155,7 +155,7 @@ class UnitOfWork
 
     private function getObjectSnapshot($class, $object)
     {
-        $data = array();
+        $data = [];
 
         foreach ($class->reflFields as $fieldName => $reflProperty) {
             if (!isset( $class->fields[$fieldName]['id'])) {
@@ -279,16 +279,16 @@ class UnitOfWork
         $this->processInsertions();
         $this->processDeletions();
 
-        $this->scheduledInsertions = array();
-        $this->scheduledDeletions  = array();
+        $this->scheduledInsertions = [];
+        $this->scheduledDeletions  = [];
     }
 
     public function clear()
     {
-        $this->scheduledInsertions = array();
-        $this->scheduledDeletions  = array();
-        $this->identifiers         = array();
-        $this->originalData        = array();
-        $this->identityMap         = array();
+        $this->scheduledInsertions = [];
+        $this->scheduledDeletions  = [];
+        $this->identifiers         = [];
+        $this->originalData        = [];
+        $this->identityMap         = [];
     }
 }

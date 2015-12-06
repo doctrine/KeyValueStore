@@ -67,11 +67,11 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
             ->method('newObject')
             ->will($this->returnCallback(function($key, $data) use ($objectMock, $that) {
                 $that->assertEquals('foobar', $key);
-                $that->assertEquals(array('title' => 'Riak test'), $data);
+                $that->assertEquals(['title' => 'Riak test'], $data);
                 return $objectMock;
             }));
 
-        $this->storage->insert('riak-test', 'foobar', array('title' => 'Riak test'));
+        $this->storage->insert('riak-test', 'foobar', ['title' => 'Riak test']);
     }
 
     public function testUpdate()
@@ -97,13 +97,13 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
         $objectMock->expects($this->once())
             ->method('setData')
             ->will($this->returnCallback(function($data) use ($that) {
-                $that->assertEquals(array('title' => 'Riak cookbook'), $data);
+                $that->assertEquals(['title' => 'Riak cookbook'], $data);
             }));
 
         $objectMock->expects($this->once())
             ->method('store');
 
-        $this->storage->update('riak-test', 'foobar', array('title' => 'Riak cookbook'));
+        $this->storage->update('riak-test', 'foobar', ['title' => 'Riak cookbook']);
     }
 
     public function testDelete()
@@ -189,9 +189,9 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
 
         $objectMock->expects($this->once())
             ->method('getData')
-            ->will($this->returnValue(array('title' => 'Riak Test')));
+            ->will($this->returnValue(['title' => 'Riak Test']));
 
-        $this->assertEquals(array('title' => 'Riak Test'), $this->storage->find('riaktest', 'foobar'));
+        $this->assertEquals(['title' => 'Riak Test'], $this->storage->find('riaktest', 'foobar'));
     }
 
     /**

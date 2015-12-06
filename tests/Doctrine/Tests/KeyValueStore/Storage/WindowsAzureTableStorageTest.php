@@ -24,13 +24,13 @@ class WindowsAzureTableStorageTest extends AbstractStorageTestCase
 
     public function mockInsertCompositeKey($key, $data)
     {
-        $expectedHeaders = array(
+        $expectedHeaders = [
             'Content-Type' => 'application/atom+xml',
             'Content-Length' => 620,
             'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
-        );
+        ];
 
         $this->client->expects($this->at(0))
                      ->method('request')
@@ -79,7 +79,7 @@ XML
   </content>
 </entry>
 XML
-, array()
+, []
 
                      ))
         );
@@ -87,14 +87,14 @@ XML
 
     public function mockUpdateCompositeKey($key, $data)
     {
-        $expectedHeaders = array(
+        $expectedHeaders = [
             'Content-Type' => 'application/atom+xml',
             'Content-Length' => 707,
             'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'If-Match' => '*',
             'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
-        );
+        ];
 
         $this->client->expects($this->at(0))
                      ->method('request')
@@ -119,21 +119,21 @@ XML
 XML
                         ),
                         $this->equalTo($expectedHeaders))
-                     ->will($this->returnValue(new Response(204, "", array()))
+                     ->will($this->returnValue(new Response(204, "", []))
         );
 
     }
 
     public function mockDeleteCompositeKey($key)
     {
-        $expectedHeaders = array(
+        $expectedHeaders = [
             'Content-Type' => 'application/atom+xml',
             'Content-Length' => 0,
             'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'If-Match' => '*',
             'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
-        );
+        ];
 
         $this->client->expects($this->at(0))
                      ->method('request')
@@ -142,18 +142,18 @@ XML
                         $this->equalTo("https://teststore.table.core.windows.net/stdClass". rawurlencode("(PartitionKey='foo', RowKey='100')")),
                         $this->equalTo(''),
                         $this->equalTo($expectedHeaders)
-                     )->will($this->returnValue(new Response(204, "", array())));
+                     )->will($this->returnValue(new Response(204, "", [])));
     }
 
     public function mockFindCompositeKey($key)
     {
-        $expectedHeaders = array(
+        $expectedHeaders = [
             'Content-Type' => 'application/atom+xml',
             'Content-Length' => 0,
             'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
             'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
-        );
+        ];
 
         $this->client->expects($this->at(0))
                      ->method('request')
@@ -187,7 +187,7 @@ XML
   </content>
 </entry>
 XML
-, array()
+, []
 
                      ))
         );

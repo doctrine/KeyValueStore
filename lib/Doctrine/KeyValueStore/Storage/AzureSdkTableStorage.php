@@ -153,7 +153,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
 
     private function getProperties(Entity $entity)
     {
-        $properties = array();
+        $properties = [];
 
         foreach ($entity->getProperties() as $name => $property) {
             if ($name === 'PartitionKey') {
@@ -181,10 +181,10 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
      */
     public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null)
     {
-        $filters = array("PartitionKey eq " . $this->quoteFilterValue($query->getPartitionKey()));
+        $filters = ["PartitionKey eq " . $this->quoteFilterValue($query->getPartitionKey())];
 
         foreach ($query->getConditions() as $condition) {
-            if (!in_array($condition[0], array('eq', 'neq', 'le', 'lt', 'ge', 'gt'))) {
+            if (!in_array($condition[0], ['eq', 'neq', 'le', 'lt', 'ge', 'gt'])) {
                 throw new \InvalidArgumentException(
                     "Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions."
                 );
@@ -195,7 +195,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
         $filter = '(' . implode(" and ", $filters) . ')';
         $result = $this->client->queryEntities($storageName, $filter);
 
-        $rows = array();
+        $rows = [];
 
         foreach ($result->getEntities() as $entity) {
             $row    = $this->getProperties($entity);

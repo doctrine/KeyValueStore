@@ -30,7 +30,7 @@ class Response
 
     private $body;
 
-    private $headers = array();
+    private $headers = [];
 
     public function __construct($code, $body, array $headers)
     {

@@ -54,46 +54,46 @@ class RedisStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testInsert()
     {
-        $data = array(
+        $data = [
             'author' => 'John Doe',
             'title'  => 'example book',
-        );
+        ];
 
-        $dbDataset = array();
+        $dbDataset = [];
 
         $this->redis->expects($this->once())
             ->method('set')
             ->will($this->returnCallback(function($key, $data) use (&$dbDataset) {
-                $dbDataset[] = array('key' => $key, 'value' => $data);
+                $dbDataset[] = ['key' => $key, 'value' => $data];
             }));
 
         $this->storage->insert('redis', '1', $data);
 
         $this->assertCount(1, $dbDataset);
-        $this->assertEquals(array(array('key' => $this->storage->getKeyName('1'), 'value' => json_encode($data))), $dbDataset);
+        $this->assertEquals([['key' => $this->storage->getKeyName('1'), 'value' => json_encode($data)]], $dbDataset);
     }
 
     public function testUpdate()
     {
 
-        $data = array(
+        $data = [
             'author' => 'John Doe Updated',
             'title'  => 'example book updated',
-        );
+        ];
 
-        $dbDataset = array();
+        $dbDataset = [];
 
         $this->redis->expects($this->once())
             ->method('set')
             ->will($this->returnCallback(function($key, $data) use (&$dbDataset) {
-                $dbDataset[] = array('key' => $key, 'value' => $data);
+                $dbDataset[] = ['key' => $key, 'value' => $data];
             }));
 
 
          $this->storage->update('redis', '1', $data);
 
          $this->assertCount(1, $dbDataset);
-         $this->assertEquals(array(array('key' => $this->storage->getKeyName('1'), 'value' => json_encode($data))), $dbDataset);
+         $this->assertEquals([['key' => $this->storage->getKeyName('1'), 'value' => json_encode($data)]], $dbDataset);
     }
 
     public function testGetName()

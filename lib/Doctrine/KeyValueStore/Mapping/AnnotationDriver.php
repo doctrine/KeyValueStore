@@ -78,7 +78,7 @@ class AnnotationDriver implements MappingDriver
             } elseif ($transientAnnot) {
                 $metadata->skipTransientField($property->getName());
             } else {
-                $metadata->mapField(array('fieldName' => $property->getName()));
+                $metadata->mapField(['fieldName' => $property->getName()]);
             }
         }
     }

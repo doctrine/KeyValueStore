@@ -18,9 +18,9 @@ class SharedKeyLiteTest extends \PHPUnit_Framework_TestCase
 
     public function testKeyGeneration1()
     {
-        $authorization = $this->auth->signRequest('GET', '/', '', '', array(
+        $authorization = $this->auth->signRequest('GET', '/', '', '', [
             "x-ms-date" => "Wed, 29 Apr 2009 13:12:47 GMT"
-        ));
+        ]);
         $this->assertEquals(
             "Authorization: SharedKeyLite testing:vZdOn/j0gW5FG0kAUG9NhSBO9eBjZqfe6RwALPYUtqU=",
             $authorization
@@ -29,9 +29,9 @@ class SharedKeyLiteTest extends \PHPUnit_Framework_TestCase
 
     public function testKeyGeneration2()
     {
-        $authorization = $this->auth->signRequest('GET', '/test', '', '', array(
+        $authorization = $this->auth->signRequest('GET', '/test', '', '', [
             "x-ms-date" => "Wed, 29 Apr 2009 13:12:47 GMT"
-        ));
+        ]);
         $this->assertEquals(
             "Authorization: SharedKeyLite testing:HJTSiRDtMsQVsFVispSHkcODeFykLO+WEuOepwmh51o=",
             $authorization

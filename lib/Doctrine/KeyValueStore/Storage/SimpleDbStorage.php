@@ -78,11 +78,11 @@ class SimpleDbStorage implements Storage
     {
         $this->createDomain($storageName);
 
-        $this->client->putAttributes(array(
+        $this->client->putAttributes([
             'DomainName' => $storageName,
             'ItemName'   => $key,
             'Attributes' => $this->makeAttributes($data),
-        ));
+        ]);
     }
 
     /**
@@ -98,10 +98,10 @@ class SimpleDbStorage implements Storage
      */
     public function delete($storageName, $key)
     {
-        $this->client->deleteAttributes(array(
+        $this->client->deleteAttributes([
             'DomainName' => $storageName,
             'ItemName'   => $key,
-        ));
+        ]);
     }
 
     /**
@@ -111,16 +111,16 @@ class SimpleDbStorage implements Storage
     {
         $select = "select * from {$storageName} where itemName() = '{$key}'";
 
-        $iterator = $this->client->select(array(
+        $iterator = $this->client->select([
             'SelectExpression' => $select,
-        ));
+        ]);
         
         $results = $iterator->get('Items');
 
         if (count($results)) {
             $result = array_shift($results);
 
-            $data = array('id' => $result['Name']);
+            $data = ['id' => $result['Name']];
         
             foreach ($result['Attributes'] as $attribute) {
                 $data[$attribute['Name']] = $attribute['Value'];
@@ -148,11 +148,11 @@ class SimpleDbStorage implements Storage
     protected function createDomain($domainName)
     {
         try {
-            $domain = $this->client->domainMetadata(array('DomainName' => $domainName));
+            $domain = $this->client->domainMetadata(['DomainName' => $domainName]);
         } catch (NoSuchDomainException $e) {
-            $this->client->createDomain(array('DomainName' => $domainName));
+            $this->client->createDomain(['DomainName' => $domainName]);
 
-            $domain = $this->client->domainMetadata(array('DomainName' => $domainName));
+            $domain = $this->client->domainMetadata(['DomainName' => $domainName]);
         } catch (SimpleDbException $e) {
             throw new KeyValueStoreException($e->getMessage(), 0, $e);
         }
@@ -166,15 +166,15 @@ class SimpleDbStorage implements Storage
      */
     protected function makeAttributes($data)
     {
-        $attributes = array();
+        $attributes = [];
 
         foreach ($data as $name => $value) {
-            if ($value !== null && $value !== array() && $value !== '') {
-                $attributes[] = array(
+            if ($value !== null && $value !== [] && $value !== '') {
+                $attributes[] = [
                     'Name' => $name,
                     'Value' => $value,
                     'Replace' => true,
-                );
+                ];
             }
         }
 

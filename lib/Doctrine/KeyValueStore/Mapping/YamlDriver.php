@@ -95,9 +95,9 @@ class YamlDriver extends FileDriver
                 continue;
             }
 
-            $metadata->mapField(array(
+            $metadata->mapField([
                 'fieldName' => $property->getName(),
-            ));
+            ]);
         }
     }
 }

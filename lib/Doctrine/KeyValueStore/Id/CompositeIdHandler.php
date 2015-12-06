@@ -26,11 +26,11 @@ class CompositeIdHandler implements IdHandlingStrategy
     public function normalizeId(ClassMetadata $metadata, $key)
     {
         if (!$metadata->isCompositeKey && !is_array($key)) {
-            $id = array($metadata->identifier[0] => $key);
+            $id = [$metadata->identifier[0] => $key];
         } elseif (!is_array($key)) {
             throw new \InvalidArgumentException("Array of identifier key-value pairs is expected!");
         } else {
-            $id = array();
+            $id = [];
             foreach ($metadata->identifier as $field) {
                 if (!isset($key[$field])) {
                     throw new \InvalidArgumentException(

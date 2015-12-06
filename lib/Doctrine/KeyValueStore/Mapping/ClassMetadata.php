@@ -26,11 +26,11 @@ class ClassMetadata implements BaseClassMetadata
     public $name;
     public $storageName;
     public $rootClassName;
-    public $fields          = array();
-    public $identifier      = array();
+    public $fields          = [];
+    public $identifier      = [];
     public $isCompositeKey  = false;
-    public $transientFields = array();
-    public $reflFields      = array();
+    public $transientFields = [];
+    public $reflFields      = [];
     public $reflClass;
 
     private $prototype;
@@ -44,7 +44,7 @@ class ClassMetadata implements BaseClassMetadata
     {
         $this->identifier[]   = $fieldName;
         $this->isCompositeKey = count($this->identifier) > 1;
-        $this->mapField(array('fieldName' => $fieldName, 'id' => true));
+        $this->mapField(['fieldName' => $fieldName, 'id' => true]);
     }
 
     public function mapField($mapping)
@@ -78,12 +78,12 @@ class ClassMetadata implements BaseClassMetadata
 
     public function __sleep()
     {
-        return array('fields', 'isCompositeKey', 'identifier', 'name', 'storageName');
+        return ['fields', 'isCompositeKey', 'identifier', 'name', 'storageName'];
     }
 
     public function getIdentifierValues($object)
     {
-        $id = array();
+        $id = [];
         foreach ($this->identifier as $field) {
             $value = $this->reflFields[$field]->getValue($object);
             if ($value !== null) {

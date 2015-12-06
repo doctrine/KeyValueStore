@@ -50,33 +50,33 @@ class CouchbaseStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testInsert()
     {
-        $data = array(
+        $data = [
             'author' => 'John Doe',
             'title'  => 'example book',
-        );
+        ];
 
-        $dbDataset = array();
+        $dbDataset = [];
 
         $this->couchbase->expects($this->once())
             ->method('add')
             ->will($this->returnCallback(function($key, $data) use (&$dbDataset) {
-                $dbDataset[] = array('key' => $key, 'value' => $data);
+                $dbDataset[] = ['key' => $key, 'value' => $data];
             }));
 
         $this->storage->insert('', '1', $data);
         $this->assertCount(1, $dbDataset);
 
-        $this->assertEquals(array(array('key' => '1', 'value' => $data)), $dbDataset);
+        $this->assertEquals([['key' => '1', 'value' => $data]], $dbDataset);
     }
 
     public function testUpdate()
     {
-        $data = array(
+        $data = [
             'author' => 'John Doe',
             'title'  => 'example book',
-        );
+        ];
 
-        $dbDataset = array();
+        $dbDataset = [];
 
         $this->couchbase->expects($this->once())
             ->method('replace')
@@ -86,17 +86,17 @@ class CouchbaseStorageTest extends \PHPUnit_Framework_TestCase
 
         $this->storage->update('', '1', $data);
 
-        $this->assertEquals(array('1' => $data), $dbDataset);
+        $this->assertEquals(['1' => $data], $dbDataset);
     }
 
     public function testDelete()
     {
-        $dataset = array(
-            'foobar' => array(
+        $dataset = [
+            'foobar' => [
                 'author' => 'John Doe',
                 'title'  => 'example book',
-            ),
-        );
+            ],
+        ];
 
         $this->couchbase->expects($this->once())
              ->method('delete')
@@ -116,12 +116,12 @@ class CouchbaseStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testFind()
     {
-        $dataset = array(
-            'foobar' => array(
+        $dataset = [
+            'foobar' => [
                 'author' => 'John Doe',
                 'title'  => 'example book',
-            ),
-        );
+            ],
+        ];
 
         $this->couchbase->expects($this->once())
             ->method('get')
