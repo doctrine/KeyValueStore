@@ -35,4 +35,3 @@ class SingleBasicCrudTest extends BasicCrudTestCase
         return $this->storage->find('post', $id);
     }
 }
-

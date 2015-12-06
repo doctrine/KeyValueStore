@@ -29,4 +29,3 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Doctrine\KeyValueStore\Id\NullIdConverter', $strategy);
     }
 }
-

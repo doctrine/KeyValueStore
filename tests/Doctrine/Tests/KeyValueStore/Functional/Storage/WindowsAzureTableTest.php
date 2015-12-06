@@ -72,4 +72,3 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
         $this->assertTrue(count($data) > 0);
     }
 }
-

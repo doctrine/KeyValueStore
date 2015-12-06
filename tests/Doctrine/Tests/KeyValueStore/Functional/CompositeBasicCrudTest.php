@@ -35,4 +35,3 @@ class CompositeBasicCrudTest extends BasicCrudTestCase
         return $this->cache->fetch("post-oid:id=".$id.";");
     }
 }
-

@@ -50,4 +50,3 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $this->metadata->fields);
     }
 }
-

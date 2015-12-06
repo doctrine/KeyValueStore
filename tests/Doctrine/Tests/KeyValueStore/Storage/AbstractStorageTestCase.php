@@ -97,4 +97,3 @@ abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
     abstract function mockDeleteCompositeKey($key);
     abstract function mockFindCompositeKey($key);
 }
-
