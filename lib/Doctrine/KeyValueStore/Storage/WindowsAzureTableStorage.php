@@ -32,7 +32,7 @@ use Doctrine\KeyValueStore\NotFoundException;
  * Using a HTTP client to communicate with the REST API of Azure Table.
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
- * @deprecated Use the AzureSdkTableStorage instead, this will be unmaintained.
+ * @deprecated This class is deprecated and will be removed in 2.0, use the AzureSdkTableStorage instead.
  */
 class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 {

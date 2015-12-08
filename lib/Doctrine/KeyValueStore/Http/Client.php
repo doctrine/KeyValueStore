@@ -23,6 +23,7 @@ namespace Doctrine\KeyValueStore\Http;
  * Yet another HTTP client
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
+ * @deprecated This class is deprecated and will be removed in 2.0.
  */
 interface Client
 {

@@ -28,6 +28,7 @@ namespace Doctrine\KeyValueStore\Http;
  * @link        www.doctrine-project.com
  * @since       1.0
  * @author      Kore Nordmann <kore@arbitracker.org>
+ * @deprecated  This class is deprecated and will be removed in 2.0.
  */
 class SocketClient implements Client
 {
