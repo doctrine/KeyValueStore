@@ -24,6 +24,7 @@ namespace Doctrine\KeyValueStore\Storage\WindowsAzureTable;
  *
  * @link http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx
  * @author Benjamin Eberlei <kontakt@beberlei.de>
+ * @deprecated This class is deprecated and will be removed in 2.0.
  */
 interface AuthorizationSchema
 {

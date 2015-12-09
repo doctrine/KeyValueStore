@@ -19,6 +19,9 @@
 
 namespace Doctrine\KeyValueStore\Storage\WindowsAzureTable;
 
+/**
+ * @deprecated This class is deprecated and will be removed in 2.0.
+ */
 class SharedKeyAuthorization implements AuthorizationSchema
 {
     /**

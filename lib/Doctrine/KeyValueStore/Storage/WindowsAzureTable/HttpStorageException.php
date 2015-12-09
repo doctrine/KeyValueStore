@@ -21,6 +21,9 @@ namespace Doctrine\KeyValueStore\Storage\WindowsAzureTable;
 
 use Doctrine\KeyValueStore\Storage\StorageException;
 
+/**
+ * @deprecated This class is deprecated and will be removed in 2.0.
+ */
 class HttpStorageException extends StorageException
 {
 }
