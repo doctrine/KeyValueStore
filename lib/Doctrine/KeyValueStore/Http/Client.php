@@ -36,5 +36,5 @@ interface Client
      * @param array $headers
      * @return Response
      */
-    public function request($method, $url, $body = null, array $headers = array());
+    public function request($method, $url, $body = null, array $headers = []);
 }

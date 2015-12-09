@@ -24,15 +24,15 @@ abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped("Composite keys need to be supported for this test to run.");
         }
 
-        $key = array('dist' => 'foo', 'range' => 100);
-        $data = array(
+        $key = ['dist' => 'foo', 'range' => 100];
+        $data = [
             'dist' => 'foo',
             'range' => 100,
             'name' => 'Test',
             'value' => 1,
             'amount' => 200.23,
             'timestamp' => new \DateTime("2012-03-26 12:12:12")
-        );
+        ];
 
         $this->mockInsertCompositeKey($key, $data);
         $this->storage->insert('stdClass', $key, $data);
@@ -44,15 +44,15 @@ abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped("Composite keys need to be supported for this test to run.");
         }
 
-        $key = array('dist' => 'foo', 'range' => 100);
-        $data = array(
+        $key = ['dist' => 'foo', 'range' => 100];
+        $data = [
             'dist' => 'foo',
             'range' => 100,
             'name' => 'Test',
             'value' => 1,
             'amount' => 200.23,
             'timestamp' => new \DateTime("2012-03-26 12:12:12")
-        );
+        ];
 
         $this->mockUpdateCompositeKey($key, $data);
         $this->storage->update('stdClass', $key, $data);
@@ -64,7 +64,7 @@ abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped("Composite keys need to be supported for this test to run.");
         }
 
-        $key = array('dist' => 'foo', 'range' => 100);
+        $key = ['dist' => 'foo', 'range' => 100];
 
         $this->mockDeleteCompositeKey($key);
         $this->storage->delete('stdClass', $key);
@@ -76,12 +76,12 @@ abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped("Composite keys need to be supported for this test to run.");
         }
 
-        $key = array('dist' => 'foo', 'range' => 100);
+        $key = ['dist' => 'foo', 'range' => 100];
 
         $this->mockFindCompositeKey($key);
         $data = $this->storage->find('stdClass', $key);
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             'dist' => 'foo',
             'range' => '100',
             'timestamp' => new \DateTime('2008-09-18 23:46:19', new \DateTimeZone("UTC")),
@@ -89,7 +89,7 @@ abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
             'value' => 23,
             'amount' => 200.23,
             'bool' => true,
-        ), $data);
+        ], $data);
     }
 
     abstract function mockInsertCompositeKey($key, $data);
@@ -97,4 +97,3 @@ abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
     abstract function mockDeleteCompositeKey($key);
     abstract function mockFindCompositeKey($key);
 }
-

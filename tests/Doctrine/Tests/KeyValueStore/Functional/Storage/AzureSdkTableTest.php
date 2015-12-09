@@ -34,8 +34,8 @@ class AzureSdkTableTest extends KeyValueStoreTestCase
     {
         $storage = $this->storage;
 
-        $key = array("dist" => "sdktest", "range" => time());
-        $storage->insert("test", $key, array("foo" => "bar"));
+        $key = ["dist" => "sdktest", "range" => time()];
+        $storage->insert("test", $key, ["foo" => "bar"]);
         $data = $storage->find("test", $key);
 
         $this->assertInstanceOf('DateTime', $data['Timestamp']);
@@ -43,7 +43,7 @@ class AzureSdkTableTest extends KeyValueStoreTestCase
         $this->assertEquals('sdktest', $data['dist']);
         $this->assertEquals($key['range'], $data['range']);
 
-        $storage->update("test", $key, array("foo" => "baz", "bar" => "baz"));
+        $storage->update("test", $key, ["foo" => "baz", "bar" => "baz"]);
         $data = $storage->find("test", $key);
 
         $this->assertEquals('baz', $data['foo']);
@@ -59,15 +59,15 @@ class AzureSdkTableTest extends KeyValueStoreTestCase
     {
         $storage = $this->storage;
 
-        $data = array(
+        $data = [
             "string" => "foo",
             "date"   => new \DateTime("now"),
             "int"    => 1234,
             "float"  => 123.45,
             "bool"   => false,
-        );
+        ];
 
-        $key = array("dist" => "sdktest", "range" => time()+1);
+        $key = ["dist" => "sdktest", "range" => time()+1];
         $storage->insert("test", $key, $data);
         $data = $storage->find("test", $key);
 
@@ -83,11 +83,10 @@ class AzureSdkTableTest extends KeyValueStoreTestCase
         $rangeQuery = new RangeQuery($this->createManager(), 'test', 'sdktest');
         $rangeQuery->rangeLessThan(time());
 
-        $data = $this->storage->executeRangeQuery($rangeQuery, 'test', array('dist', 'range'), function($row) {
+        $data = $this->storage->executeRangeQuery($rangeQuery, 'test', ['dist', 'range'], function($row) {
             return $row;
         });
 
         $this->assertTrue(count($data) > 0);
     }
 }
-

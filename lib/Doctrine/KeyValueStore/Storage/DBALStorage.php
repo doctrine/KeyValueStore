@@ -83,10 +83,10 @@ class DBALStorage implements Storage
     public function insert($storageName, $key, array $data)
     {
         try {
-            $this->conn->insert($this->table, array(
+            $this->conn->insert($this->table, [
                 $this->keyColumn => $key,
                 $this->dataColumn => serialize($data)
-            ));
+            ]);
         } catch (\Exception $e) {
         }
     }
@@ -101,11 +101,11 @@ class DBALStorage implements Storage
     public function update($storageName, $key, array $data)
     {
         try {
-            $this->conn->update($this->table, array(
+            $this->conn->update($this->table, [
                 $this->dataColumn => serialize($data)
-            ), array(
+            ], [
                 $this->keyColumn => $key
-            ));
+            ]);
         } catch (\Exception $e) {
         }
     }
@@ -119,7 +119,7 @@ class DBALStorage implements Storage
     public function delete($storageName, $key)
     {
         try {
-            $this->conn->delete($this->table, array($this->keyColumn => $key));
+            $this->conn->delete($this->table, [$this->keyColumn => $key]);
         } catch (\Exception $e) {
         }
     }
@@ -137,7 +137,7 @@ class DBALStorage implements Storage
         $qb->select("s.{$this->dataColumn}")
             ->from($this->table, 's')
             ->where("{$this->keyColumn} = ?")
-            ->setParameters(array($key));
+            ->setParameters([$key]);
 
         $stmt = $qb->execute();
 

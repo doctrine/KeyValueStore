@@ -90,7 +90,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
         $class->reflClass = $reflService->getClass($class->name);
         if ($class->reflClass) {
             foreach ($class->reflClass->getProperties() as $property) {
-                $class->mapField(array('fieldName' => $property->getName()));
+                $class->mapField(['fieldName' => $property->getName()]);
             }
         }
     }

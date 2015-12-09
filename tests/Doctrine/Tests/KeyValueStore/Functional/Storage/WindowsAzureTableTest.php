@@ -39,8 +39,8 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
     {
         $storage = $this->storage;
 
-        $key = array("dist" => "foo", "range" => time());
-        $storage->insert("test", $key, array("foo" => "bar"));
+        $key = ["dist" => "foo", "range" => time()];
+        $storage->insert("test", $key, ["foo" => "bar"]);
         $data = $storage->find("test", $key);
 
         $this->assertInstanceOf('DateTime', $data['Timestamp']);
@@ -48,7 +48,7 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
         $this->assertEquals('foo', $data['dist']);
         $this->assertEquals($key['range'], $data['range']);
 
-        $storage->update("test", $key, array("foo" => "baz", "bar" => "baz"));
+        $storage->update("test", $key, ["foo" => "baz", "bar" => "baz"]);
         $data = $storage->find("test", $key);
 
         $this->assertEquals('baz', $data['foo']);
@@ -65,11 +65,10 @@ class WindowsAzureTableTest extends KeyValueStoreTestCase
         $rangeQuery = new RangeQuery($this->createManager(), 'test', 'foo');
         $rangeQuery->rangeLessThan(time());
 
-        $data = $this->storage->executeRangeQuery($rangeQuery, 'test', array('dist', 'range'), function($row) {
+        $data = $this->storage->executeRangeQuery($rangeQuery, 'test', ['dist', 'range'], function($row) {
             return $row;
         });
 
         $this->assertTrue(count($data) > 0);
     }
 }
-

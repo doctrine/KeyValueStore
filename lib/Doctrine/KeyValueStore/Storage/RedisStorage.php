@@ -49,13 +49,13 @@ class RedisStorage implements Storage
      * @param \Redis $redis
      * @param array $dbOptions
      */
-    public function __construct($redis, $dbOptions = array())
+    public function __construct($redis, $dbOptions = [])
     {
         $this->client = $redis;
 
-        $this->dbOptions = array_merge(array(
+        $this->dbOptions = array_merge([
             'keyPrefix' => $this->keyPrefix
-        ), $dbOptions);
+        ], $dbOptions);
     }
 
     /**

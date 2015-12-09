@@ -55,4 +55,3 @@ abstract class KeyValueStoreTestCase extends \PHPUnit_Framework_TestCase
         return new EntityManager($storage, $config);
     }
 }
-

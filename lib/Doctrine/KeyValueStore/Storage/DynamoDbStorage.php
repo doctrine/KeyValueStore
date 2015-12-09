@@ -79,11 +79,11 @@ class DynamoDbStorage implements Storage
 
         $this->prepareData($key, $data);
 
-        $result = $this->client->putItem(array(
+        $result = $this->client->putItem([
             'TableName' => $storageName,
             'Item' => $this->client->formatAttributes($data),
             'ReturnConsumedCapacity' => 'TOTAL'
-        ));
+        ]);
     }
 
     /**
@@ -96,18 +96,18 @@ class DynamoDbStorage implements Storage
         unset($data['id']);
 
         foreach ($data as $k => $v) {
-            $data[$k] = array(
+            $data[$k] = [
                 "Value" => $this->client->formatValue($v),
-            );
+            ];
         }
 
-        $result = $this->client->updateItem(array(
+        $result = $this->client->updateItem([
             'TableName' => $storageName,
-            'Key' => array(
-                "id" => array('S' => $key)
-            ),
+            'Key' => [
+                "id" => ['S' => $key]
+            ],
             "AttributeUpdates" => $data,
-        ));
+        ]);
     }
 
     /**
@@ -115,12 +115,12 @@ class DynamoDbStorage implements Storage
      */
     public function delete($storageName, $key)
     {
-        $result = $this->client->deleteItem(array(
+        $result = $this->client->deleteItem([
             'TableName' => $storageName,
-            'Key' => array(
-                'id' => array('S' => $key),
-            )
-        ));
+            'Key' => [
+                'id' => ['S' => $key],
+            ]
+        ]);
     }
 
     /**
@@ -128,12 +128,12 @@ class DynamoDbStorage implements Storage
      */
     public function find($storageName, $key)
     {
-        $iterator = new ItemIterator($this->client->getScanIterator(array(
+        $iterator = new ItemIterator($this->client->getScanIterator([
             "TableName" => $storageName,
-            "Key" => array(
-                "Id" => array('S' => $key),
-            ),
-        )));
+            "Key" => [
+                "Id" => ['S' => $key],
+            ],
+        ]));
 
         $results = $iterator->toArray();
 
@@ -161,29 +161,29 @@ class DynamoDbStorage implements Storage
     protected function createTable($tableName)
     {
         try {
-            $this->client->describeTable(array(
+            $this->client->describeTable([
                 'TableName' => $tableName,
-            ));
+            ]);
         } catch (ResourceNotFoundException $e) {
-            $this->client->createTable(array(
-                'AttributeDefinitions' => array(
-                    array(
+            $this->client->createTable([
+                'AttributeDefinitions' => [
+                    [
                         'AttributeName' => 'id',
                         'AttributeType' => 'S',
-                    ),
-                ),
+                    ],
+                ],
                 'TableName' => $tableName,
-                'KeySchema' => array(
-                    array(
+                'KeySchema' => [
+                    [
                         'AttributeName' => 'id',
                         'KeyType' => 'HASH',
-                    ),
-                ),
-                'ProvisionedThroughput' => array(
+                    ],
+                ],
+                'ProvisionedThroughput' => [
                     'ReadCapacityUnits' => 1,
                     'WriteCapacityUnits' => 1,
-                ),
-            ));
+                ],
+            ]);
         }
     }
 
@@ -193,12 +193,12 @@ class DynamoDbStorage implements Storage
      */
     protected function prepareData($key, &$data)
     {
-        $data = array_merge($data, array(
+        $data = array_merge($data, [
             'id' => $key,
-        ));
+        ]);
 
         foreach ($data as $key => $value) {
-            if ($value === null || $value === array() || $value === '') {
+            if ($value === null || $value === [] || $value === '') {
                 unset($data[$key]);
             }
         }

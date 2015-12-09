@@ -130,9 +130,9 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
     public function insert($storageName, $key, array $data)
     {
-        $headers = array(
+        $headers = [
             'Content-Type' => 'application/atom+xml',
-        );
+        ];
         // TODO: This sucks
         $tableName = $storageName;
 
@@ -174,9 +174,9 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
     public function createTable($tableName)
     {
-        $headers = array(
+        $headers = [
             'Content-Type' => 'application/atom+xml',
-        );
+        ];
 
         $dom       = $this->createDomDocumentRequestBody(self::XML_TEMPLATE_TABLE);
         $tableNode = $dom->getElementsByTagNameNS(self::DATA_NS, 'TableName')->item(0);
@@ -195,11 +195,11 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
     public function update($storageName, $key, array $data)
     {
-        $headers = array(
+        $headers = [
             'Content-Type' => 'application/atom+xml',
             'x-ms-date' => $this->now(),
             'If-Match' => '*',
-        );
+        ];
         // TODO: This sucks
         $tableName = $storageName;
 
@@ -232,12 +232,12 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
     public function delete($storageName, $key)
     {
-        $headers = array(
+        $headers = [
             'Content-Type' => 'application/atom+xml',
             'x-ms-date' => $this->now(),
             'Content-Length' => 0,
             'If-Match' => '*',
-        );
+        ];
 
         // TODO: This sucks
         $tableName = $storageName;
@@ -255,11 +255,11 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
     public function find($storageName, $key)
     {
-        $headers = array(
+        $headers = [
             'Content-Type' => 'application/atom+xml',
             'x-ms-date' => $this->now(),
             'Content-Length' => 0,
-        );
+        ];
 
         // TODO: This sucks
         $tableName = $storageName;
@@ -294,7 +294,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
     {
         $properties = $xpath->evaluate('atom:content/m:properties/d:*', $entry);
 
-        $data                        = array();
+        $data                        = [];
         list($partitionKey, $rowKey) = $keyNames;
 
         foreach ($properties as $property) {
@@ -330,15 +330,15 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
     public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null)
     {
-        $headers = array(
+        $headers = [
             'Content-Type' => 'application/atom+xml',
             'x-ms-date' => $this->now(),
             'Content-Length' => 0,
-        );
+        ];
 
-        $filters = array("PartitionKey eq " . $this->quoteFilterValue($query->getPartitionKey()));
+        $filters = ["PartitionKey eq " . $this->quoteFilterValue($query->getPartitionKey())];
         foreach ($query->getConditions() as $condition) {
-            if (!in_array($condition[0], array('eq', 'neq', 'le', 'lt', 'ge', 'gt'))) {
+            if (!in_array($condition[0], ['eq', 'neq', 'le', 'lt', 'ge', 'gt'])) {
                 throw new \InvalidArgumentException(
                     "Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions."
                 );
@@ -368,7 +368,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $xpath->registerNamespace('atom', "http://www.w3.org/2005/Atom");
         $entries = $xpath->evaluate('/atom:feed/atom:entry');
 
-        $results = array();
+        $results = [];
         foreach ($entries as $entry) {
             $data      = $this->createRow($key, $xpath, $entry);
             $results[] = $hydrateRow ? $hydrateRow($data) : $data;

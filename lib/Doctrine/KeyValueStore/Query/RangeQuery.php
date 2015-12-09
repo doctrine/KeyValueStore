@@ -51,7 +51,7 @@ class RangeQuery
     /**
      * @var array
      */
-    protected $conditions = array();
+    protected $conditions = [];
 
     /**
      * Limit result to only a set of entities.
@@ -65,7 +65,7 @@ class RangeQuery
      *
      * @var array
      */
-    protected $hints = array();
+    protected $hints = [];
 
     /**
      * @var EntityManager
@@ -118,7 +118,7 @@ class RangeQuery
      */
     public function rangeEquals($value)
     {
-        $this->conditions[] = array(self::CONDITION_EQ, $value);
+        $this->conditions[] = [self::CONDITION_EQ, $value];
         return $this;
     }
 
@@ -130,7 +130,7 @@ class RangeQuery
      */
     public function rangeNotEquals($value)
     {
-        $this->conditions[] = array(self::CONDITION_NEQ, $value);
+        $this->conditions[] = [self::CONDITION_NEQ, $value];
         return $this;
     }
 
@@ -142,7 +142,7 @@ class RangeQuery
      */
     public function rangeLessThan($value)
     {
-        $this->conditions[] = array(self::CONDITION_LT, $value);
+        $this->conditions[] = [self::CONDITION_LT, $value];
         return $this;
     }
 
@@ -154,7 +154,7 @@ class RangeQuery
      */
     public function rangeLessThanEquals($value)
     {
-        $this->conditions[] = array(self::CONDITION_LE, $value);
+        $this->conditions[] = [self::CONDITION_LE, $value];
         return $this;
     }
 
@@ -166,7 +166,7 @@ class RangeQuery
      */
     public function rangeGreaterThan($value)
     {
-        $this->conditions[] = array(self::CONDITION_GT, $value);
+        $this->conditions[] = [self::CONDITION_GT, $value];
         return $this;
     }
 
@@ -178,7 +178,7 @@ class RangeQuery
      */
     public function rangeGreaterThanEquals($value)
     {
-        $this->conditions[] = array(self::CONDITION_GE, $value);
+        $this->conditions[] = [self::CONDITION_GE, $value];
         return $this;
     }
 
@@ -211,7 +211,7 @@ class RangeQuery
         $class = $this->em->getClassMetadata($this->className);
 
         $rowHydration = function ($row) use ($uow, $class) {
-            $key = array();
+            $key = [];
             foreach ($class->identifier as $id) {
                 $key[$id] = $row[$id];
             }

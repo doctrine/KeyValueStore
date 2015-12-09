@@ -49,13 +49,13 @@ class MongoDbStorage implements Storage
      * @param \Mongo $mongo
      * @param array $dbOptions
      */
-    public function __construct(\Mongo $mongo, array $dbOptions = array())
+    public function __construct(\Mongo $mongo, array $dbOptions = [])
     {
         $this->mongo     = $mongo;
-        $this->dbOptions = array_merge(array(
+        $this->dbOptions = array_merge([
             'database' => '',
             'collection' => '',
-        ), $dbOptions);
+        ], $dbOptions);
     }
 
     /**
@@ -114,10 +114,10 @@ class MongoDbStorage implements Storage
     {
         $this->initialize();
 
-        $value = array(
+        $value = [
             'key'   => $key,
             'value' => $data,
-        );
+        ];
 
         $this->collection->insert($value);
     }
@@ -129,12 +129,12 @@ class MongoDbStorage implements Storage
     {
         $this->initialize();
 
-        $value = array(
+        $value = [
             'key'   => $key,
             'value' => $data,
-        );
+        ];
 
-        $this->collection->update(array('key' => $key), $value);
+        $this->collection->update(['key' => $key], $value);
     }
 
     /**
@@ -144,7 +144,7 @@ class MongoDbStorage implements Storage
     {
         $this->initialize();
 
-        $this->collection->remove(array('key' => $key));
+        $this->collection->remove(['key' => $key]);
     }
 
     /**
@@ -154,7 +154,7 @@ class MongoDbStorage implements Storage
     {
         $this->initialize();
 
-        $value = $this->collection->findOne(array('key' => $key), array('value'));
+        $value = $this->collection->findOne(['key' => $key], ['value']);
 
         if ($value) {
             return $value['value'];

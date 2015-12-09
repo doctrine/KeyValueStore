@@ -84,7 +84,7 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
     {
         $this->manager = $this->createManager($this->storage, $mappingDriver);
 
-        $this->populate(1, array('id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => __NAMESPACE__ . '\\Post'));
+        $this->populate(1, ['id' => 1, 'headline' => 'test', 'body' => 'tset', 'foo' => 'bar', 'php_class' => __NAMESPACE__ . '\\Post']);
 
         $post = $this->manager->find(__NAMESPACE__ . '\\Post', 1);
 
@@ -117,13 +117,13 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
         $this->manager->flush();
 
         $this->assertEquals(
-            array(
+            [
                 'id' => 1,
                 'headline' => 'asdf',
                 'body' => 'bar',
                 'text' => 'baz',
                 'php_class' => __NAMESPACE__ . '\\Post'
-            ),
+            ],
             $this->find(1)
         );
     }

@@ -45,7 +45,7 @@ class XmlDriver extends FileDriver
      */
     protected function loadMappingFile($file)
     {
-        $result = array();
+        $result = [];
         $xmlElement = simplexml_load_file($file);
 
         if (isset($xmlElement->entity)) {
@@ -111,9 +111,9 @@ class XmlDriver extends FileDriver
                 continue;
             }
 
-            $metadata->mapField(array(
+            $metadata->mapField([
                 'fieldName' => $property->getName(),
-            ));
+            ]);
         }
     }
 }

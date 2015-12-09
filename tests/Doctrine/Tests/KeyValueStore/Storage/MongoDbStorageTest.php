@@ -31,20 +31,20 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
              ->method('selectCollection')
              ->will($this->returnValue($this->collection));
 
-        $this->storage = new MongoDbStorage($this->mongo, array(
+        $this->storage = new MongoDbStorage($this->mongo, [
             'collection' => 'test',
             'database' => 'test'
-        ));
+        ]);
     }
 
     public function testInsert()
     {
-        $data = array(
+        $data = [
             'author' => 'John Doe',
             'title'  => 'example book',
-        );
+        ];
 
-        $dbDataset = array();
+        $dbDataset = [];
 
         $this->collection->expects($this->once())
             ->method('insert')
@@ -55,41 +55,41 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
         $this->storage->insert('mongodb', '1', $data);
         $this->assertCount(1, $dbDataset);
 
-        $this->assertEquals(array(array('key' => '1', 'value' => $data)), $dbDataset);
+        $this->assertEquals([['key' => '1', 'value' => $data]], $dbDataset);
     }
 
     public function testUpdate()
     {
-        $data = array(
+        $data = [
             'author' => 'John Doe',
             'title'  => 'example book',
-        );
+        ];
 
-        $dbDataset = array();
+        $dbDataset = [];
 
         $this->collection->expects($this->once())
             ->method('update')
             ->will($this->returnCallback(function($citeria, $data) use (&$dbDataset) {
-                $dbDataset = array($citeria, $data);
+                $dbDataset = [$citeria, $data];
             }));
 
         $this->storage->update('mongodb', '1', $data);
 
-        $this->assertEquals(array('key' => '1'), $dbDataset[0]);
-        $this->assertEquals(array('key' => '1', 'value' => $data), $dbDataset[1]);
+        $this->assertEquals(['key' => '1'], $dbDataset[0]);
+        $this->assertEquals(['key' => '1', 'value' => $data], $dbDataset[1]);
     }
 
     public function testDelete()
     {
-        $dataset = array(
-            array(
+        $dataset = [
+            [
                 'key' => 'foobar',
-                'value' => array(
+                'value' => [
                     'author' => 'John Doe',
                     'title'  => 'example book',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $this->collection->expects($this->once())
              ->method('remove')
@@ -109,15 +109,15 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testFind()
     {
-        $dataset = array(
-            array(
+        $dataset = [
+            [
                 'key' => 'foobar',
-                'value' => array(
+                'value' => [
                     'author' => 'John Doe',
                     'title'  => 'example book',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $this->collection->expects($this->once())
             ->method('findOne')
