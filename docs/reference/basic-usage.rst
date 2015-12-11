@@ -1,7 +1,41 @@
 Basic Usage
 ===========
 
-Suppose we track e-mail campaigns based on campaign id and recipients.
+Requirements
+------------
+
+This guide covers getting started with the Doctrine Key Value Store.
+
+To use the KeyValueStore you actually need:
+
+- PHP 5.5 or above
+- Composer Package Manager (`Install Composer
+  <http://getcomposer.org/doc/00-intro.md>`_)
+
+Installation
+------------
+
+To install the KeyValueStore in your project just run the Composer command:
+
+..
+
+    $ composer require doctrine/key-value-store
+
+or add it to your composer.json file with:
+
+..
+
+    {
+        "require": {
+            "doctrine/key-value-store": "^1.0"
+        }
+    }
+
+Usage Examples
+--------------
+
+In the guide examples we suppose to track e-mail campaigns
+based on campaign id and recipients.
 
 .. code-block:: php
 
