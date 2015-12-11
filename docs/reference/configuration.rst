@@ -56,6 +56,7 @@ So far the following drivers exist (and are documented here):
 * SQL Backend with Doctrine DBAL
 * Microsoft Windows Azure Table
 * Couchbase
+* CouchDB
 * MongoDB
 * Riak
 
@@ -144,6 +145,24 @@ Until the version 1.2 also Couchbase is supported:
     $conn = new Couchbase(/* connection parameters */);
 
     $storage = new CouchbaseStorage($conn);
+
+CouchDB
+-------
+
+CouchDB storage setup based on `doctrine/couchdb-client <https://github.com/doctrine/couchdb-client>`_:
+
+.. code-block:: php
+
+    <?php
+
+    use Doctrine\CouchDB\CouchDBClient;
+    use Doctrine\KeyValueStore\Storage\CouchDbStorage;
+
+    $client = CouchDBClient::create(array(
+        'dbname' => 'doctrine_example',
+    ));
+
+    $storage = new CouchDbStorage($client);
 
 MongoDB
 -------
