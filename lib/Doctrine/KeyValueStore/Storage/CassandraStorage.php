@@ -19,9 +19,8 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\Query\RangeQuery;
-use Doctrine\KeyValueStore\Query\RangeQueryStorage;
 use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\Query\RangeQuery;
 
 use Cassandra\Session;
 use Cassandra\ExecutionOptions;
@@ -29,12 +28,11 @@ use Cassandra\ExecutionOptions;
 /**
  * Cassandra Storage Engine for KeyValueStore.
  *
- * Uses the new PHP Driver from Datastax {@link
- * https://github.com/datastax/php-driver}. Cassandra supports range queries
- * over a partition key, so we are using the RangeQueryStorage here to
- * implement more complex queries.
+ * Uses the PHP Driver from Datastax.
+ *
+ * @uses https://github.com/datastax/php-driver
  */
-class CassandraStorage implements Storage, RangeQueryStorage
+class CassandraStorage implements Storage
 {
     /**
      * @var \Cassandra\Session
@@ -90,8 +88,9 @@ class CassandraStorage implements Storage, RangeQueryStorage
         $cql = "INSERT INTO " . $storageName . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', array_fill(0, count($values), '?')) . ")";
         $stmt = $this->session->prepare($cql);
 
-        $options = new ExecutionOptions();
-        $options->arguments = $values;
+        $options = new ExecutionOptions([
+            'arguments' => $values,
+        ]);
 
         $this->session->execute($stmt, $options);
     }
@@ -117,8 +116,9 @@ class CassandraStorage implements Storage, RangeQueryStorage
 
         $values = array_merge(array_values($data), array_values($key));
 
-        $options = new ExecutionOptions();
-        $options->arguments = $values;
+        $options = new ExecutionOptions([
+            'arguments' => $values,
+        ]);
 
         $this->session->execute($stmt, $options);
     }
@@ -137,8 +137,9 @@ class CassandraStorage implements Storage, RangeQueryStorage
         $cql = "DELETE FROM " . $storageName . " WHERE " . implode(' AND ', $where);
         $stmt = $this->session->prepare($cql);
 
-        $options = new ExecutionOptions();
-        $options->arguments = array_values($key);
+        $options = new ExecutionOptions([
+            'arguments' => array_values($key),
+        ]);
 
         $this->session->execute($stmt, $options);
     }
@@ -157,8 +158,9 @@ class CassandraStorage implements Storage, RangeQueryStorage
         $cql = "SELECT * FROM " . $storageName . " WHERE " . implode(' AND ', $where);
         $stmt = $this->session->prepare($cql);
 
-        $options = new ExecutionOptions();
-        $options->arguments = array_values($key);
+        $options = new ExecutionOptions([
+            'arguments' => array_values($key),
+        ]);
 
         $result = $this->session->execute($stmt, $options);
         $rows = iterator_to_array($result);
@@ -177,14 +179,6 @@ class CassandraStorage implements Storage, RangeQueryStorage
         }
 
         return $data;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null)
-    {
-        throw new \RuntimeException("TODO: Implement");
     }
 
     /**

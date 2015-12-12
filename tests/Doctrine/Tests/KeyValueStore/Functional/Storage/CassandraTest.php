@@ -16,12 +16,13 @@ class CassandraTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Cassandra Extension is not installed.');
         }
 
-        $cluster = Cassandra::cluster()->build();
-        $this->session = $cluster->connect();
-
         try {
+            $cluster = Cassandra::cluster()->build();
+            $this->session = $cluster->connect();
+
             $this->session->execute(new \Cassandra\SimpleStatement("DROP KEYSPACE doctrine"));
         } catch (\Cassandra\Exception\RuntimeException $e) {
+            $this->markTestSkipped($e->getMessage());
         }
 
         $cql = "CREATE KEYSPACE doctrine WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };";
