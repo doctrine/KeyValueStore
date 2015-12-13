@@ -7,14 +7,7 @@ php:
   - hhvm
 
 before_install:
-  - if [[ $TRAVIS_PHP_VERSION != "hhvm" && $TRAVIS_PHP_VERSION != "7.0" ]]; then sudo sh -c "echo 'JVM_OPTS=\"\${JVM_OPTS} -Djava.net.preferIPv4Stack=false\"' >> /usr/local/cassandra/conf/cassandra-env.sh"; fi
-  - if [[ $TRAVIS_PHP_VERSION != "hhvm" && $TRAVIS_PHP_VERSION != "7.0" ]]; then sudo service cassandra start; fi
-  - if [[ $TRAVIS_PHP_VERSION != "hhvm" && $TRAVIS_PHP_VERSION != "7.0" ]]; then sudo apt-add-repository -y ppa:linuxjedi/ppa; fi
-  - if [[ $TRAVIS_PHP_VERSION != "hhvm" && $TRAVIS_PHP_VERSION != "7.0" ]]; then sudo apt-get update; fi
-  - if [[ $TRAVIS_PHP_VERSION != "hhvm" && $TRAVIS_PHP_VERSION != "7.0" ]]; then sudo apt-get install -y libuv-dev libssl-dev; fi
-  - if [[ $TRAVIS_PHP_VERSION != "hhvm" && $TRAVIS_PHP_VERSION != "7.0" ]]; then cd /tmp && git clone https://github.com/datastax/php-driver.git && cd php-driver && git submodule update --init; fi
-  - if [[ $TRAVIS_PHP_VERSION != "hhvm" && $TRAVIS_PHP_VERSION != "7.0" ]]; then cd ext && ./install.sh && cd "$TRAVIS_BUILD_DIR"; fi
-  - if [[ $TRAVIS_PHP_VERSION != "hhvm" && $TRAVIS_PHP_VERSION != "7.0" ]]; then echo "extension=cassandra.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`; fi
+  - if [[ $TRAVIS_PHP_VERSION != "hhvm" && $TRAVIS_PHP_VERSION != "7.0" ]]; then sh ./tests/travis.sh; fi
   - composer self-update
 
 install:
