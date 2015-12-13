@@ -6,6 +6,7 @@
         "doctrine/couchdb": "^1.0.0-beta4"
     },
     "require-dev": {
+        "datastax/php-driver": "^1.0",
         "phpunit/phpunit": "^4.8",
         "riak/riak-client": "dev-master"
     },
