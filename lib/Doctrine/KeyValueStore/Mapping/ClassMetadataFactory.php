@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,10 +21,10 @@
 namespace Doctrine\KeyValueStore\Mapping;
 
 use Doctrine\Common\Persistence\Mapping\AbstractClassMetadataFactory;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\KeyValueStore\Mapping\ClassMetadata as KeyValueMetadata;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\ReflectionService;
+use Doctrine\KeyValueStore\Mapping\ClassMetadata as KeyValueMetadata;
 
 /**
  * Load Metadata of an entity.
@@ -45,7 +46,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
 
     protected function getFqcnFromAlias($namespaceAlias, $simpleClassName)
     {
-        throw new \InvalidArgumentException("aliasing is not supported.");
+        throw new \InvalidArgumentException('aliasing is not supported.');
     }
 
     protected function doLoadMetadata($class, $parent, $rootEntityFound, array $nonSuperclassParents)
@@ -57,13 +58,13 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
             $class->storageName   = $parent->storageName;
         }
 
-        if (!$class->storageName) {
-            $parts              = explode("\\", $class->name);
+        if ( ! $class->storageName) {
+            $parts              = explode('\\', $class->name);
             $class->storageName = end($parts);
         }
 
-        if (!$class->identifier) {
-            throw new \InvalidArgumentException("Class " . $class->name . " has no identifier.");
+        if ( ! $class->identifier) {
+            throw new \InvalidArgumentException('Class ' . $class->name . ' has no identifier.');
         }
     }
 

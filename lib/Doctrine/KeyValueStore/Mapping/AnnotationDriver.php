@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,8 +20,8 @@
 
 namespace Doctrine\KeyValueStore\Mapping;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 
 class AnnotationDriver implements MappingDriver
@@ -45,21 +46,21 @@ class AnnotationDriver implements MappingDriver
     /**
      * Loads the metadata for the specified class into the provided container.
      *
-     * @param string $className
+     * @param string        $className
      * @param ClassMetadata $metadata
      */
     public function loadMetadataForClass($className, ClassMetadata $metadata)
     {
         $class = $metadata->getReflectionClass();
-        if (!$class) {
+        if ( ! $class) {
             // this happens when running annotation driver in combination with
             // static reflection services. This is not the nicest fix
             $class = new \ReflectionClass($metadata->name);
         }
 
         $entityAnnot = $this->reader->getClassAnnotation($class, 'Doctrine\KeyValueStore\Mapping\Annotations\Entity');
-        if (!$entityAnnot) {
-            throw new \InvalidArgumentException($metadata->name . " is not a valid key-value-store entity.");
+        if ( ! $entityAnnot) {
+            throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
         }
         $metadata->storageName = $entityAnnot->storageName;
 
@@ -98,7 +99,8 @@ class AnnotationDriver implements MappingDriver
      * MappedSuperclass.
      *
      * @param string $className
-     * @return boolean
+     *
+     * @return bool
      */
     public function isTransient($className)
     {

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,14 +20,13 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use WindowsAzure\Table\TableRestProxy;
-use WindowsAzure\Table\Models\Entity;
-use WindowsAzure\Table\Models\EdmType;
-use WindowsAzure\Common\ServiceException;
-
 use Doctrine\KeyValueStore\NotFoundException;
 use Doctrine\KeyValueStore\Query\RangeQuery;
 use Doctrine\KeyValueStore\Query\RangeQueryStorage;
+use WindowsAzure\Common\ServiceException;
+use WindowsAzure\Table\Models\EdmType;
+use WindowsAzure\Table\Models\Entity;
+use WindowsAzure\Table\TableRestProxy;
 
 /**
  * Storage implementation for Microsoft Windows Azure Table using the PHP SDK.
@@ -83,7 +83,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
                 $this->client->createTable($storageName);
             } else {
                 throw new StorageException(
-                    "Could not save entity in table, WindowsAzure SDK client reported error: " . $e->getMessage(),
+                    'Could not save entity in table, WindowsAzure SDK client reported error: ' . $e->getMessage(),
                     $e->getCode(),
                     $e
                 );
@@ -102,7 +102,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
             $this->client->updateEntity($storageName, $entity);
         } catch (ServiceException $e) {
             throw new StorageException(
-                "Could not update entity in table, WindowsAzure SDK client reported error: " . $e->getMessage(),
+                'Could not update entity in table, WindowsAzure SDK client reported error: ' . $e->getMessage(),
                 $e->getCode(),
                 $e
             );
@@ -114,13 +114,13 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
      */
     public function delete($storageName, $key)
     {
-        list ($partitonKey, $rowKey) = array_values($key);
+        list($partitonKey, $rowKey) = array_values($key);
 
         try {
             $this->client->deleteEntity($storageName, $partitonKey, $rowKey);
         } catch (ServiceException $e) {
             throw new StorageException(
-                "Could not delete entity in table, WindowsAzure SDK client reported error: " . $e->getMessage(),
+                'Could not delete entity in table, WindowsAzure SDK client reported error: ' . $e->getMessage(),
                 $e->getCode(),
                 $e
             );
@@ -132,7 +132,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
      */
     public function find($storageName, $key)
     {
-        list ($partitonKey, $rowKey) = array_values($key);
+        list($partitonKey, $rowKey) = array_values($key);
 
         try {
             $result = $this->client->getEntity($storageName, $partitonKey, $rowKey);
@@ -141,7 +141,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
                 throw new NotFoundException();
             } else {
                 throw new StorageException(
-                    "Could not find entity in table, WindowsAzure SDK client reported error: " . $e->getMessage(),
+                    'Could not find entity in table, WindowsAzure SDK client reported error: ' . $e->getMessage(),
                     $e->getCode(),
                     $e
                 );
@@ -181,18 +181,18 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
      */
     public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null)
     {
-        $filters = ["PartitionKey eq " . $this->quoteFilterValue($query->getPartitionKey())];
+        $filters = ['PartitionKey eq ' . $this->quoteFilterValue($query->getPartitionKey())];
 
         foreach ($query->getConditions() as $condition) {
-            if (!in_array($condition[0], ['eq', 'neq', 'le', 'lt', 'ge', 'gt'])) {
+            if ( ! in_array($condition[0], ['eq', 'neq', 'le', 'lt', 'ge', 'gt'])) {
                 throw new \InvalidArgumentException(
-                    "Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions."
+                    'Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions.'
                 );
             }
-            $filters[] = "RowKey " . $condition[0] . " " . $this->quoteFilterValue($condition[1]);
+            $filters[] = 'RowKey ' . $condition[0] . ' ' . $this->quoteFilterValue($condition[1]);
         }
 
-        $filter = '(' . implode(" and ", $filters) . ')';
+        $filter = '(' . implode(' and ', $filters) . ')';
         $result = $this->client->queryEntities($storageName, $filter);
 
         $rows = [];
@@ -207,7 +207,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
 
     private function quoteFilterValue($value)
     {
-        return "'" . str_replace("'", "", $value) . "'";
+        return "'" . str_replace("'", '', $value) . "'";
     }
 
     /**
@@ -215,15 +215,16 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
      *
      * @param array $key
      * @param array $data
+     *
      * @return \WindowsAzure\Table\Model\Entity
      */
     private function createEntity(array $key, array $data)
     {
-        list ($partitonKey, $rowKey) = array_values($key);
+        list($partitonKey, $rowKey) = array_values($key);
 
         $entity = new Entity();
-        $entity->setPartitionKey((string)$partitonKey);
-        $entity->setRowKey((string)$rowKey);
+        $entity->setPartitionKey((string) $partitonKey);
+        $entity->setRowKey((string) $rowKey);
 
         foreach ($data as $variable => $value) {
             $type = $this->getPropertyType($value);

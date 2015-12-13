@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -47,13 +48,13 @@ class MongoDbStorage implements Storage
      * Constructor
      *
      * @param \Mongo $mongo
-     * @param array $dbOptions
+     * @param array  $dbOptions
      */
     public function __construct(\Mongo $mongo, array $dbOptions = [])
     {
         $this->mongo     = $mongo;
         $this->dbOptions = array_merge([
-            'database' => '',
+            'database'   => '',
             'collection' => '',
         ], $dbOptions);
     }
@@ -79,8 +80,7 @@ class MongoDbStorage implements Storage
         $this->collection = $this
             ->mongo
             ->selectDB($this->dbOptions['database'])
-            ->selectCollection($this->dbOptions['collection'])
-        ;
+            ->selectCollection($this->dbOptions['collection']);
     }
 
     /**

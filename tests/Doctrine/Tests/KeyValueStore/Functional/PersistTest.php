@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -13,14 +14,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
 namespace Doctrine\Tests\KeyValueStore\Functional;
 
-use Doctrine\Tests\KeyValueStoreTestCase;
 use Doctrine\KeyValueStore\Mapping\Annotations as KVS;
+use Doctrine\Tests\KeyValueStoreTestCase;
 
 class PersistTest extends KeyValueStoreTestCase
 {
@@ -52,11 +53,11 @@ class PersistTest extends KeyValueStoreTestCase
      */
     public function testPersistKnownIdThrowsException($mappingDriver)
     {
-        $manager = $this->createManager(null, $mappingDriver);
-        $persist = new PersistEntity();
+        $manager     = $this->createManager(null, $mappingDriver);
+        $persist     = new PersistEntity();
         $persist->id = 1;
 
-        $persist2 = new PersistEntity();
+        $persist2     = new PersistEntity();
         $persist2->id = 1;
 
         $manager->persist($persist);

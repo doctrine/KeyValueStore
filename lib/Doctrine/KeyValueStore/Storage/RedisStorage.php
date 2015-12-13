@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -47,14 +48,14 @@ class RedisStorage implements Storage
      * Constructor
      *
      * @param \Redis $redis
-     * @param array $dbOptions
+     * @param array  $dbOptions
      */
     public function __construct($redis, $dbOptions = [])
     {
         $this->client = $redis;
 
         $this->dbOptions = array_merge([
-            'keyPrefix' => $this->keyPrefix
+            'keyPrefix' => $this->keyPrefix,
         ], $dbOptions);
     }
 
@@ -117,7 +118,7 @@ class RedisStorage implements Storage
     {
         $key = $this->getKeyName($key);
 
-        if (! $this->client->exists($key)) {
+        if ( ! $this->client->exists($key)) {
             throw new NotFoundException();
         }
 
@@ -137,7 +138,8 @@ class RedisStorage implements Storage
     /**
      * Add prefix to Redis key space name
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return string
      */
     public function getKeyName($key)

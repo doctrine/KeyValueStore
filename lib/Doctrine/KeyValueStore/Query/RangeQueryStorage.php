@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -31,9 +32,10 @@ interface RangeQueryStorage
      * Execute the range query and return a ResultIterator
      *
      * @param RangeQuery $query
-     * @param string $storageName
-     * @param array $key
-     * @param Closure $hydrateRow
+     * @param string     $storageName
+     * @param array      $key
+     * @param Closure    $hydrateRow
+     *
      * @return ResultIterator
      */
     public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null);

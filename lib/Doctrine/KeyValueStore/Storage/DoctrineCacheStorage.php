@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -61,11 +62,11 @@ class DoctrineCacheStorage implements Storage
 
     private function flattenKey($storageName, $key)
     {
-        if (!$this->supportsCompositeKeys) {
-            return $storageName . "-" . $key;
+        if ( ! $this->supportsCompositeKeys) {
+            return $storageName . '-' . $key;
         }
 
-        $hash = $storageName . "-oid:";
+        $hash = $storageName . '-oid:';
         ksort($key);
         foreach ($key as $property => $value) {
             $hash .= "$property=$value;";

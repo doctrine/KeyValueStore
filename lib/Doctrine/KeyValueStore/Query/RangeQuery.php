@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -114,6 +115,7 @@ class RangeQuery
      * Add range equals condition to range key.
      *
      * @param mixed $value
+     *
      * @return RangeQuery
      */
     public function rangeEquals($value)
@@ -126,6 +128,7 @@ class RangeQuery
      * Add range not equals condition to range key.
      *
      * @param mixed $value
+     *
      * @return RangeQuery
      */
     public function rangeNotEquals($value)
@@ -138,6 +141,7 @@ class RangeQuery
      * Add range less than condition to range key.
      *
      * @param mixed $value
+     *
      * @return RangeQuery
      */
     public function rangeLessThan($value)
@@ -150,6 +154,7 @@ class RangeQuery
      * Add range less than equals condition to range key.
      *
      * @param mixed $value
+     *
      * @return RangeQuery
      */
     public function rangeLessThanEquals($value)
@@ -162,6 +167,7 @@ class RangeQuery
      * Add range greater than condition to range key.
      *
      * @param mixed $value
+     *
      * @return RangeQuery
      */
     public function rangeGreaterThan($value)
@@ -174,6 +180,7 @@ class RangeQuery
      * Add range greater than equals condition to range key.
      *
      * @param mixed $value
+     *
      * @return RangeQuery
      */
     public function rangeGreaterThanEquals($value)
@@ -201,9 +208,9 @@ class RangeQuery
     {
         $storage = $this->em->unwrap();
 
-        if (!($storage instanceof RangeQueryStorage)) {
+        if ( ! ($storage instanceof RangeQueryStorage)) {
             throw new \RuntimeException(
-                "The storage backend " . $this->storage->getName() . " does not support range queries."
+                'The storage backend ' . $this->storage->getName() . ' does not support range queries.'
             );
         }
 

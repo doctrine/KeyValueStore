@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -32,7 +33,8 @@ interface IdHandlingStrategy
      * Given an unstructured key format and a class metadata, generate a key.
      *
      * @param ClassMetadata $metadata
-     * @param string|array $key
+     * @param string|array  $key
+     *
      * @return string|array
      */
     public function normalizeId(ClassMetadata $metadata, $key);
@@ -41,7 +43,8 @@ interface IdHandlingStrategy
      * Extract identifier from an object
      *
      * @param ClassMetadata $metadata
-     * @param object $object
+     * @param object        $object
+     *
      * @return string|array
      */
     public function getIdentifier(ClassMetadata $metadata, $object);
@@ -50,6 +53,7 @@ interface IdHandlingStrategy
      * Given a normalized key, generate a hash version for it.
      *
      * @param array|string $key
+     *
      * @return string
      */
     public function hash($key);

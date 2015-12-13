@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,10 +20,10 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\ResourceNotFoundException;
 use Aws\DynamoDb\Iterator\ItemIterator;
+use Doctrine\KeyValueStore\NotFoundException;
 
 /**
  * DyanmoDb storage
@@ -80,9 +81,9 @@ class DynamoDbStorage implements Storage
         $this->prepareData($key, $data);
 
         $result = $this->client->putItem([
-            'TableName' => $storageName,
-            'Item' => $this->client->formatAttributes($data),
-            'ReturnConsumedCapacity' => 'TOTAL'
+            'TableName'              => $storageName,
+            'Item'                   => $this->client->formatAttributes($data),
+            'ReturnConsumedCapacity' => 'TOTAL',
         ]);
     }
 
@@ -97,16 +98,16 @@ class DynamoDbStorage implements Storage
 
         foreach ($data as $k => $v) {
             $data[$k] = [
-                "Value" => $this->client->formatValue($v),
+                'Value' => $this->client->formatValue($v),
             ];
         }
 
         $result = $this->client->updateItem([
             'TableName' => $storageName,
-            'Key' => [
-                "id" => ['S' => $key]
+            'Key'       => [
+                'id' => ['S' => $key],
             ],
-            "AttributeUpdates" => $data,
+            'AttributeUpdates' => $data,
         ]);
     }
 
@@ -117,9 +118,9 @@ class DynamoDbStorage implements Storage
     {
         $result = $this->client->deleteItem([
             'TableName' => $storageName,
-            'Key' => [
+            'Key'       => [
                 'id' => ['S' => $key],
-            ]
+            ],
         ]);
     }
 
@@ -129,9 +130,9 @@ class DynamoDbStorage implements Storage
     public function find($storageName, $key)
     {
         $iterator = new ItemIterator($this->client->getScanIterator([
-            "TableName" => $storageName,
-            "Key" => [
-                "Id" => ['S' => $key],
+            'TableName' => $storageName,
+            'Key'       => [
+                'Id' => ['S' => $key],
             ],
         ]));
 
@@ -153,7 +154,6 @@ class DynamoDbStorage implements Storage
     {
         return 'dynamodb';
     }
-    
 
     /**
      * @param string $tableName
@@ -176,11 +176,11 @@ class DynamoDbStorage implements Storage
                 'KeySchema' => [
                     [
                         'AttributeName' => 'id',
-                        'KeyType' => 'HASH',
+                        'KeyType'       => 'HASH',
                     ],
                 ],
                 'ProvisionedThroughput' => [
-                    'ReadCapacityUnits' => 1,
+                    'ReadCapacityUnits'  => 1,
                     'WriteCapacityUnits' => 1,
                 ],
             ]);
@@ -188,8 +188,8 @@ class DynamoDbStorage implements Storage
     }
 
     /**
-     * @param string $key 
-     * @param array $data 
+     * @param string $key
+     * @param array  $data
      */
     protected function prepareData($key, &$data)
     {

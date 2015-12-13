@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,14 +26,14 @@ class CompositeIdHandler implements IdHandlingStrategy
 {
     public function normalizeId(ClassMetadata $metadata, $key)
     {
-        if (!$metadata->isCompositeKey && !is_array($key)) {
+        if ( ! $metadata->isCompositeKey && ! is_array($key)) {
             $id = [$metadata->identifier[0] => $key];
-        } elseif (!is_array($key)) {
-            throw new \InvalidArgumentException("Array of identifier key-value pairs is expected!");
+        } elseif ( ! is_array($key)) {
+            throw new \InvalidArgumentException('Array of identifier key-value pairs is expected!');
         } else {
             $id = [];
             foreach ($metadata->identifier as $field) {
-                if (!isset($key[$field])) {
+                if ( ! isset($key[$field])) {
                     throw new \InvalidArgumentException(
                         "Missing identifier field $field in request for the primary key."
                     );
@@ -51,6 +52,6 @@ class CompositeIdHandler implements IdHandlingStrategy
 
     public function hash($key)
     {
-        return implode('__##__', (array)$key);
+        return implode('__##__', (array) $key);
     }
 }

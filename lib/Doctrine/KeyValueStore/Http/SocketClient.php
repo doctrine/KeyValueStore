@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,9 +26,12 @@ namespace Doctrine\KeyValueStore\Http;
  * extension dependencies.
  *
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @link        www.doctrine-project.com
  * @since       1.0
+ *
  * @author      Kore Nordmann <kore@arbitracker.org>
+ *
  * @deprecated  This class is deprecated and will be removed in 2.0.
  */
 class SocketClient implements Client
@@ -57,20 +61,18 @@ class SocketClient implements Client
      *
      * Checks if the connection already has been established, or tries to
      * establish the connection, if not done yet.
-     *
-     * @return void
      */
     protected function checkConnection($host, $port)
     {
-        $host = ($port == 443) ? "ssl://" . $host : "tcp://" . $host;
+        $host = ($port == 443) ? 'ssl://' . $host : 'tcp://' . $host;
 
         // If the connection could not be established, fsockopen sadly does not
         // only return false (as documented), but also always issues a warning.
         if (($this->connection === null) &&
-            (($this->connection = @stream_socket_client($host . ":" . $port, $errno, $errstr)) === false)) {
+            (($this->connection = @stream_socket_client($host . ':' . $port, $errno, $errstr)) === false)) {
             // This is a bit hackisch...
             $this->connection = null;
-            throw new \RuntimeException("fail");
+            throw new \RuntimeException('fail');
         }
     }
 
@@ -82,6 +84,7 @@ class SocketClient implements Client
      * @param string $method
      * @param string $path
      * @param string $data
+     *
      * @return string
      */
     protected function buildRequest($method, $url, $data, $headers)
@@ -96,13 +99,13 @@ class SocketClient implements Client
         // Set keep-alive header, which helps to keep to connection
         // initilization costs low, especially when the database server is not
         // available in the locale net.
-        $request .= "Connection: " . ( $this->options['keep-alive'] ? 'Keep-Alive' : 'Close' ) . "\r\n";
+        $request .= 'Connection: ' . ($this->options['keep-alive'] ? 'Keep-Alive' : 'Close') . "\r\n";
 
         // Also add headers and request body if data should be sent to the
         // server. Otherwise just add the closing mark for the header section
         // of the request.
         foreach ($headers as $name => $header) {
-            $request .= $name . ": " . $header . "\r\n";
+            $request .= $name . ': ' . $header . "\r\n";
         }
         $request = rtrim($request) . "\r\n\r\n";
 
@@ -124,7 +127,8 @@ class SocketClient implements Client
      * @param string $method
      * @param string $path
      * @param string $data
-     * @param bool $raw
+     * @param bool   $raw
+     *
      * @return Response
      */
     public function request($method, $url, $data = null, array $headers = [])
@@ -148,12 +152,12 @@ class SocketClient implements Client
         // Read server response headers
         $rawHeaders = '';
         $headers    = [
-            'connection' => ( $this->options['keep-alive'] ? 'Keep-Alive' : 'Close' ),
+            'connection' => ($this->options['keep-alive'] ? 'Keep-Alive' : 'Close'),
         ];
 
         // Remove leading newlines, should not accur at all, actually.
         while (true) {
-            if (!(($line = fgets($this->connection)) !== false) || !(($lineContent = rtrim($line)) === '')) {
+            if ( ! (($line = fgets($this->connection)) !== false) || ! (($lineContent = rtrim($line)) === '')) {
                 break;
             }
         }
@@ -190,11 +194,11 @@ class SocketClient implements Client
 
         // Read response body
         $body = '';
-        if (!isset($headers['transfer-encoding']) ||
+        if ( ! isset($headers['transfer-encoding']) ||
              ($headers['transfer-encoding'] !== 'chunked')) {
             // HTTP 1.1 supports chunked transfer encoding, if the according
             // header is not set, just read the specified amount of bytes.
-            $bytesToRead = (int) ( isset( $headers['content-length'] ) ? $headers['content-length'] : 0 );
+            $bytesToRead = (int) (isset($headers['content-length']) ? $headers['content-length'] : 0);
 
             // Read body only as specified by chunk sizes, everything else
             // are just footnotes, which are not relevant for us.

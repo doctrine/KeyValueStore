@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,7 +24,9 @@ namespace Doctrine\KeyValueStore\Storage\WindowsAzureTable;
  * Abstraction for WindowsAzure Authorization Schemes
  *
  * @link http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx
+ *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
+ *
  * @deprecated This class is deprecated and will be removed in 2.0.
  */
 interface AuthorizationSchema
@@ -35,7 +38,8 @@ interface AuthorizationSchema
      * @param string $path
      * @param string $queryString
      * @param string $body
-     * @param array $headers
+     * @param array  $headers
+     *
      * @return string
      */
     public function signRequest($method, $path, $queryString, $body, array $headers);
