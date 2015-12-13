@@ -85,8 +85,7 @@ class CassandraStorage implements Storage
             $values[] = $value;
         }
 
-        $cql = "INSERT INTO " . $storageName . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', array_fill(0, count($values), '?')) . ")";
-        $stmt = $this->session->prepare($cql);
+        $stmt = $this->session->prepare("INSERT INTO " . $storageName . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', array_fill(0, count($values), '?')) . ")");
 
         $options = new ExecutionOptions([
             'arguments' => $values,
@@ -111,8 +110,7 @@ class CassandraStorage implements Storage
             $set[] = $name . ' = ?';
         }
 
-        $cql = "UPDATE " . $storageName . " SET " . implode(', ', $set) . " WHERE " . implode(' AND ', $where);
-        $stmt = $this->session->prepare($cql);
+        $stmt = $this->session->prepare("UPDATE " . $storageName . " SET " . implode(', ', $set) . " WHERE " . implode(' AND ', $where));
 
         $values = array_merge(array_values($data), array_values($key));
 
@@ -134,8 +132,7 @@ class CassandraStorage implements Storage
             $where[] = $name . ' = ?';
         }
 
-        $cql = "DELETE FROM " . $storageName . " WHERE " . implode(' AND ', $where);
-        $stmt = $this->session->prepare($cql);
+        $stmt = $this->session->prepare("DELETE FROM " . $storageName . " WHERE " . implode(' AND ', $where));
 
         $options = new ExecutionOptions([
             'arguments' => array_values($key),
@@ -155,8 +152,7 @@ class CassandraStorage implements Storage
             $where[] = $name . ' = ?';
         }
 
-        $cql = "SELECT * FROM " . $storageName . " WHERE " . implode(' AND ', $where);
-        $stmt = $this->session->prepare($cql);
+        $stmt = $this->session->prepare("SELECT * FROM " . $storageName . " WHERE " . implode(' AND ', $where));
 
         $options = new ExecutionOptions([
             'arguments' => array_values($key),
