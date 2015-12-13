@@ -5,6 +5,9 @@ namespace Doctrine\Tests\KeyValueStore\Functional\Storage;
 use Cassandra;
 use Doctrine\KeyValueStore\Storage\CassandraStorage;
 
+/**
+ * @requires extension cassandra
+ */
 class CassandraTest extends \PHPUnit_Framework_TestCase
 {
     private $session;
@@ -12,10 +15,6 @@ class CassandraTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        if ( ! extension_loaded('cassandra')) {
-            $this->markTestSkipped('Cassandra Extension is not installed.');
-        }
-
         $cluster = Cassandra::cluster()->build();
         $this->session = $cluster->connect();
 
