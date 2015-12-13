@@ -133,9 +133,9 @@ class DBALStorage implements Storage
     {
         $qb = $this->conn->createQueryBuilder();
 
-        $qb->select("s.{$this->dataColumn}")
+        $qb->select('s.' . $this->dataColumn)
             ->from($this->table, 's')
-            ->where("{$this->keyColumn} = ?")
+            ->where($this->keyColumn . ' = ?')
             ->setParameters([$key]);
 
         $stmt = $qb->execute();

@@ -69,7 +69,7 @@ class DoctrineCacheStorage implements Storage
         $hash = $storageName . '-oid:';
         ksort($key);
         foreach ($key as $property => $value) {
-            $hash .= "$property=$value;";
+            $hash .= $property . '=' . $value . ';';
         }
         return $hash;
     }

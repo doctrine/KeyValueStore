@@ -110,7 +110,7 @@ class SimpleDbStorage implements Storage
      */
     public function find($storageName, $key)
     {
-        $select = "select * from {$storageName} where itemName() = '{$key}'";
+        $select = 'select * from ' . $storageName . ' where itemName() = \'' . $key . '\'';
 
         $iterator = $this->client->select([
             'SelectExpression' => $select,
