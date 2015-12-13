@@ -1,5 +1,9 @@
 language: php
 
+services:
+  - mongodb
+  - redis-server
+
 php:
   - 5.5
   - 5.6
