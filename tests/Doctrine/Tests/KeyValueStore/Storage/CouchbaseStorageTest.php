@@ -8,6 +8,8 @@ use Doctrine\KeyValueStore\Storage\CouchbaseStorage;
  * Couchbase storage testcase
  *
  * @author Simon Schick <simonsimcity@gmail.com>
+ *
+ * @requires extension couchbase
  */
 class CouchbaseStorageTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,9 +25,6 @@ class CouchbaseStorageTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-		if (!class_exists('\Couchbase'))
-			$this->markTestSkipped("The PHP extension 'couchbase' is not installed");
-
         $this->couchbase = $this->getMockBuilder('\Couchbase')
             ->disableOriginalConstructor()
             ->getMock();

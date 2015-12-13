@@ -6,6 +6,8 @@ use Doctrine\KeyValueStore\Storage\RedisStorage;
 
 /**
  * @author Marcel Araujo <admin@marcelaraujo.me>
+ *
+ * @requires extension redis
  */
 class RedisStorageTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,10 +23,6 @@ class RedisStorageTest extends \PHPUnit_Framework_TestCase
 
     protected function setup()
     {
-        if ( ! extension_loaded('redis')) {
-            $this->markTestSkipped('Redis Extension is not installed.');
-        }
-
         $this->redis = $this->getMockBuilder('\Redis')
             ->disableOriginalConstructor()
             ->getMock();
