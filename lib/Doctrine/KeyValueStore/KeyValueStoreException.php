@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,6 +24,6 @@ class KeyValueStoreException extends \Exception
 {
     public static function mappingDriverMissing()
     {
-        return new self("No mapping driver was assigned to the configuration. Use \$config->setMappingDriverImpl()");
+        return new self('No mapping driver was assigned to the configuration. Use $config->setMappingDriverImpl()');
     }
 }

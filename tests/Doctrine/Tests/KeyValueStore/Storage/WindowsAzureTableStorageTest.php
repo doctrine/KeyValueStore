@@ -1,9 +1,27 @@
 <?php
 
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.doctrine-project.org>.
+ */
+
 namespace Doctrine\Tests\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\Storage\WindowsAzureTableStorage;
 use Doctrine\KeyValueStore\Http\Response;
+use Doctrine\KeyValueStore\Storage\WindowsAzureTableStorage;
 
 class WindowsAzureTableStorageTest extends AbstractStorageTestCase
 {
@@ -12,7 +30,7 @@ class WindowsAzureTableStorageTest extends AbstractStorageTestCase
     protected function createStorage()
     {
         $this->client = $this->getMock('Doctrine\KeyValueStore\Http\Client');
-        $auth = $this->getMock('Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema');
+        $auth         = $this->getMock('Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema');
         $auth->expects($this->any())->method('signRequest')->will($this->returnValue('Authorization: SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM='));
 
         $storage = new WindowsAzureTableStorage(
@@ -25,11 +43,11 @@ class WindowsAzureTableStorageTest extends AbstractStorageTestCase
     public function mockInsertCompositeKey($key, $data)
     {
         $expectedHeaders = [
-            'Content-Type' => 'application/atom+xml',
+            'Content-Type'   => 'application/atom+xml',
             'Content-Length' => 620,
-            'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
-            'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
-            'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
+            'x-ms-date'      => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'Date'           => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'Authorization'  => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
         ];
 
         $this->client->expects($this->at(0))
@@ -88,19 +106,19 @@ XML
     public function mockUpdateCompositeKey($key, $data)
     {
         $expectedHeaders = [
-            'Content-Type' => 'application/atom+xml',
+            'Content-Type'   => 'application/atom+xml',
             'Content-Length' => 707,
-            'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
-            'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
-            'If-Match' => '*',
-            'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
+            'x-ms-date'      => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'Date'           => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'If-Match'       => '*',
+            'Authorization'  => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
         ];
 
         $this->client->expects($this->at(0))
                      ->method('request')
                      ->with(
                         $this->equalTo('PUT'),
-                        $this->equalTo("https://teststore.table.core.windows.net/stdClass". rawurlencode("(PartitionKey='foo', RowKey='100')")),
+                        $this->equalTo('https://teststore.table.core.windows.net/stdClass' . rawurlencode("(PartitionKey='foo', RowKey='100')")),
                         $this->equalTo(<<<XML
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <entry xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
@@ -119,47 +137,46 @@ XML
 XML
                         ),
                         $this->equalTo($expectedHeaders))
-                     ->will($this->returnValue(new Response(204, "", []))
+                     ->will($this->returnValue(new Response(204, '', []))
         );
-
     }
 
     public function mockDeleteCompositeKey($key)
     {
         $expectedHeaders = [
-            'Content-Type' => 'application/atom+xml',
+            'Content-Type'   => 'application/atom+xml',
             'Content-Length' => 0,
-            'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
-            'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
-            'If-Match' => '*',
-            'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
+            'x-ms-date'      => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'Date'           => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'If-Match'       => '*',
+            'Authorization'  => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
         ];
 
         $this->client->expects($this->at(0))
                      ->method('request')
                      ->with(
                         $this->equalTo('DELETE'),
-                        $this->equalTo("https://teststore.table.core.windows.net/stdClass". rawurlencode("(PartitionKey='foo', RowKey='100')")),
+                        $this->equalTo('https://teststore.table.core.windows.net/stdClass' . rawurlencode("(PartitionKey='foo', RowKey='100')")),
                         $this->equalTo(''),
                         $this->equalTo($expectedHeaders)
-                     )->will($this->returnValue(new Response(204, "", [])));
+                     )->will($this->returnValue(new Response(204, '', [])));
     }
 
     public function mockFindCompositeKey($key)
     {
         $expectedHeaders = [
-            'Content-Type' => 'application/atom+xml',
+            'Content-Type'   => 'application/atom+xml',
             'Content-Length' => 0,
-            'x-ms-date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
-            'Date' => 'Mon, 26 Mar 2012 10:10:10 GMT',
-            'Authorization' => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
+            'x-ms-date'      => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'Date'           => 'Mon, 26 Mar 2012 10:10:10 GMT',
+            'Authorization'  => 'SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM=',
         ];
 
         $this->client->expects($this->at(0))
                      ->method('request')
                      ->with(
                         $this->equalTo('GET'),
-                        $this->equalTo("https://teststore.table.core.windows.net/stdClass". rawurlencode("(PartitionKey='foo', RowKey='100')")),
+                        $this->equalTo('https://teststore.table.core.windows.net/stdClass' . rawurlencode("(PartitionKey='foo', RowKey='100')")),
                         $this->equalTo(''),
                         $this->equalTo($expectedHeaders)
                      )->will($this->returnValue(
@@ -191,6 +208,5 @@ XML
 
                      ))
         );
-
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,11 +21,11 @@
 namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\Http\Client;
-use Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema;
-use Doctrine\KeyValueStore\Storage\WindowsAzureTable\HttpStorageException;
+use Doctrine\KeyValueStore\NotFoundException;
 use Doctrine\KeyValueStore\Query\RangeQuery;
 use Doctrine\KeyValueStore\Query\RangeQueryStorage;
-use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema;
+use Doctrine\KeyValueStore\Storage\WindowsAzureTable\HttpStorageException;
 
 /**
  * Storage implementation for Microsoft Windows Azure Table.
@@ -32,6 +33,7 @@ use Doctrine\KeyValueStore\NotFoundException;
  * Using a HTTP client to communicate with the REST API of Azure Table.
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
+ *
  * @deprecated This class is deprecated and will be removed in 2.0, use the AzureSdkTableStorage instead.
  */
 class WindowsAzureTableStorage implements Storage, RangeQueryStorage
@@ -101,7 +103,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
     private $now;
 
     /**
-     * @param HttpClient $client
+     * @param HttpClient          $client
      * @param AuthorizationSchema $authorization
      */
     public function __construct(Client $client, $accountName, AuthorizationSchema $authorization, \DateTime $now = null)
@@ -110,7 +112,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $this->authorization = $authorization;
         $this->baseUrl       = sprintf(self::WINDOWS_AZURE_TABLE_BASEURL, $accountName);
         $this->now           = $now ? clone $now : new \DateTime();
-        $this->now->setTimeZone(new \DateTimeZone("UTC"));
+        $this->now->setTimeZone(new \DateTimeZone('UTC'));
     }
 
     public function supportsPartialUpdates()
@@ -151,11 +153,9 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $response = $this->request('POST', $url, $xml, $headers);
 
         if ($response->getStatusCode() == 404) {
-
             $this->createTable($tableName);
             $this->insert($storageName, $key, $data);
         } elseif ($response->getStatusCode() >= 400) {
-
             $this->convertResponseToException($response);
         }
     }
@@ -168,7 +168,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $node = $dom->getElementsByTagName('Message')->item(0);
 
         throw new HttpStorageException(
-            $node ? $node->nodeValue : "An error has occured"
+            $node ? $node->nodeValue : 'An error has occured'
         );
     }
 
@@ -197,8 +197,8 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
     {
         $headers = [
             'Content-Type' => 'application/atom+xml',
-            'x-ms-date' => $this->now(),
-            'If-Match' => '*',
+            'x-ms-date'    => $this->now(),
+            'If-Match'     => '*',
         ];
         // TODO: This sucks
         $tableName = $storageName;
@@ -233,10 +233,10 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
     public function delete($storageName, $key)
     {
         $headers = [
-            'Content-Type' => 'application/atom+xml',
-            'x-ms-date' => $this->now(),
+            'Content-Type'   => 'application/atom+xml',
+            'x-ms-date'      => $this->now(),
             'Content-Length' => 0,
-            'If-Match' => '*',
+            'If-Match'       => '*',
         ];
 
         // TODO: This sucks
@@ -256,8 +256,8 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
     public function find($storageName, $key)
     {
         $headers = [
-            'Content-Type' => 'application/atom+xml',
-            'x-ms-date' => $this->now(),
+            'Content-Type'   => 'application/atom+xml',
+            'x-ms-date'      => $this->now(),
             'Content-Length' => 0,
         ];
 
@@ -284,7 +284,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $xpath = new \DOMXpath($dom);
         $xpath->registerNamespace('d', 'http://schemas.microsoft.com/ado/2007/08/dataservices');
         $xpath->registerNamespace('m', 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata');
-        $xpath->registerNamespace('atom', "http://www.w3.org/2005/Atom");
+        $xpath->registerNamespace('atom', 'http://www.w3.org/2005/Atom');
         $entries = $xpath->evaluate('/atom:entry');
 
         return $this->createRow(array_keys($key), $xpath, $entries->item(0));
@@ -299,9 +299,9 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         foreach ($properties as $property) {
             $name = substr($property->tagName, 2);
-            if ($name == "PartitionKey") {
+            if ($name == 'PartitionKey') {
                 $name = $partitionKey;
-            } elseif ($name == "RowKey") {
+            } elseif ($name == 'RowKey') {
                 $name = $rowKey;
             }
 
@@ -318,7 +318,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
                         $value = new \DateTime(substr($value, 0, 19), new \DateTimeZone('UTC'));
                         break;
                     case self::TYPE_INT32:
-                        $value = (int)$value;
+                        $value = (int) $value;
                         break;
                 }
             }
@@ -331,19 +331,19 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
     public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null)
     {
         $headers = [
-            'Content-Type' => 'application/atom+xml',
-            'x-ms-date' => $this->now(),
+            'Content-Type'   => 'application/atom+xml',
+            'x-ms-date'      => $this->now(),
             'Content-Length' => 0,
         ];
 
-        $filters = ["PartitionKey eq " . $this->quoteFilterValue($query->getPartitionKey())];
+        $filters = ['PartitionKey eq ' . $this->quoteFilterValue($query->getPartitionKey())];
         foreach ($query->getConditions() as $condition) {
-            if (!in_array($condition[0], ['eq', 'neq', 'le', 'lt', 'ge', 'gt'])) {
+            if ( ! in_array($condition[0], ['eq', 'neq', 'le', 'lt', 'ge', 'gt'])) {
                 throw new \InvalidArgumentException(
-                    "Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions."
+                    'Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions.'
                 );
             }
-            $filters[] = $key[1] . " " . $condition[0] . " " . $this->quoteFilterValue($condition[1]);
+            $filters[] = $key[1] . ' ' . $condition[0] . ' ' . $this->quoteFilterValue($condition[1]);
         }
 
         // TODO: This sucks
@@ -365,7 +365,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $xpath = new \DOMXpath($dom);
         $xpath->registerNamespace('d', 'http://schemas.microsoft.com/ado/2007/08/dataservices');
         $xpath->registerNamespace('m', 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata');
-        $xpath->registerNamespace('atom', "http://www.w3.org/2005/Atom");
+        $xpath->registerNamespace('atom', 'http://www.w3.org/2005/Atom');
         $entries = $xpath->evaluate('/atom:feed/atom:entry');
 
         $results = [];
@@ -383,7 +383,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
             return $value;
         }
 
-        return "'" . str_replace("'", "", $value) . "'";
+        return "'" . str_replace("'", '', $value) . "'";
     }
 
     public function getName()
@@ -417,7 +417,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         if ($propertyValue instanceof \DateTime) {
             return self::TYPE_DATETIME;
         }
-        return null;
+        return;
     }
 
     private function convertPropertyValue($propertyValue, $type)
@@ -427,7 +427,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
                 $propertyValue = $this->isoDate($propertyValue);
                 break;
             case self::TYPE_BOOLEAN:
-                $propertyValue = $propertyValue ? "1" : "0";
+                $propertyValue = $propertyValue ? '1' : '0';
                 break;
         }
         return $propertyValue;
@@ -451,9 +451,9 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
                     $propertiesNode->appendChild($rowKey);
                     break;
                 default:
-                    throw new \RuntimeException("Only exactly 2 composite key fields allowed.");
+                    throw new \RuntimeException('Only exactly 2 composite key fields allowed.');
             }
-            $keys++;
+            ++$keys;
         }
     }
 
@@ -471,7 +471,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
             $xml,
             $headers
         );
-        $authorizationParts              = explode(":", $authorizationHeader, 2);
+        $authorizationParts              = explode(':', $authorizationHeader, 2);
         $headers[$authorizationParts[0]] = ltrim($authorizationParts[1]);
         return $this->client->request($method, $url, $xml, $headers);
     }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -66,29 +67,26 @@ interface Storage
     /**
      * Insert data into the storage key specified.
      *
-     * @param string $storageName
+     * @param string       $storageName
      * @param array|string $key
-     * @param array $data
-     * @return void
+     * @param array        $data
      */
     public function insert($storageName, $key, array $data);
 
     /**
      * Update data into the given key.
      *
-     * @param string $storageName
+     * @param string       $storageName
      * @param array|string $key
-     * @param array $data
-     * @return void
+     * @param array        $data
      */
     public function update($storageName, $key, array $data);
 
     /**
      * Delete data at key
      *
-     * @param string $storageName
+     * @param string       $storageName
      * @param array|string $key
-     * @return void
      */
     public function delete($storageName, $key);
 
@@ -97,10 +95,12 @@ interface Storage
      *
      * Important note: The returned array does contain the identifier (again)!
      *
+     *
+     * @param string       $storageName
+     * @param array|string $key
+     *
      * @throws Doctrine\KeyValueStore\NotFoundException When data with key is not found.
      *
-     * @param string $storageName
-     * @param array|string $key
      * @return array
      */
     public function find($storageName, $key);

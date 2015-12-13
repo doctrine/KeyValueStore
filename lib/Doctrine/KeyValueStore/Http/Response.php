@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,6 +24,7 @@ namespace Doctrine\KeyValueStore\Http;
  * HTTP Response
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
+ *
  * @deprecated This class is deprecated and will be removed in 2.0.
  */
 class Response
@@ -64,12 +66,13 @@ class Response
      * Get HTTP Response header
      *
      * @param string $name
+     *
      * @return null|string|array
      */
     public function getHeader($name)
     {
-        if (!isset($this->headers[$name])) {
-            return null;
+        if ( ! isset($this->headers[$name])) {
+            return;
         }
         return $this->headers[$name];
     }

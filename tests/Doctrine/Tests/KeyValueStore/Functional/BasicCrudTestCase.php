@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -13,7 +14,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -47,10 +48,10 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
     {
         $this->manager = $this->createManager($this->storage, $mappingDriver);
 
-        $post = new Post();
-        $post->id = "1";
-        $post->headline = "asdf";
-        $post->text = "foo";
+        $post           = new Post();
+        $post->id       = '1';
+        $post->headline = 'asdf';
+        $post->text     = 'foo';
 
         $this->manager->persist($post);
         $this->manager->flush();
@@ -65,10 +66,10 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
     {
         $this->manager = $this->createManager($this->storage, $mappingDriver);
 
-        $post = new Post();
-        $post->id = "1";
-        $post->headline = "asdf";
-        $post->text = "foo";
+        $post           = new Post();
+        $post->id       = '1';
+        $post->headline = 'asdf';
+        $post->text     = 'foo';
 
         $this->manager->persist($post);
         $this->manager->flush();
@@ -103,26 +104,26 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
     {
         $this->manager = $this->createManager($this->storage, $mappingDriver);
 
-        $post = new Post();
-        $post->id = "1";
-        $post->headline = "asdf";
-        $post->text = "foo";
+        $post           = new Post();
+        $post->id       = '1';
+        $post->headline = 'asdf';
+        $post->text     = 'foo';
 
         $this->manager->persist($post);
         $this->manager->flush();
 
-        $post->body = "bar";
-        $post->text = "baz";
+        $post->body = 'bar';
+        $post->text = 'baz';
 
         $this->manager->flush();
 
         $this->assertEquals(
             [
-                'id' => 1,
-                'headline' => 'asdf',
-                'body' => 'bar',
-                'text' => 'baz',
-                'php_class' => __NAMESPACE__ . '\\Post'
+                'id'        => 1,
+                'headline'  => 'asdf',
+                'body'      => 'bar',
+                'text'      => 'baz',
+                'php_class' => __NAMESPACE__ . '\\Post',
             ],
             $this->find(1)
         );
@@ -135,10 +136,10 @@ abstract class BasicCrudTestCase extends KeyValueStoreTestCase
     {
         $this->manager = $this->createManager($this->storage, $mappingDriver);
 
-        $post = new Post();
-        $post->id = "1";
-        $post->headline = "asdf";
-        $post->text = "foo";
+        $post           = new Post();
+        $post->id       = '1';
+        $post->headline = 'asdf';
+        $post->text     = 'foo';
 
         $this->manager->persist($post);
         $this->manager->flush();
@@ -170,5 +171,4 @@ class Post
     public $id;
     public $headline;
     public $body;
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,8 +20,8 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\NotFoundException;
 use Doctrine\DBAL\Connection;
+use Doctrine\KeyValueStore\NotFoundException;
 
 /**
  * Relational databased backed system.
@@ -77,15 +78,14 @@ class DBALStorage implements Storage
      * Insert data into the storage key specified.
      *
      * @param array|string $key
-     * @param array $data
-     * @return void
+     * @param array        $data
      */
     public function insert($storageName, $key, array $data)
     {
         try {
             $this->conn->insert($this->table, [
-                $this->keyColumn => $key,
-                $this->dataColumn => serialize($data)
+                $this->keyColumn  => $key,
+                $this->dataColumn => serialize($data),
             ]);
         } catch (\Exception $e) {
         }
@@ -95,16 +95,15 @@ class DBALStorage implements Storage
      * Update data into the given key.
      *
      * @param array|string $key
-     * @param array $data
-     * @return void
+     * @param array        $data
      */
     public function update($storageName, $key, array $data)
     {
         try {
             $this->conn->update($this->table, [
-                $this->dataColumn => serialize($data)
+                $this->dataColumn => serialize($data),
             ], [
-                $this->keyColumn => $key
+                $this->keyColumn => $key,
             ]);
         } catch (\Exception $e) {
         }
@@ -114,7 +113,6 @@ class DBALStorage implements Storage
      * Delete data at key
      *
      * @param array|string $key
-     * @return void
      */
     public function delete($storageName, $key)
     {
@@ -128,22 +126,23 @@ class DBALStorage implements Storage
      * Find data at key
      *
      * @param array|string $key
+     *
      * @return array
      */
     public function find($storageName, $key)
     {
         $qb = $this->conn->createQueryBuilder();
 
-        $qb->select("s.{$this->dataColumn}")
+        $qb->select('s.' . $this->dataColumn)
             ->from($this->table, 's')
-            ->where("{$this->keyColumn} = ?")
+            ->where($this->keyColumn . ' = ?')
             ->setParameters([$key]);
 
         $stmt = $qb->execute();
 
         $data = $stmt->fetchColumn();
 
-        if (!$data) {
+        if ( ! $data) {
             throw new NotFoundException();
         }
 

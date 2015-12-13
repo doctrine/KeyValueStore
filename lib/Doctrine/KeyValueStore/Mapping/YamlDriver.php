@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -52,10 +53,8 @@ class YamlDriver extends FileDriver
     /**
      * Loads the metadata for the specified class into the provided container.
      *
-     * @param string $className
+     * @param string              $className
      * @param CommonClassMetadata $metadata
-     *
-     * @return void
      */
     public function loadMetadataForClass($className, CommonClassMetadata $metadata)
     {

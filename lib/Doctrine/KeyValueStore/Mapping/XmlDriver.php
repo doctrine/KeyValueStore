@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -45,12 +46,12 @@ class XmlDriver extends FileDriver
      */
     protected function loadMappingFile($file)
     {
-        $result = [];
+        $result     = [];
         $xmlElement = simplexml_load_file($file);
 
         if (isset($xmlElement->entity)) {
             foreach ($xmlElement->entity as $entityElement) {
-                $entityName = (string)$entityElement['name'];
+                $entityName          = (string) $entityElement['name'];
                 $result[$entityName] = $entityElement;
             }
         }
@@ -61,10 +62,8 @@ class XmlDriver extends FileDriver
     /**
      * Loads the metadata for the specified class into the provided container.
      *
-     * @param string $className
+     * @param string              $className
      * @param CommonClassMetadata $metadata
-     *
-     * @return void
      */
     public function loadMetadataForClass($className, CommonClassMetadata $metadata)
     {

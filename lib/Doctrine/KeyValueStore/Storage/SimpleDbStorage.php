@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,11 +20,11 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\NotFoundException;
-use Doctrine\KeyValueStore\KeyValueStoreException;
-use Aws\SimpleDb\SimpleDbClient;
 use Aws\SimpleDb\Exception\NoSuchDomainException;
 use Aws\SimpleDb\Exception\SimpleDbException;
+use Aws\SimpleDb\SimpleDbClient;
+use Doctrine\KeyValueStore\KeyValueStoreException;
+use Doctrine\KeyValueStore\NotFoundException;
 
 /**
  * SimpleDb storage
@@ -109,19 +110,19 @@ class SimpleDbStorage implements Storage
      */
     public function find($storageName, $key)
     {
-        $select = "select * from {$storageName} where itemName() = '{$key}'";
+        $select = 'select * from ' . $storageName . ' where itemName() = \'' . $key . '\'';
 
         $iterator = $this->client->select([
             'SelectExpression' => $select,
         ]);
-        
+
         $results = $iterator->get('Items');
 
         if (count($results)) {
             $result = array_shift($results);
 
             $data = ['id' => $result['Name']];
-        
+
             foreach ($result['Attributes'] as $attribute) {
                 $data[$attribute['Name']] = $attribute['Value'];
             }
@@ -161,8 +162,8 @@ class SimpleDbStorage implements Storage
     }
 
     /**
-     * @param string $key 
-     * @param array $data 
+     * @param string $key
+     * @param array  $data
      */
     protected function makeAttributes($data)
     {
@@ -171,8 +172,8 @@ class SimpleDbStorage implements Storage
         foreach ($data as $name => $value) {
             if ($value !== null && $value !== [] && $value !== '') {
                 $attributes[] = [
-                    'Name' => $name,
-                    'Value' => $value,
+                    'Name'    => $name,
+                    'Value'   => $value,
                     'Replace' => true,
                 ];
             }

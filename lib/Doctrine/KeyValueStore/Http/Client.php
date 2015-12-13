@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,6 +24,7 @@ namespace Doctrine\KeyValueStore\Http;
  * Yet another HTTP client
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
+ *
  * @deprecated This class is deprecated and will be removed in 2.0.
  */
 interface Client
@@ -30,10 +32,11 @@ interface Client
     /**
      * Send HTTP Request
      *
-     * @param string $method
-     * @param string $url
+     * @param string      $method
+     * @param string      $url
      * @param string|null $body
-     * @param array $headers
+     * @param array       $headers
+     *
      * @return Response
      */
     public function request($method, $url, $body = null, array $headers = []);

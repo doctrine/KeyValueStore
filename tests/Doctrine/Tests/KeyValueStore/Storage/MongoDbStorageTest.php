@@ -1,5 +1,23 @@
 <?php
 
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.doctrine-project.org>.
+ */
+
 namespace Doctrine\Tests\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\Storage\MongoDbStorage;
@@ -31,7 +49,7 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
 
         $this->storage = new MongoDbStorage($this->mongo, [
             'collection' => 'test',
-            'database' => 'test'
+            'database'   => 'test',
         ]);
     }
 
@@ -46,7 +64,7 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
 
         $this->collection->expects($this->once())
             ->method('insert')
-            ->will($this->returnCallback(function($data) use (&$dbDataset) {
+            ->will($this->returnCallback(function ($data) use (&$dbDataset) {
                 $dbDataset[] = $data;
             }));
 
@@ -67,7 +85,7 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
 
         $this->collection->expects($this->once())
             ->method('update')
-            ->will($this->returnCallback(function($citeria, $data) use (&$dbDataset) {
+            ->will($this->returnCallback(function ($citeria, $data) use (&$dbDataset) {
                 $dbDataset = [$citeria, $data];
             }));
 
@@ -81,7 +99,7 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
     {
         $dataset = [
             [
-                'key' => 'foobar',
+                'key'   => 'foobar',
                 'value' => [
                     'author' => 'John Doe',
                     'title'  => 'example book',
@@ -91,7 +109,7 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
 
         $this->collection->expects($this->once())
              ->method('remove')
-             ->will($this->returnCallback(function($citeria) use (&$dataset) {
+             ->will($this->returnCallback(function ($citeria) use (&$dataset) {
                     foreach ($dataset as $key => $row) {
                         if ($row['key'] === $citeria['key']) {
                             unset($dataset[$key]);
@@ -109,7 +127,7 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
     {
         $dataset = [
             [
-                'key' => 'foobar',
+                'key'   => 'foobar',
                 'value' => [
                     'author' => 'John Doe',
                     'title'  => 'example book',
@@ -119,7 +137,7 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
 
         $this->collection->expects($this->once())
             ->method('findOne')
-            ->will($this->returnCallback(function($citeria, $fields) use (&$dataset) {
+            ->will($this->returnCallback(function ($citeria, $fields) use (&$dataset) {
                 foreach ($dataset as $key => $row) {
                     if ($row['key'] === $citeria['key']) {
                         return $row;

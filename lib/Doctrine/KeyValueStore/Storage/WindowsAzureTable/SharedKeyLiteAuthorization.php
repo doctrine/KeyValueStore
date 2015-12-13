@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -45,10 +46,10 @@ class SharedKeyLiteAuthorization implements AuthorizationSchema
      */
     public function signRequest($method, $path, $queryString, $body, array $headers)
     {
-        $canonicalResource = "/" . $this->accountName . $path;
+        $canonicalResource = '/' . $this->accountName . $path;
         $stringToSign      = $headers['x-ms-date'] . "\n" .
                         $canonicalResource;
-        return "Authorization: SharedKeyLite " . $this->accountName . ":" .
+        return 'Authorization: SharedKeyLite ' . $this->accountName . ':' .
             base64_encode(hash_hmac('sha256', $stringToSign, $this->accountKey, true));
     }
 }

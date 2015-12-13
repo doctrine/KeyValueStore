@@ -69,7 +69,7 @@ Doctrine Cache Backend
 The Doctrine Cache Backend uses the `Caching Framework
 <https://github.com/doctrine/cache>`_ from Doctrine as a backend. Depending on
 the cache driver you get a persistent or in-memory key value store with this
-solution. See the `Doctrine Common documentation 
+solution. See the `Doctrine Common documentation
 <http://docs.doctrine-project.org/projects/doctrine-common/en/latest/reference/caching.html>`_
 for more details about the different supported drivers.
 
@@ -167,7 +167,7 @@ CouchDB storage setup based on `doctrine/couchdb-client <https://github.com/doct
 MongoDB
 -------
 
-Mongo support is provided using a `Mongo <http://php.net/manual/en/class.mongo.php>`_ 
+Mongo support is provided using a `Mongo <http://php.net/manual/en/class.mongo.php>`_
 instance, the collection name and the database name.
 
 Both the options ``collection`` and ``database`` are required.

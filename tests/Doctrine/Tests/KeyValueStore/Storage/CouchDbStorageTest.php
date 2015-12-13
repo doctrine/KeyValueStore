@@ -1,5 +1,23 @@
 <?php
 
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.doctrine-project.org>.
+ */
+
 namespace Doctrine\Tests\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\Storage\CouchDbStorage;
@@ -30,10 +48,10 @@ class CouchDbStorageTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->couchdb = $this->getMockBuilder('\Doctrine\CouchDB\CouchDBClient')
-            ->setConstructorArgs(array(
+            ->setConstructorArgs([
                 $client,
                 'test',
-            ))
+            ])
             ->getMock();
 
         $this->storage = new CouchDbStorage($this->couchdb);
@@ -62,17 +80,17 @@ class CouchDbStorageTest extends \PHPUnit_Framework_TestCase
 
         $this->couchdb->expects($this->once())
             ->method('putDocument')
-            ->will($this->returnCallback(function(array $data, $id) use (&$storedDataset) {
-                $storedDataset = array($id, null);
+            ->will($this->returnCallback(function (array $data, $id) use (&$storedDataset) {
+                $storedDataset = [$id, null];
             }));
 
         $storageName = rand();
-        $key = sha1(rand());
+        $key         = sha1(rand());
 
         $this->storage->insert($storageName, $key, $data);
         $this->assertNotNull($storedDataset);
 
-        $this->assertSame(array($storageName.'-'.$key, null), $storedDataset);
+        $this->assertSame([$storageName . '-' . $key, null], $storedDataset);
     }
 
     public function testUpdate()
@@ -82,38 +100,38 @@ class CouchDbStorageTest extends \PHPUnit_Framework_TestCase
         $storedDataset = null;
 
         $this->couchdb->method('putDocument')
-            ->will($this->returnCallback(function(array $data, $id) use (&$storedDataset) {
-                $storedDataset = array($id, null);
+            ->will($this->returnCallback(function (array $data, $id) use (&$storedDataset) {
+                $storedDataset = [$id, null];
             }));
 
         $storageName = rand();
-        $key = sha1(rand());
+        $key         = sha1(rand());
 
         $this->storage->insert($storageName, $key, $data);
         $this->assertNotNull($storedDataset);
 
-        $this->assertSame(array($storageName.'-'.$key, null), $storedDataset);
+        $this->assertSame([$storageName . '-' . $key, null], $storedDataset);
 
         $data = range(0, 20);
 
         $this->storage->insert($storageName, $key, $data);
         $this->assertNotNull($storedDataset);
 
-        $this->assertSame(array($storageName.'-'.$key, null), $storedDataset);
+        $this->assertSame([$storageName . '-' . $key, null], $storedDataset);
     }
 
     public function testDelete()
     {
-        $storedDataset = array(
-            'test-foobar' => array(
+        $storedDataset = [
+            'test-foobar' => [
                 'author' => 'John Doe',
                 'title'  => 'example book',
-            ),
-        );
+            ],
+        ];
 
         $this->couchdb->expects($this->once())
              ->method('deleteDocument')
-             ->will($this->returnCallback(function($key) use (&$storedDataset) {
+             ->will($this->returnCallback(function ($key) use (&$storedDataset) {
                     foreach ($storedDataset as $id => $row) {
                         if ($id === $key) {
                             unset($storedDataset[$key]);
@@ -129,21 +147,21 @@ class CouchDbStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testFind()
     {
-        $storedDataset = array(
-            'test-foobar' => array(
+        $storedDataset = [
+            'test-foobar' => [
                 'author' => 'John Doe',
                 'title'  => 'example book',
-            ),
-        );
+            ],
+        ];
 
         $this->couchdb->expects($this->once())
             ->method('findDocument')
-            ->will($this->returnCallback(function($key) use (&$storedDataset) {
+            ->will($this->returnCallback(function ($key) use (&$storedDataset) {
                 if (isset($storedDataset[$key])) {
                     return $storedDataset[$key];
                 }
 
-                return null;
+                return;
             }
         ));
 

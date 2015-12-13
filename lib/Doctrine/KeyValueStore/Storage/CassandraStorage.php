@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,11 +20,9 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\NotFoundException;
-use Doctrine\KeyValueStore\Query\RangeQuery;
-
-use Cassandra\Session;
 use Cassandra\ExecutionOptions;
+use Cassandra\Session;
+use Doctrine\KeyValueStore\NotFoundException;
 
 /**
  * Cassandra Storage Engine for KeyValueStore.
@@ -73,19 +72,19 @@ class CassandraStorage implements Storage
      */
     public function insert($storageName, $key, array $data)
     {
-        $keys = $values = array();
+        $keys = $values = [];
 
         foreach ($key as $name => $value) {
-            $keys[] = $name;
+            $keys[]   = $name;
             $values[] = $value;
         }
 
         foreach ($data as $name => $value) {
-            $keys[] = $name;
+            $keys[]   = $name;
             $values[] = $value;
         }
 
-        $stmt = $this->session->prepare("INSERT INTO " . $storageName . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', array_fill(0, count($values), '?')) . ")");
+        $stmt = $this->session->prepare('INSERT INTO ' . $storageName . ' (' . implode(', ', $keys) . ') VALUES (' . implode(', ', array_fill(0, count($values), '?')) . ')');
 
         $options = new ExecutionOptions([
             'arguments' => $values,
@@ -99,8 +98,8 @@ class CassandraStorage implements Storage
      */
     public function update($storageName, $key, array $data)
     {
-        $where = array();
-        $set = array();
+        $where = [];
+        $set   = [];
 
         foreach ($key as $name => $value) {
             $where[] = $name . ' = ?';
@@ -110,7 +109,7 @@ class CassandraStorage implements Storage
             $set[] = $name . ' = ?';
         }
 
-        $stmt = $this->session->prepare("UPDATE " . $storageName . " SET " . implode(', ', $set) . " WHERE " . implode(' AND ', $where));
+        $stmt = $this->session->prepare('UPDATE ' . $storageName . ' SET ' . implode(', ', $set) . ' WHERE ' . implode(' AND ', $where));
 
         $values = array_merge(array_values($data), array_values($key));
 
@@ -126,13 +125,13 @@ class CassandraStorage implements Storage
      */
     public function delete($storageName, $key)
     {
-        $where = array();
+        $where = [];
 
         foreach ($key as $name => $value) {
             $where[] = $name . ' = ?';
         }
 
-        $stmt = $this->session->prepare("DELETE FROM " . $storageName . " WHERE " . implode(' AND ', $where));
+        $stmt = $this->session->prepare('DELETE FROM ' . $storageName . ' WHERE ' . implode(' AND ', $where));
 
         $options = new ExecutionOptions([
             'arguments' => array_values($key),
@@ -146,26 +145,26 @@ class CassandraStorage implements Storage
      */
     public function find($storageName, $key)
     {
-        $where = array();
+        $where = [];
 
         foreach ($key as $name => $value) {
             $where[] = $name . ' = ?';
         }
 
-        $stmt = $this->session->prepare("SELECT * FROM " . $storageName . " WHERE " . implode(' AND ', $where));
+        $stmt = $this->session->prepare('SELECT * FROM ' . $storageName . ' WHERE ' . implode(' AND ', $where));
 
         $options = new ExecutionOptions([
             'arguments' => array_values($key),
         ]);
 
         $result = $this->session->execute($stmt, $options);
-        $rows = iterator_to_array($result);
+        $rows   = iterator_to_array($result);
 
-        if (!isset($rows[0])) {
+        if ( ! isset($rows[0])) {
             throw new NotFoundException();
         }
 
-        $data = array();
+        $data = [];
         foreach ($rows[0] as $column => $value) {
             if (isset($key[$column])) {
                 continue;

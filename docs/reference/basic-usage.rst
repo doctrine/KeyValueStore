@@ -6,7 +6,7 @@ Suppose we track e-mail campaigns based on campaign id and recipients.
 .. code-block:: php
 
     <?php
-    
+
     use Doctrine\KeyValueStore\Mapping\Annotations as KeyValue;
 
     /**
