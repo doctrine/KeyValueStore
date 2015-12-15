@@ -22,6 +22,7 @@ namespace Doctrine\KeyValueStore\Storage;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\InvalidArgumentException;
 
 class AmazonDynamoDbStorage implements Storage
 {
@@ -82,14 +83,12 @@ class AmazonDynamoDbStorage implements Storage
     private function  validateKeyName($name)
     {
         if (!is_string($name)) {
-            throw new \InvalidArgumentException(
-                sprintf('The key must be a string, got "%s" instead.', gettype($name))
-            );
+            throw InvalidArgumentException::invalidType('key', 'string', $name);
         }
 
         $len = strlen($name);
         if ($len > 255 || $len < 1) {
-            throw new \InvalidArgumentException('The name must not exceed 255 bytes.');
+            throw InvalidArgumentException::invalidLength('name', 1, 255);
         }
     }
 
@@ -105,13 +104,11 @@ class AmazonDynamoDbStorage implements Storage
     private function  validateTableName($name)
     {
         if (!is_string($name)) {
-            throw new \InvalidArgumentException(
-                sprintf('The key must be a string, got "%s" instead.', gettype($name))
-            );
+            throw InvalidArgumentException::invalidType('key', 'string', $name);
         }
 
         if (!preg_match('/^[a-z0-9_.-]{3,255}$/i', $name)) {
-            throw new \InvalidArgumentException('Invalid DynamoDB table name.');
+            throw InvalidArgumentException::invalidTableName($name);
         }
     }
 
@@ -146,7 +143,7 @@ class AmazonDynamoDbStorage implements Storage
      *
      * @throws \InvalidArgumentException When the key or table name is invalid.
      */
-    public function setKeyForTable($table, $key)
+    private function setKeyForTable($table, $key)
     {
         $this->validateTableName($table);
         $this->validateKeyName($key);

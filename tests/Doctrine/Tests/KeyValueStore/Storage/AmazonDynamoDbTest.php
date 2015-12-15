@@ -51,7 +51,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Doctrine\KeyValueStore\KeyValueStoreException
      * @expectedExceptionMessage The key must be a string, got "array" instead.
      */
     public function testDefaultKeyCannotBeSomethingOtherThanString()
@@ -61,7 +61,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Doctrine\KeyValueStore\KeyValueStoreException
      * @expectedExceptionMessage The key must be a string, got "object" instead.
      */
     public function testTableKeysMustAllBeStringsOrElse()
@@ -71,8 +71,8 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The name must not exceed 255 bytes.
+     * @expectedException \Doctrine\KeyValueStore\KeyValueStoreException
+     * @expectedExceptionMessage The name must be at least 1 but no more than 255 chars.
      */
     public function testKeyNameMustBeUnder255Bytes()
     {
@@ -101,16 +101,28 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    private function invokeMethod($methodName, $obj, array $args = null)
+    {
+        $relf = new \ReflectionObject($obj);
+        $method = $relf->getMethod($methodName);
+        $method->setAccessible(true);
+
+        if ($args) {
+            return $method->invokeArgs($obj, $args);
+        }
+
+        return $method->invoke($obj);
+    }
+
     /**
      * @dataProvider invalidTableNames
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid DynamoDB table name.
+     * @expectedException \Doctrine\KeyValueStore\KeyValueStoreException
      */
     public function testTableNameValidatesAgainstInvalidTableNames($tableName)
     {
         $client = $this->getDynamoDbMock();
         $storage = new AmazonDynamoDbStorage($client);
-        $storage->setKeyForTable($tableName, 'Id');
+        $this->invokeMethod('setKeyForTable', $storage, [$tableName, 'Id']);
     }
 
     /**
@@ -120,7 +132,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     {
         $client = $this->getDynamoDbMock();
         $storage = new AmazonDynamoDbStorage($client);
-        $storage->setKeyForTable($tableName, 'Id');
+        $this->invokeMethod('setKeyForTable', $storage, [$tableName, 'Id']);
 
         $this->assertAttributeSame([$tableName => 'Id'], 'tableKeys', $storage);
     }
@@ -129,8 +141,8 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     {
         $client = $this->getDynamoDbMock();
         $storage = new AmazonDynamoDbStorage($client);
-        $storage->setKeyForTable('Aaa', '2');
-        $storage->setKeyForTable('Bbb', '1');
+        $this->invokeMethod('setKeyForTable', $storage, ['Aaa', '2']);
+        $this->invokeMethod('setKeyForTable', $storage, ['Bbb', '1']);
 
         $this->assertAttributeSame(['Aaa' => '2', 'Bbb' => '1'], 'tableKeys', $storage);
     }
@@ -162,10 +174,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
 
         $storage = new AmazonDynamoDbStorage($client, null, 'sauce', ['this' => 'that', 'yolo' => 'now']);
 
-        $r = new \ReflectionObject($storage);
-        $method = $r->getMethod('prepareKey');
-        $method->setAccessible(true);
-        $this->assertSame(['that' => ['N' => '111']], $method->invoke($storage, 'this', 111));
+        $this->assertSame(['that' => ['N' => '111']], $this->invokeMethod('prepareKey', $storage, ['this', 111]));
     }
 
     public function testThatSomeStorageUsesDefaultKey()
@@ -174,10 +183,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
 
         $storage = new AmazonDynamoDbStorage($client, null, 'sauce', ['this' => 'that', 'yolo' => 'now']);
 
-        $r = new \ReflectionObject($storage);
-        $method = $r->getMethod('prepareKey');
-        $method->setAccessible(true);
-        $this->assertSame(['sauce' => ['S' => 'hello']], $method->invoke($storage, 'MyTable', "hello"));
+        $this->assertSame(['sauce' => ['S' => 'hello']], $this->invokeMethod('prepareKey', $storage, ['MyTable', "hello"]));
     }
 
     public function testInsertingCallsAPutItem()
