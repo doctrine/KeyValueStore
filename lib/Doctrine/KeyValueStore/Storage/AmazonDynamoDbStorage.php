@@ -67,10 +67,8 @@ class AmazonDynamoDbStorage implements Storage
             $this->setDefaultKeyName($defaultKeyName);
         }
 
-        if (!empty($tableKeys)) {
-            foreach ($tableKeys as $table => $keyName) {
-                $this->setKeyForTable($table, $keyName);
-            }
+        foreach ($tableKeys as $table => $keyName) {
+            $this->setKeyForTable($table, $keyName);
         }
     }
 
