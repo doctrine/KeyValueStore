@@ -71,34 +71,34 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame([], 'tableKeys', $storage);
     }
 
-    /**
-     * @expectedException \Doctrine\KeyValueStore\KeyValueStoreException
-     * @expectedExceptionMessage The key must be a string, got "array" instead.
-     */
     public function testDefaultKeyCannotBeSomethingOtherThanString()
     {
         $client = $this->getDynamoDbMock();
+        $this->setExpectedException(
+            '\Doctrine\KeyValueStore\KeyValueStoreException',
+            'The key must be a string, got "array" instead.'
+        );
         new AmazonDynamoDbStorage($client, null, []);
     }
 
-    /**
-     * @expectedException \Doctrine\KeyValueStore\KeyValueStoreException
-     * @expectedExceptionMessage The key must be a string, got "object" instead.
-     */
     public function testTableKeysMustAllBeStringsOrElse()
     {
         $client = $this->getDynamoDbMock();
+        $this->setExpectedException(
+            '\Doctrine\KeyValueStore\KeyValueStoreException',
+            'The key must be a string, got "object" instead.'
+        );
         new AmazonDynamoDbStorage($client, null, null, ['mytable' => 'hello', 'yourtable' => new \stdClass()]);
     }
 
-    /**
-     * @expectedException \Doctrine\KeyValueStore\KeyValueStoreException
-     * @expectedExceptionMessage The name must be at least 1 but no more than 255 chars.
-     */
     public function testKeyNameMustBeUnder255Bytes()
     {
         $client = $this->getDynamoDbMock();
         $storage = new AmazonDynamoDbStorage($client);
+        $this->setExpectedException(
+            '\Doctrine\KeyValueStore\KeyValueStoreException',
+            'The name must be at least 1 but no more than 255 chars.'
+        );
         $storage->setDefaultKeyName(str_repeat('a', 256));
     }
 
@@ -137,12 +137,12 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider invalidTableNames
-     * @expectedException \Doctrine\KeyValueStore\KeyValueStoreException
      */
     public function testTableNameValidatesAgainstInvalidTableNames($tableName)
     {
         $client = $this->getDynamoDbMock();
         $storage = new AmazonDynamoDbStorage($client);
+        $this->setExpectedException('\Doctrine\KeyValueStore\KeyValueStoreException');
         $this->invokeMethod('setKeyForTable', $storage, [$tableName, 'Id']);
     }
 
@@ -267,9 +267,6 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
         $storage->delete('MyTable', 'abc123');
     }
 
-    /**
-     * @expectedException \Doctrine\KeyValueStore\NotFoundException
-     */
     public function testTryingToFindAnItemThatDoesNotExist()
     {
         $client = $this->getDynamoDbMock(['getItem']);
@@ -280,6 +277,10 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
         ]))->willReturn(null);
 
         $storage = new AmazonDynamoDbStorage($client);
+        $this->setExpectedException(
+            '\Doctrine\KeyValueStore\NotFoundException',
+            'Could not find an item with key: 1000'
+        );
         $storage->find('MyTable', 1000);
     }
 
