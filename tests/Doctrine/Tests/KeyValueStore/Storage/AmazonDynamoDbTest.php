@@ -158,14 +158,14 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     {
         $client = $this->getDynamoDbMock();
         $storage = new AmazonDynamoDbStorage($client, null, 'CustomKey');
-        $this->assertSame('CustomKey', $storage->getKeyNameForTable('whatever_this_is'));
+        $this->assertSame('CustomKey', $this->invokeMethod('getKeyNameForTable', $storage, ['whatever_this_is']));
     }
 
     public function testGetWillReturnCorrectKeyForRecognizedTableName()
     {
         $client = $this->getDynamoDbMock();
         $storage = new AmazonDynamoDbStorage($client, null, 'CustomKey', ['MyTable' => 'Yesss']);
-        $this->assertSame('Yesss', $storage->getKeyNameForTable('MyTable'));
+        $this->assertSame('Yesss', $this->invokeMethod('getKeyNameForTable', $storage, ['MyTable']));
     }
 
     public function testThatSomeStorageHasDifferentKey()

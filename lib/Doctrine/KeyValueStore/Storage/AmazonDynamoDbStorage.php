@@ -158,7 +158,7 @@ class AmazonDynamoDbStorage implements Storage
      *
      * @return string
      */
-    public function getKeyNameForTable($tableName)
+    private function getKeyNameForTable($tableName)
     {
         return isset($this->tableKeys[$tableName]) ?
             $this->tableKeys[$tableName] :
@@ -173,7 +173,7 @@ class AmazonDynamoDbStorage implements Storage
      *
      * @return array The key in DynamoDB format.
      */
-    private function  prepareKey($storageName, $key)
+    private function prepareKey($storageName, $key)
     {
         if (is_array($key)) {
             $keyValue = reset($key);
