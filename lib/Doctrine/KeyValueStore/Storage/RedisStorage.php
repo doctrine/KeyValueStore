@@ -25,7 +25,7 @@ use Doctrine\KeyValueStore\NotFoundException;
 /**
  * @author Marcel Araujo <admin@marcelaraujo.me>
  */
-class RedisStorage implements Storage
+class RedisStorage extends AbstractStorage
 {
     /**
      * @var \Redis

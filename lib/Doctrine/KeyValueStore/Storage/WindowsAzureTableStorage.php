@@ -36,7 +36,7 @@ use Doctrine\KeyValueStore\Storage\WindowsAzureTable\HttpStorageException;
  *
  * @deprecated This class is deprecated and will be removed in 2.0, use the AzureSdkTableStorage instead.
  */
-class WindowsAzureTableStorage implements Storage, RangeQueryStorage
+class WindowsAzureTableStorage extends AbstractStorage implements RangeQueryStorage
 {
     const WINDOWS_AZURE_TABLE_BASEURL = 'https://%s.table.core.windows.net';
 
@@ -61,7 +61,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 </entry>';
 
     const XML_TEMPLATE_TABLE = '<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<entry xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom"> 
+<entry xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
 <title />
 <updated></updated>
 <author>

@@ -30,7 +30,7 @@ use Doctrine\KeyValueStore\NotFoundException;
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
-class DBALStorage implements Storage
+class DBALStorage extends AbstractStorage
 {
     private $conn;
     private $table;

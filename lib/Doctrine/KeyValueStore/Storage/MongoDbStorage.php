@@ -27,7 +27,7 @@ use Doctrine\KeyValueStore\NotFoundException;
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  */
-class MongoDbStorage implements Storage
+class MongoDbStorage extends AbstractStorage
 {
     /**
      * @var \Mongo

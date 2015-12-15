@@ -31,7 +31,7 @@ use Doctrine\KeyValueStore\NotFoundException;
  *
  * @author Stan Lemon <stosh1985@gmail.com>
  */
-class SimpleDbStorage implements Storage
+class SimpleDbStorage extends AbstractStorage
 {
     /**
      * @var \Aws\SimpleDb\SimpleDbClient

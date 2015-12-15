@@ -26,7 +26,7 @@ use Riak\Client;
 /**
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  */
-class RiakStorage implements Storage
+class RiakStorage extends AbstractStorage
 {
     /**
      * @var \Riak\Client

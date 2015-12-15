@@ -33,7 +33,7 @@ use WindowsAzure\Table\TableRestProxy;
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
-class AzureSdkTableStorage implements Storage, RangeQueryStorage
+class AzureSdkTableStorage extends AbstractStorage implements RangeQueryStorage
 {
     /**
      * @var \WindowsAzure\Table\TableRestProxy

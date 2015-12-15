@@ -31,7 +31,7 @@ use Doctrine\KeyValueStore\NotFoundException;
  *
  * @uses https://github.com/datastax/php-driver
  */
-class CassandraStorage implements Storage
+class CassandraStorage extends AbstractStorage
 {
     /**
      * @var \Cassandra\Session

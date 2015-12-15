@@ -20,97 +20,74 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\NotFoundException;
-
-/**
- * @author Simon Schick <simonsimcity@gmail.com>
- */
-class CouchbaseStorage extends AbstractStorage
+abstract class AbstractStorage implements Storage
 {
     /**
-     * @var \Couchbase
+     * {@inheritDoc}
      */
-    protected $client;
+    abstract public function supportsPartialUpdates();
 
     /**
-     * Constructor
+     * {@inheritDoc}
+     */
+    abstract public function supportsCompositePrimaryKeys();
+
+    /**
+     * {@inheritDoc}
+     */
+    abstract public function requiresCompositePrimaryKeys();
+
+    /**
+     * {@inheritDoc}
+     */
+    abstract public function insert($storageName, $key, array $data);
+
+    /**
+     * {@inheritDoc}
+     */
+    abstract public function update($storageName, $key, array $data);
+
+    /**
+     * {@inheritDoc}
+     */
+    abstract public function delete($storageName, $key);
+
+    /**
+     * {@inheritDoc}
+     */
+    abstract public function find($storageName, $key);
+
+    /**
+     * {@inheritDoc}
+     */
+    abstract public function getName();
+
+    /**
+     * Used to flattening keys.
      *
-     * @param \Couchbase $couchbase
-     */
-    public function __construct(\Couchbase $couchbase)
-    {
-        $this->client = $couchbase;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function supportsPartialUpdates()
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function supportsCompositePrimaryKeys()
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function requiresCompositePrimaryKeys()
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function insert($storageName, $key, array $data)
-    {
-        $this->client->add($key, $data);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function update($storageName, $key, array $data)
-    {
-        $this->client->replace($key, $data);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function delete($storageName, $key)
-    {
-        $this->client->delete($key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function find($storageName, $key)
-    {
-        $value = $this->client->get($key);
-
-        if ($value === null) {
-            throw new NotFoundException();
-        }
-
-        return $value;
-    }
-
-    /**
-     * Return a name of the underlying storage.
+     * @param string                      $storageName
+     * @param string|int|float|bool|array $key
      *
      * @return string
      */
-    public function getName()
+    protected function flattenKey($storageName, $key)
     {
-        return 'couchbase';
+        if (is_scalar($key)) {
+            return $storageName . '-' . $key;
+        }
+
+        if ( ! is_array($key)) {
+            throw new \InvalidArgumentException('The key should be a string or a flat array.');
+        }
+
+        ksort($key);
+
+        $hash = $storageName . '-oid:';
+
+        foreach ($key as $property => $value) {
+            $hash .= $property . '=' . $value . ';';
+        }
+
+        return $hash;
     }
 }

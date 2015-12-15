@@ -30,7 +30,7 @@ use Doctrine\Common\Cache\Cache;
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
-class DoctrineCacheStorage implements Storage
+class DoctrineCacheStorage extends AbstractStorage
 {
     /**
      * @var Doctrine\Common\Cache\Cache
@@ -58,20 +58,6 @@ class DoctrineCacheStorage implements Storage
     public function requiresCompositePrimaryKeys()
     {
         return false;
-    }
-
-    private function flattenKey($storageName, $key)
-    {
-        if ( ! $this->supportsCompositeKeys) {
-            return $storageName . '-' . $key;
-        }
-
-        $hash = $storageName . '-oid:';
-        ksort($key);
-        foreach ($key as $property => $value) {
-            $hash .= $property . '=' . $value . ';';
-        }
-        return $hash;
     }
 
     public function insert($storageName, $key, array $data)

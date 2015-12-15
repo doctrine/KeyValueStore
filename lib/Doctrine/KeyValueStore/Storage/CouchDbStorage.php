@@ -30,7 +30,7 @@ use Doctrine\CouchDB\CouchDBClient;
  *
  * @author Emanuele Minotto <minottoemanuele@gmail.com>
  */
-final class CouchDbStorage implements Storage
+final class CouchDbStorage extends AbstractStorage
 {
     /**
      * @var CouchDBClient
@@ -111,30 +111,5 @@ final class CouchDbStorage implements Storage
     public function getName()
     {
         return 'couchdb';
-    }
-
-    /**
-     * @param string       $storageName
-     * @param array|string $key
-     * 
-     * @return string
-     */
-    private function flattenKey($storageName, $key)
-    {
-        $finalKey = $storageName . '-';
-
-        if (is_string($key)) {
-            return $finalKey . $key;
-        }
-
-        if ( ! is_array($key)) {
-            throw new \InvalidArgumentException('The key should be a string or a flat array.');
-        }
-
-        foreach ($key as $property => $value) {
-            $finalKey .= sprintf('%s:%s-', $property, $value);
-        }
-
-        return $finalKey;
     }
 }
