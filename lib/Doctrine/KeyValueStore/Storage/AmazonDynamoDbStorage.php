@@ -27,6 +27,26 @@ use Doctrine\KeyValueStore\InvalidArgumentException;
 class AmazonDynamoDbStorage implements Storage
 {
     /**
+     * The key that DynamoDb uses to indicate the name of the table.
+     */
+    const TABLE_NAME_KEY = 'TableName';
+
+    /**
+     * The key that DynamoDb uses to indicate whether or not to do a consistent read.
+     */
+    const CONSISTENT_READ_KEY = 'ConsistentRead';
+
+    /**
+     * The key that is used to refer to the DynamoDb table key.
+     */
+    const TABLE_KEY = 'Key';
+
+    /**
+     * The key that is used to refer to the marshaled item for DynamoDb table.
+     */
+    const TABLE_ITEM_KEY = 'Item';
+
+    /**
      * @var DynamoDbClient
      */
     private $client;
@@ -219,8 +239,8 @@ class AmazonDynamoDbStorage implements Storage
     public function insert($storageName, $key, array $data)
     {
         $this->client->putItem([
-            'TableName' => $storageName,
-            'Item' => $this->prepareKey($storageName, $key) + $this->marshaler->marshalItem($data),
+            self::TABLE_NAME_KEY => $storageName,
+            self::TABLE_ITEM_KEY => $this->prepareKey($storageName, $key) + $this->marshaler->marshalItem($data),
         ]);
     }
 
@@ -239,8 +259,8 @@ class AmazonDynamoDbStorage implements Storage
     public function delete($storageName, $key)
     {
         $this->client->deleteItem([
-            'TableName' => $storageName,
-            'Key' => $this->prepareKey($storageName, $key),
+            self::TABLE_NAME_KEY => $storageName,
+            self::TABLE_KEY      => $this->prepareKey($storageName, $key),
         ]);
     }
 
@@ -250,16 +270,16 @@ class AmazonDynamoDbStorage implements Storage
     public function find($storageName, $key)
     {
         $item = $this->client->getItem([
-            'TableName' => $storageName,
-            'ConsistentRead' => true,
-            'Key' => $this->prepareKey($storageName, $key),
+            self::TABLE_NAME_KEY      => $storageName,
+            self::CONSISTENT_READ_KEY => true,
+            self::TABLE_KEY           => $this->prepareKey($storageName, $key),
         ]);
 
         if (!$item) {
             throw new NotFoundException();
         }
 
-        $item = $item->get('Item');
+        $item = $item->get(self::TABLE_ITEM_KEY);
         if (!is_array($item)) {
             throw new NotFoundException();
         }
