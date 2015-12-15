@@ -79,7 +79,7 @@ class AmazonDynamoDbStorage implements Storage
      *
      * @throws \InvalidArgumentException When the key name is invalid.
      */
-    protected function validateKeyName($name)
+    private function  validateKeyName($name)
     {
         if (!is_string($name)) {
             throw new \InvalidArgumentException(
@@ -102,7 +102,7 @@ class AmazonDynamoDbStorage implements Storage
      *
      * @throws \InvalidArgumentException When the name is invalid.
      */
-    protected function validateTableName($name)
+    private function  validateTableName($name)
     {
         if (!is_string($name)) {
             throw new \InvalidArgumentException(
@@ -176,7 +176,7 @@ class AmazonDynamoDbStorage implements Storage
      *
      * @return array The key in DynamoDB format.
      */
-    protected function prepareKey($storageName, $key)
+    private function  prepareKey($storageName, $key)
     {
         if (is_array($key)) {
             $keyValue = reset($key);
