@@ -276,13 +276,10 @@ class AmazonDynamoDbStorage implements Storage
         ]);
 
         if (!$item) {
-            throw new NotFoundException();
+            throw NotFoundException::notFoundByKey($key);
         }
 
         $item = $item->get(self::TABLE_ITEM_KEY);
-        if (!is_array($item)) {
-            throw new NotFoundException();
-        }
 
         return $this->marshaler->unmarshalItem($item);
     }

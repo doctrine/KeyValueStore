@@ -22,4 +22,8 @@ namespace Doctrine\KeyValueStore;
 
 class NotFoundException extends KeyValueStoreException
 {
+    public static function notFoundByKey($key)
+    {
+        return new static(sprintf('Could not find an item with key: %s', $key), 0);
+    }
 }
