@@ -85,7 +85,7 @@ class UnitOfWork
         return;
     }
 
-    public function reconsititute($className, $key)
+    public function reconstititute($className, $key)
     {
         $class = $this->cmf->getMetadataFor($className);
         $id    = $this->idHandler->normalizeId($class, $key);
