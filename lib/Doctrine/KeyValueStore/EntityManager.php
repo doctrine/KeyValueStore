@@ -66,7 +66,7 @@ class EntityManager
      */
     public function find($className, $key)
     {
-        return $this->unitOfWork->reconsititute($className, $key);
+        return $this->unitOfWork->reconstititute($className, $key);
     }
 
     /**
