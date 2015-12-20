@@ -34,88 +34,98 @@ use Doctrine\KeyValueStore\Id\NullIdConverter;
 class Configuration
 {
     /**
-     * @param array
+     * @var null|MappingDriver
      */
-    private $config;
+    private $mappingDriver;
+
+    /**
+     * @var null|Cache
+     */
+    private $metadataCache;
+
+    /**
+     * @var null|IdConverterStrategy
+     */
+    private $idConverter;
 
     /**
      * Get mapping driver implementation used with this configuration.
      *
-     * @return \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
+     * @return MappingDriver
      */
     public function getMappingDriverImpl()
     {
-        if (! isset($this->config['mappingDriver'])) {
+        if (! isset($this->mappingDriver)) {
             throw KeyValueStoreException::mappingDriverMissing();
         }
 
-        return $this->config['mappingDriver'];
+        return $this->mappingDriver;
     }
 
     /**
      * Set the mapping driver implementation.
      *
-     * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $driver
+     * @param MappingDriver $driver
      *
-     * @return \Doctrine\KeyValueStore\Configuration
+     * @return Configuration
      */
     public function setMappingDriverImpl(MappingDriver $driver)
     {
-        $this->config['mappingDriver'] = $driver;
+        $this->mappingDriver = $driver;
         return $this;
     }
 
     /**
      * Set the Metadata Mapping cache used with this configuration.
      *
-     * @param \Doctrine\Common\Cache\Cache $cache
+     * @param Cache $cache
      *
-     * @return \Doctrine\KeyValueStore\Configuration
+     * @return Configuration
      */
     public function setMetadataCache(Cache $cache)
     {
-        $this->config['metadataCache'] = $cache;
+        $this->metadataCache = $cache;
         return $this;
     }
 
     /**
      * Get the metadata mapping cache used with this configuration.
      *
-     * @return \Doctrine\Common\Cache\Cache $cache
+     * @return Cache
      */
     public function getMetadataCache()
     {
-        if (! isset($this->config['metadataCache'])) {
-            $this->config['metadataCache'] = new ArrayCache();
+        if (! isset($this->metadataCache)) {
+            $this->metadataCache = new ArrayCache();
         }
 
-        return $this->config['metadataCache'];
+        return $this->metadataCache;
     }
 
     /**
      * Set the ID Converter Strategy
      *
-     * @param \Doctrine\KeyValueStore\Id\IdConverterStrategy
+     * @param IdConverterStrategy $strategy
      *
-     * @return \Doctrine\KeyValueStore\Configuration
+     * @return Configuration
      */
     public function setIdConverterStrategy(IdConverterStrategy $strategy)
     {
-        $this->config['idConverter'] = $strategy;
+        $this->idConverter = $strategy;
         return $this;
     }
 
     /**
      * Get the Id Converter strategy
      *
-     * @return \Doctrine\KeyValueStore\Id\IdConverterStrategy
+     * @return IdConverterStrategy
      */
     public function getIdConverterStrategy()
     {
-        if (! isset($this->config['idConverter'])) {
-            $this->config['idConverter'] = new NullIdConverter();
+        if (! isset($this->idConverter)) {
+            $this->idConverter = new NullIdConverter();
         }
 
-        return $this->config['idConverter'];
+        return $this->idConverter;
     }
 }

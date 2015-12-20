@@ -45,14 +45,14 @@ class EntityManager
      * Create a new EntityManager
      *
      * @param Storage       $storageDriver
-     * @param Configuration $config
+     * @param Configuration $configuration
      */
-    public function __construct(Storage $storageDriver, Configuration $config)
+    public function __construct(Storage $storageDriver, Configuration $configuration)
     {
-        $cmf = new ClassMetadataFactory($config->getMappingDriverImpl());
-        $cmf->setCacheDriver($config->getMetadataCache());
+        $classMetadataFactory = new ClassMetadataFactory($configuration->getMappingDriverImpl());
+        $classMetadataFactory->setCacheDriver($configuration->getMetadataCache());
 
-        $this->unitOfWork    = new UnitOfWork($cmf, $storageDriver, $config);
+        $this->unitOfWork    = new UnitOfWork($classMetadataFactory, $storageDriver, $configuration);
         $this->storageDriver = $storageDriver;
     }
 

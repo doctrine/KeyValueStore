@@ -112,10 +112,15 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
     protected function initializeReflection(CommonClassMetadata $class, ReflectionService $reflService)
     {
         $class->reflClass = $reflService->getClass($class->name);
-        if ($class->reflClass) {
-            foreach ($class->reflClass->getProperties() as $property) {
-                $class->mapField(['fieldName' => $property->getName()]);
-            }
+
+        if (! $class->reflClass) {
+            return;
+        }
+
+        foreach ($class->reflClass->getProperties() as $property) {
+            $class->mapField([
+                'fieldName' => $property->getName(),
+            ]);
         }
     }
 
