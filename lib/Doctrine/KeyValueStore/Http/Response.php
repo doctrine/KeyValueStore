@@ -71,7 +71,7 @@ class Response
      */
     public function getHeader($name)
     {
-        if ( ! isset($this->headers[$name])) {
+        if (! isset($this->headers[$name])) {
             return;
         }
         return $this->headers[$name];

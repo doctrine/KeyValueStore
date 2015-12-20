@@ -33,7 +33,7 @@ class CassandraTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $cluster = Cassandra::cluster()->build();
+        $cluster       = Cassandra::cluster()->build();
         $this->session = $cluster->connect();
 
         try {

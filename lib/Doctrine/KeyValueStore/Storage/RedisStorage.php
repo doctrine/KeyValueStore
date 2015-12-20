@@ -118,7 +118,7 @@ class RedisStorage implements Storage
     {
         $key = $this->getKeyName($key);
 
-        if ( ! $this->client->exists($key)) {
+        if (! $this->client->exists($key)) {
             throw new NotFoundException();
         }
 

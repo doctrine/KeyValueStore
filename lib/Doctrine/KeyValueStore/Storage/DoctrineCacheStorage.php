@@ -62,7 +62,7 @@ class DoctrineCacheStorage implements Storage
 
     private function flattenKey($storageName, $key)
     {
-        if ( ! $this->supportsCompositeKeys) {
+        if (! $this->supportsCompositeKeys) {
             return $storageName . '-' . $key;
         }
 

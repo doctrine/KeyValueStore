@@ -39,7 +39,7 @@ abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
 
     public function testInsertCompositeKey()
     {
-        if ( ! $this->storage->supportsCompositePrimaryKeys()) {
+        if (! $this->storage->supportsCompositePrimaryKeys()) {
             $this->markTestSkipped('Composite keys need to be supported for this test to run.');
         }
 
@@ -59,7 +59,7 @@ abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
 
     public function testUpdateCompositeKey()
     {
-        if ( ! $this->storage->supportsCompositePrimaryKeys()) {
+        if (! $this->storage->supportsCompositePrimaryKeys()) {
             $this->markTestSkipped('Composite keys need to be supported for this test to run.');
         }
 
@@ -79,7 +79,7 @@ abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
 
     public function testDeleteCompositeKey()
     {
-        if ( ! $this->storage->supportsCompositePrimaryKeys()) {
+        if (! $this->storage->supportsCompositePrimaryKeys()) {
             $this->markTestSkipped('Composite keys need to be supported for this test to run.');
         }
 
@@ -91,7 +91,7 @@ abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
 
     public function testFindCompositeKey()
     {
-        if ( ! $this->storage->supportsCompositePrimaryKeys()) {
+        if (! $this->storage->supportsCompositePrimaryKeys()) {
             $this->markTestSkipped('Composite keys need to be supported for this test to run.');
         }
 

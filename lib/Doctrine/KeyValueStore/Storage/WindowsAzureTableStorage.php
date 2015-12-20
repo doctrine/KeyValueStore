@@ -61,7 +61,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 </entry>';
 
     const XML_TEMPLATE_TABLE = '<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<entry xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom"> 
+<entry xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
 <title />
 <updated></updated>
 <author>
@@ -338,7 +338,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         $filters = ['PartitionKey eq ' . $this->quoteFilterValue($query->getPartitionKey())];
         foreach ($query->getConditions() as $condition) {
-            if ( ! in_array($condition[0], ['eq', 'neq', 'le', 'lt', 'ge', 'gt'])) {
+            if (! in_array($condition[0], ['eq', 'neq', 'le', 'lt', 'ge', 'gt'])) {
                 throw new \InvalidArgumentException(
                     'Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions.'
                 );

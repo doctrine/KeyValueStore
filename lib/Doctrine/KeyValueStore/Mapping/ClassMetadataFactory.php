@@ -58,12 +58,12 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
             $class->storageName   = $parent->storageName;
         }
 
-        if ( ! $class->storageName) {
+        if (! $class->storageName) {
             $parts              = explode('\\', $class->name);
             $class->storageName = end($parts);
         }
 
-        if ( ! $class->identifier) {
+        if (! $class->identifier) {
             throw new \InvalidArgumentException('Class ' . $class->name . ' has no identifier.');
         }
     }

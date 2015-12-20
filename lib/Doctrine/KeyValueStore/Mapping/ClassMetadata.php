@@ -50,7 +50,7 @@ class ClassMetadata implements BaseClassMetadata
 
     public function mapField($mapping)
     {
-        if ( ! isset($this->transientFields[$mapping['fieldName']])) {
+        if (! isset($this->transientFields[$mapping['fieldName']])) {
             $this->fields[$mapping['fieldName']] = $mapping;
         }
     }
@@ -93,6 +93,7 @@ class ClassMetadata implements BaseClassMetadata
         }
         return $id;
     }
+
     /**
      * Get fully-qualified class name of this persistent class.
      *

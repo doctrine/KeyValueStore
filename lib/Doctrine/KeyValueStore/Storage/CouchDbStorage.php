@@ -127,7 +127,7 @@ final class CouchDbStorage implements Storage
             return $finalKey . $key;
         }
 
-        if ( ! is_array($key)) {
+        if (! is_array($key)) {
             throw new \InvalidArgumentException('The key should be a string or a flat array.');
         }
 

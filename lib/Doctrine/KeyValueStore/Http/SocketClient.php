@@ -157,7 +157,7 @@ class SocketClient implements Client
 
         // Remove leading newlines, should not accur at all, actually.
         while (true) {
-            if ( ! (($line = fgets($this->connection)) !== false) || ! (($lineContent = rtrim($line)) === '')) {
+            if (! (($line = fgets($this->connection)) !== false) || ! (($lineContent = rtrim($line)) === '')) {
                 break;
             }
         }
@@ -194,7 +194,7 @@ class SocketClient implements Client
 
         // Read response body
         $body = '';
-        if ( ! isset($headers['transfer-encoding']) ||
+        if (! isset($headers['transfer-encoding']) ||
              ($headers['transfer-encoding'] !== 'chunked')) {
             // HTTP 1.1 supports chunked transfer encoding, if the according
             // header is not set, just read the specified amount of bytes.

@@ -101,7 +101,7 @@ class RiakStorage implements Storage
         /** @var $object \Riak\Object */
         $object = $bucket->get($key);
 
-        if ( ! $object->exists()) {
+        if (! $object->exists()) {
             // object does not exist, do nothing
             return;
         }
@@ -119,7 +119,7 @@ class RiakStorage implements Storage
         /** @var $object \Riak\Object */
         $object = $bucket->get($key);
 
-        if ( ! $object->exists()) {
+        if (! $object->exists()) {
             throw new NotFoundException;
         }
 

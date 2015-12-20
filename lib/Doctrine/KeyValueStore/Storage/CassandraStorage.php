@@ -160,7 +160,7 @@ class CassandraStorage implements Storage
         $result = $this->session->execute($stmt, $options);
         $rows   = iterator_to_array($result);
 
-        if ( ! isset($rows[0])) {
+        if (! isset($rows[0])) {
             throw new NotFoundException();
         }
 
