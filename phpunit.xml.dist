@@ -2,7 +2,7 @@
 <phpunit bootstrap="tests/bootstrap.php" colors="true">
     <testsuites>
         <testsuite name="Doctrine KeyValueStore">
-            <directory suffix="Test.php">tests/Doctrine/Tests/KeyValueStore</directory>
+            <directory suffix="Test.php">tests/Doctrine</directory>
         </testsuite>
     </testsuites>
 
