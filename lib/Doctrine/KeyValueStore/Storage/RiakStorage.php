@@ -29,15 +29,12 @@ use Riak\Client;
 class RiakStorage implements Storage
 {
     /**
-     * @var \Riak\Client
+     * @var Client
      */
     protected $client;
 
     /**
-     * Constructor
-     *
-     * @param \Riak\Client $riak
-     * @param string       $bucketName
+     * @param Client $riak
      */
     public function __construct(Client $riak)
     {

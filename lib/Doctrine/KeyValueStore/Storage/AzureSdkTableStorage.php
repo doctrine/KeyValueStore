@@ -36,10 +36,13 @@ use WindowsAzure\Table\TableRestProxy;
 class AzureSdkTableStorage implements Storage, RangeQueryStorage
 {
     /**
-     * @var \WindowsAzure\Table\TableRestProxy
+     * @var TableRestProxy
      */
     private $client;
 
+    /**
+     * @param TableRestProxy $client
+     */
     public function __construct(TableRestProxy $client)
     {
         $this->client = $client;
@@ -151,6 +154,11 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
         return $this->getProperties($result->getEntity());
     }
 
+    /**
+     * @param Entity $entity
+     *
+     * @return array
+     */
     private function getProperties(Entity $entity)
     {
         $properties = [];
@@ -205,6 +213,11 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
         return $rows;
     }
 
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
     private function quoteFilterValue($value)
     {
         return "'" . str_replace("'", '', $value) . "'";
@@ -216,7 +229,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
      * @param array $key
      * @param array $data
      *
-     * @return \WindowsAzure\Table\Model\Entity
+     * @return Entity
      */
     private function createEntity(array $key, array $data)
     {
@@ -236,6 +249,10 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
 
     /**
      * Infer the property type of variables.
+     *
+     * @param mixed $propertyValue
+     *
+     * @return string
      */
     private function getPropertyType($propertyValue)
     {

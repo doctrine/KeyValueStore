@@ -24,6 +24,9 @@ use Doctrine\KeyValueStore\Mapping\ClassMetadata;
 
 class SingleIdHandler implements IdHandlingStrategy
 {
+    /**
+     * {@inheritDoc}
+     */
     public function normalizeId(ClassMetadata $metadata, $key)
     {
         if (is_scalar($key)) {
@@ -34,12 +37,18 @@ class SingleIdHandler implements IdHandlingStrategy
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getIdentifier(ClassMetadata $metadata, $object)
     {
         $values = $metadata->getIdentifierValues($object);
         return $values[$metadata->identifier[0]];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function hash($key)
     {
         return $key;

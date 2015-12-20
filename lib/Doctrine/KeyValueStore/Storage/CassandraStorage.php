@@ -34,10 +34,13 @@ use Doctrine\KeyValueStore\NotFoundException;
 class CassandraStorage implements Storage
 {
     /**
-     * @var \Cassandra\Session
+     * @var Session
      */
     private $session;
 
+    /**
+     * @param Session $session
+     */
     public function __construct(Session $session)
     {
         $this->session = $session;

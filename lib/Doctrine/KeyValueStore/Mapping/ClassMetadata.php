@@ -25,23 +25,61 @@ use ReflectionClass;
 
 class ClassMetadata implements BaseClassMetadata
 {
+    /**
+     * @var string
+     */
     public $name;
+
+    /**
+     * @var string
+     */
     public $storageName;
     public $rootClassName;
     public $fields          = [];
     public $identifier      = [];
     public $isCompositeKey  = false;
+
+    /**
+     * @var array
+     */
+
+    /**
+     * @var array
+     */
+
+    /**
+     * @var bool
+     */
+
+    /**
+     * @var array
+     */
     public $transientFields = [];
     public $reflFields      = [];
     public $reflClass;
 
+    /**
+     * @var array
+     */
+
+    /**
+     * @var null|mixed
+     */
     private $prototype;
 
+    /**
+     * @param string $className
+     */
     public function __construct($className)
     {
         $this->name = $className;
     }
 
+    /**
+     * Add a mapped identifier.
+     *
+     * @param string $fieldName
+     */
     public function mapIdentifier($fieldName)
     {
         $this->identifier[]   = $fieldName;
@@ -50,12 +88,22 @@ class ClassMetadata implements BaseClassMetadata
     }
 
     public function mapField($mapping)
+    /**
+     * Add a mapped field.
+     *
+     * @param array $mapping
+     */
     {
         if (! isset($this->transientFields[$mapping['fieldName']])) {
             $this->fields[$mapping['fieldName']] = $mapping;
         }
     }
 
+    /**
+     * Add a transient field.
+     *
+     * @param string $fieldName
+     */
     public function skipTransientField($fieldName)
     {
         // it's necessary to unset because ClassMetadataFactory::initializeReflection has already run
@@ -78,11 +126,21 @@ class ClassMetadata implements BaseClassMetadata
         return clone $this->prototype;
     }
 
+    /**
+     * @return array
+     */
     public function __sleep()
     {
         return ['fields', 'isCompositeKey', 'identifier', 'name', 'storageName'];
     }
 
+    /**
+     * Get identifiers values.
+     *
+     * @param string|object $object
+     *
+     * @return array
+     */
     public function getIdentifierValues($object)
     {
         $id = [];

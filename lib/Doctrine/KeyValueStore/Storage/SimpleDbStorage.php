@@ -34,14 +34,12 @@ use Doctrine\KeyValueStore\NotFoundException;
 class SimpleDbStorage implements Storage
 {
     /**
-     * @var \Aws\SimpleDb\SimpleDbClient
+     * @var SimpleDbClient
      */
     protected $client;
 
     /**
-     * Constructor
-     *
-     * @param \Aws\SimpleDb\SimpleDbClient $client
+     * @param SimpleDbClient $client
      */
     public function __construct(SimpleDbClient $client)
     {
@@ -134,9 +132,7 @@ class SimpleDbStorage implements Storage
     }
 
     /**
-     * Return a name of the underlying storage.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -145,6 +141,8 @@ class SimpleDbStorage implements Storage
 
     /**
      * @param string $tableName
+     *
+     * @return string
      */
     protected function createDomain($domainName)
     {
@@ -162,8 +160,9 @@ class SimpleDbStorage implements Storage
     }
 
     /**
-     * @param string $key
-     * @param array  $data
+     * @param array $data
+     *
+     * @return array
      */
     protected function makeAttributes($data)
     {

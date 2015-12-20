@@ -32,11 +32,32 @@ use Doctrine\KeyValueStore\NotFoundException;
  */
 class DBALStorage implements Storage
 {
+    /**
+     * @var Connection
+     */
     private $conn;
+
+    /**
+     * @var string
+     */
     private $table;
+
+    /**
+     * @var string
+     */
     private $keyColumn;
+
+    /**
+     * @var string
+     */
     private $dataColumn;
 
+    /**
+     * @param Connection $conn
+     * @param string     $table
+     * @param string     $keyColumn
+     * @param string     $dataColumn
+     */
     public function __construct(
         Connection $conn,
         $table = 'storage',
@@ -49,15 +70,16 @@ class DBALStorage implements Storage
         $this->dataColumn = $dataColumn;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function supportsPartialUpdates()
     {
         return false;
     }
 
     /**
-     * Does this storage support composite primary keys?
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function supportsCompositePrimaryKeys()
     {
@@ -65,9 +87,7 @@ class DBALStorage implements Storage
     }
 
     /**
-     * Does this storage require composite primary keys?
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function requiresCompositePrimaryKeys()
     {
@@ -75,10 +95,7 @@ class DBALStorage implements Storage
     }
 
     /**
-     * Insert data into the storage key specified.
-     *
-     * @param array|string $key
-     * @param array        $data
+     * {@inheritDoc}
      */
     public function insert($storageName, $key, array $data)
     {
@@ -92,10 +109,7 @@ class DBALStorage implements Storage
     }
 
     /**
-     * Update data into the given key.
-     *
-     * @param array|string $key
-     * @param array        $data
+     * {@inheritDoc}
      */
     public function update($storageName, $key, array $data)
     {
@@ -110,9 +124,7 @@ class DBALStorage implements Storage
     }
 
     /**
-     * Delete data at key
-     *
-     * @param array|string $key
+     * {@inheritDoc}
      */
     public function delete($storageName, $key)
     {
@@ -123,11 +135,7 @@ class DBALStorage implements Storage
     }
 
     /**
-     * Find data at key
-     *
-     * @param array|string $key
-     *
-     * @return array
+     * {@inheritDoc}
      */
     public function find($storageName, $key)
     {
@@ -150,9 +158,7 @@ class DBALStorage implements Storage
     }
 
     /**
-     * Return a name of the underlying storage.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {

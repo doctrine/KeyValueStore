@@ -21,6 +21,7 @@
 namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\NotFoundException;
+use Redis;
 
 /**
  * @author Marcel Araujo <admin@marcelaraujo.me>
@@ -28,7 +29,7 @@ use Doctrine\KeyValueStore\NotFoundException;
 class RedisStorage implements Storage
 {
     /**
-     * @var \Redis
+     * @var Redis
      */
     protected $client;
 
@@ -47,10 +48,10 @@ class RedisStorage implements Storage
     /**
      * Constructor
      *
-     * @param \Redis $redis
-     * @param array  $dbOptions
+     * @param Redis $redis
+     * @param array $dbOptions
      */
-    public function __construct($redis, $dbOptions = [])
+    public function __construct(Redis $redis, $dbOptions = [])
     {
         $this->client = $redis;
 
@@ -126,9 +127,7 @@ class RedisStorage implements Storage
     }
 
     /**
-     * Return a name of the underlying storage.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {

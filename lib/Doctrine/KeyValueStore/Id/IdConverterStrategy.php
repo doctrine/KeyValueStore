@@ -31,6 +31,23 @@ namespace Doctrine\KeyValueStore\Id;
  */
 interface IdConverterStrategy
 {
+    /**
+     * Serialize data for the persistence.
+     *
+     * @param string $class
+     * @param mixed  $data
+     *
+     * @return string
+     */
     public function serialize($class, $data);
+
+    /**
+     * Unserialize data from the persistence system.
+     *
+     * @param string $class
+     * @param mixed  $data
+     *
+     * @return mixed
+     */
     public function unserialize($class, $data);
 }

@@ -20,6 +20,7 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
+use Couchbase;
 use Doctrine\KeyValueStore\NotFoundException;
 
 /**
@@ -28,16 +29,16 @@ use Doctrine\KeyValueStore\NotFoundException;
 class CouchbaseStorage implements Storage
 {
     /**
-     * @var \Couchbase
+     * @var Couchbase
      */
     protected $client;
 
     /**
      * Constructor
      *
-     * @param \Couchbase $couchbase
+     * @param Couchbase $couchbase
      */
-    public function __construct(\Couchbase $couchbase)
+    public function __construct(Couchbase $couchbase)
     {
         $this->client = $couchbase;
     }

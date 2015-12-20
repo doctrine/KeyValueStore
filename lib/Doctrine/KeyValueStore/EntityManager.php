@@ -79,7 +79,7 @@ class EntityManager
      * @param string $className
      * @param string $partitionKey
      *
-     * @return \Doctrine\KeyValueStore\Query\RangeQuery
+     * @return RangeQuery
      */
     public function createRangeQuery($className, $partitionKey)
     {
@@ -124,13 +124,16 @@ class EntityManager
     }
 
     /**
-     * @return \Doctrine\KeyValueStore\UnitOfWork
+     * @return UnitOfWork
      */
     public function getUnitOfWork()
     {
         return $this->unitOfWork;
     }
 
+    /**
+     * @see UnitOfWork::clear()
+     */
     public function clear()
     {
         return $this->unitOfWork->clear();

@@ -33,33 +33,55 @@ use Doctrine\Common\Cache\Cache;
 class DoctrineCacheStorage implements Storage
 {
     /**
-     * @var Doctrine\Common\Cache\Cache
+     * @var Cache
      */
     private $cache;
 
+    /**
+     * @var bool
+     */
     private $supportsCompositeKeys;
 
+    /**
+     * @param Cache $cache
+     * @param bool  $supportsCompositeKeys
+     */
     public function __construct(Cache $cache, $supportsCompositeKeys = true)
     {
         $this->cache                 = $cache;
         $this->supportsCompositeKeys = $supportsCompositeKeys;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function supportsPartialUpdates()
     {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function supportsCompositePrimaryKeys()
     {
         return $this->supportsCompositeKeys;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function requiresCompositePrimaryKeys()
     {
         return false;
     }
 
+    /**
+     * @param string       $storageName
+     * @param array|string $key
+     *
+     * @return string
+     */
     private function flattenKey($storageName, $key)
     {
         if (! $this->supportsCompositeKeys) {
@@ -74,30 +96,45 @@ class DoctrineCacheStorage implements Storage
         return $hash;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function insert($storageName, $key, array $data)
     {
         $key = $this->flattenKey($storageName, $key);
         $this->cache->save($key, $data);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function update($storageName, $key, array $data)
     {
         $key = $this->flattenKey($storageName, $key);
         $this->cache->save($key, $data);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function delete($storageName, $key)
     {
         $key = $this->flattenKey($storageName, $key);
         $this->cache->delete($key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function find($storageName, $key)
     {
         $key = $this->flattenKey($storageName, $key);
         return $this->cache->fetch($key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
         return 'doctrine_cache';

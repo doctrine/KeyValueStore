@@ -73,6 +73,11 @@ class RangeQuery
      */
     protected $em;
 
+    /**
+     * @param EntityManager $em
+     * @param string        $className
+     * @param string        $partitionKey
+     */
     public function __construct(EntityManager $em, $className, $partitionKey)
     {
         $this->em           = $em;
@@ -80,21 +85,33 @@ class RangeQuery
         $this->partitionKey = $partitionKey;
     }
 
+    /**
+     * Set query limit.
+     *
+     * @param int $limit
+     *
+     * @return RangeQuery
+     */
     public function setLimit($limit)
     {
         $this->limit = $limit;
         return $this;
     }
 
+    /**
+     * Get query results limit.
+     *
+     * @return int
+     */
     public function getLimit()
     {
         return $this->limit;
     }
 
     /**
-     * Get className.
+     * Get class name.
      *
-     * @return className.
+     * @return string
      */
     public function getClassName()
     {
@@ -102,9 +119,9 @@ class RangeQuery
     }
 
     /**
-     * Get partitionKey.
+     * Get partition key.
      *
-     * @return partitionKey.
+     * @return string
      */
     public function getPartitionKey()
     {

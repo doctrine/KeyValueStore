@@ -36,10 +36,12 @@ class UnitOfWork
      * @var ClassMetadataFactory
      */
     private $cmf;
+
     /**
      * @var Storage
      */
     private $storageDriver;
+
     /**
      * @var IdHandlingStrategy
      */
@@ -55,12 +57,36 @@ class UnitOfWork
      */
     private $identifiers;
 
+    /**
+     * @var array
+     */
     private $originalData;
+
+    /**
+     * @var array
+     */
     private $scheduledInsertions = [];
+
+    /**
+     * @var array
+     */
     private $scheduledDeletions  = [];
+
+    /**
+     * @var array
+     */
     private $identityMap         = [];
+
+    /**
+     * @var \Doctrine\KeyValueStore\Id\IdConverterStrategy
+     */
     private $idConverter;
 
+    /**
+     * @param ClassMetadataFactory $cmf
+     * @param Storage              $storageDriver
+     * @param Configuration|null   $config
+     */
     public function __construct(ClassMetadataFactory $cmf, Storage $storageDriver, Configuration $config = null)
     {
         $this->cmf           = $cmf;
@@ -71,11 +97,22 @@ class UnitOfWork
                                 new Id\SingleIdHandler();
     }
 
+    /**
+     * @param string $className
+     *
+     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata
+     */
     public function getClassMetadata($className)
     {
         return $this->cmf->getMetadataFor($className);
     }
 
+    /**
+     * @param string $className
+     * @param mixed  $id
+     *
+     * @return null|string|array
+     */
     private function tryGetById($className, $id)
     {
         $idHash = $this->idHandler->hash($id);
@@ -85,6 +122,14 @@ class UnitOfWork
         return;
     }
 
+    /**
+     * @param string       $className
+     * @param string|array $key
+     *
+     * @throws NotFoundException
+     *
+     * @return mixed
+     */
     public function reconstititute($className, $key)
     {
         $class = $this->cmf->getMetadataFor($className);
@@ -284,6 +329,9 @@ class UnitOfWork
         $this->scheduledDeletions  = [];
     }
 
+    /**
+     * Clear the unit of work.
+     */
     public function clear()
     {
         $this->scheduledInsertions = [];

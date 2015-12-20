@@ -33,17 +33,29 @@ use Doctrine\KeyValueStore\Mapping\ClassMetadata as KeyValueMetadata;
  */
 class ClassMetadataFactory extends AbstractClassMetadataFactory
 {
+    /**
+     * @var MappingDriver
+     */
     private $mappingDriver;
 
+    /**
+     * @param MappingDriver $driver
+     */
     public function __construct(MappingDriver $driver)
     {
         $this->mappingDriver = $driver;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function initialize()
     {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getFqcnFromAlias($namespaceAlias, $simpleClassName)
     {
         throw new \InvalidArgumentException('aliasing is not supported.');
@@ -68,17 +80,26 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function newClassMetadataInstance($className)
     {
         return new KeyValueMetadata($className);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getDriver()
     {
         return $this->mappingDriver;
     }
 
     protected function wakeupReflection(ClassMetadata $class, ReflectionService $reflService)
+    /**
+     * {@inheritDoc}
+     */
     {
         $class->reflClass = $reflService->getClass($class->name);
         foreach ($class->fields as $fieldName => $mapping) {
@@ -87,6 +108,9 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
     }
 
     protected function initializeReflection(ClassMetadata $class, ReflectionService $reflService)
+    /**
+     * {@inheritDoc}
+     */
     {
         $class->reflClass = $reflService->getClass($class->name);
         if ($class->reflClass) {
@@ -97,7 +121,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
     }
 
     /**
-     * copied from doctrine/common - tests/Doctrine/Tests/Common/Persistence/Mapping/ClassMetadataFactoryTest.php
+     * {@inheritDoc}
      */
     protected function isEntity(ClassMetadata $class)
     {

@@ -21,6 +21,8 @@
 namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\NotFoundException;
+use Mongo;
+use RuntimeException;
 
 /**
  * MongoDb storage
@@ -30,7 +32,7 @@ use Doctrine\KeyValueStore\NotFoundException;
 class MongoDbStorage implements Storage
 {
     /**
-     * @var \Mongo
+     * @var Mongo
      */
     protected $mongo;
 
@@ -47,10 +49,10 @@ class MongoDbStorage implements Storage
     /**
      * Constructor
      *
-     * @param \Mongo $mongo
-     * @param array  $dbOptions
+     * @param Mongo $mongo
+     * @param array $dbOptions
      */
-    public function __construct(\Mongo $mongo, array $dbOptions = [])
+    public function __construct(Mongo $mongo, array $dbOptions = [])
     {
         $this->mongo     = $mongo;
         $this->dbOptions = array_merge([
@@ -62,7 +64,7 @@ class MongoDbStorage implements Storage
     /**
      * Initialize the mongodb collection
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function initialize()
     {
@@ -71,10 +73,10 @@ class MongoDbStorage implements Storage
         }
 
         if (empty($this->dbOptions['database'])) {
-            throw new \RuntimeException('The option "database" must be set');
+            throw new RuntimeException('The option "database" must be set');
         }
         if (empty($this->dbOptions['collection'])) {
-            throw new \RuntimeException('The option "collection" must be set');
+            throw new RuntimeException('The option "collection" must be set');
         }
 
         $this->collection = $this
@@ -164,9 +166,7 @@ class MongoDbStorage implements Storage
     }
 
     /**
-     * Return a name of the underlying storage.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {

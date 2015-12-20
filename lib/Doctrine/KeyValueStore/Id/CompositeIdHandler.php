@@ -24,6 +24,9 @@ use Doctrine\KeyValueStore\Mapping\ClassMetadata;
 
 class CompositeIdHandler implements IdHandlingStrategy
 {
+    /**
+     * {@inheritDoc}
+     */
     public function normalizeId(ClassMetadata $metadata, $key)
     {
         if (! $metadata->isCompositeKey && ! is_array($key)) {
@@ -45,11 +48,17 @@ class CompositeIdHandler implements IdHandlingStrategy
         return $id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getIdentifier(ClassMetadata $metadata, $object)
     {
         return $metadata->getIdentifierValues($object);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function hash($key)
     {
         return implode('__##__', (array) $key);
