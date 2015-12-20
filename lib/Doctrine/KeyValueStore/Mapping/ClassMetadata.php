@@ -34,33 +34,31 @@ class ClassMetadata implements BaseClassMetadata
      * @var string
      */
     public $storageName;
-    public $rootClassName;
-    public $fields          = [];
-    public $identifier      = [];
-    public $isCompositeKey  = false;
 
     /**
      * @var array
      */
+    public $fields = [];
 
     /**
      * @var array
      */
+    public $identifier = [];
 
     /**
      * @var bool
      */
+    public $isCompositeKey = false;
 
     /**
      * @var array
      */
     public $transientFields = [];
-    public $reflFields      = [];
-    public $reflClass;
 
     /**
      * @var array
      */
+    public $reflFields = [];
 
     /**
      * @var null|mixed
@@ -84,15 +82,18 @@ class ClassMetadata implements BaseClassMetadata
     {
         $this->identifier[]   = $fieldName;
         $this->isCompositeKey = count($this->identifier) > 1;
-        $this->mapField(['fieldName' => $fieldName, 'id' => true]);
+        $this->mapField([
+            'fieldName' => $fieldName,
+            'id'        => true,
+        ]);
     }
 
-    public function mapField($mapping)
     /**
      * Add a mapped field.
      *
      * @param array $mapping
      */
+    public function mapField(array $mapping)
     {
         if (! isset($this->transientFields[$mapping['fieldName']])) {
             $this->fields[$mapping['fieldName']] = $mapping;

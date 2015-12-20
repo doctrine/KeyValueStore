@@ -55,12 +55,12 @@ class UnitOfWork
      *
      * @var array
      */
-    private $identifiers;
+    private $identifiers         = [];
 
     /**
      * @var array
      */
-    private $originalData;
+    private $originalData        = [];
 
     /**
      * @var array

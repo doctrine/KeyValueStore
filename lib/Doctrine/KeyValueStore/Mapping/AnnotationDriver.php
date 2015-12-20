@@ -100,6 +100,7 @@ class AnnotationDriver implements MappingDriver
      */
     public function getAllClassNames()
     {
+        return [];
     }
 
     /**
