@@ -210,7 +210,7 @@ class RangeQuery
 
         if ( ! ($storage instanceof RangeQueryStorage)) {
             throw new \RuntimeException(
-                'The storage backend ' . $this->storage->getName() . ' does not support range queries.'
+                'The storage backend ' . $storage->getName() . ' does not support range queries.'
             );
         }
 
