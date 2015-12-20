@@ -1,19 +1,20 @@
 {
     "name": "doctrine/key-value-store",
     "require": {
-        "php": ">=5.5",
-        "doctrine/common": "^2.4",
-        "doctrine/couchdb": "^1.0.0-beta4"
+        "php": "^5.5|^7.0",
+        "doctrine/common": "^2.4"
     },
     "require-dev": {
         "datastax/php-driver": "^1.0",
-        "phpunit/phpunit": "^4.8",
+        "doctrine/couchdb": "^1.0.0-beta4",
+        "phpunit/phpunit": "^4.8|^5.0",
         "riak/riak-client": "dev-master"
     },
     "suggest": {
-        "riak/riak-client": "to use the Riak storage",
+        "aws/aws-sdk-php": "to use the DynamoDB storage",
+        "doctrine/couchdb": "to use the CouchDB storage",
         "ext-couchbase": "to use the Couchbase storage",
-        "aws/aws-sdk-php": "to use the DynamoDB storage"
+        "riak/riak-client": "to use the Riak storage"
     },
     "description": "Simple Key-Value Store Abstraction Layer that maps to PHP objects, allowing for many backends.",
     "license": "MIT",
