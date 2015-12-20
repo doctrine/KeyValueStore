@@ -21,8 +21,12 @@
 namespace Doctrine\KeyValueStore\Mapping;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata as CommonClassMetadata;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\KeyValueStore\Mapping\Annotations\Entity;
+use Doctrine\KeyValueStore\Mapping\Annotations\Id;
+use Doctrine\KeyValueStore\Mapping\Annotations\Transient;
+use ReflectionClass;
 
 class AnnotationDriver implements MappingDriver
 {
@@ -46,19 +50,19 @@ class AnnotationDriver implements MappingDriver
     /**
      * Loads the metadata for the specified class into the provided container.
      *
-     * @param string        $className
-     * @param ClassMetadata $metadata
+     * @param string              $className
+     * @param CommonClassMetadata $metadata
      */
-    public function loadMetadataForClass($className, ClassMetadata $metadata)
+    public function loadMetadataForClass($className, CommonClassMetadata $metadata)
     {
         $class = $metadata->getReflectionClass();
         if (! $class) {
             // this happens when running annotation driver in combination with
             // static reflection services. This is not the nicest fix
-            $class = new \ReflectionClass($metadata->name);
+            $class = new ReflectionClass($metadata->name);
         }
 
-        $entityAnnot = $this->reader->getClassAnnotation($class, 'Doctrine\KeyValueStore\Mapping\Annotations\Entity');
+        $entityAnnot = $this->reader->getClassAnnotation($class, Entity::class);
         if (! $entityAnnot) {
             throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
         }
@@ -66,21 +70,26 @@ class AnnotationDriver implements MappingDriver
 
         // Evaluate annotations on properties/fields
         foreach ($class->getProperties() as $property) {
-            $idAnnot        = $this->reader->getPropertyAnnotation(
-                $property,
-                'Doctrine\KeyValueStore\Mapping\Annotations\Id'
-            );
-            $transientAnnot = $this->reader->getPropertyAnnotation(
-                $property,
-                'Doctrine\KeyValueStore\Mapping\Annotations\Transient'
-            );
+            $idAnnot = $this->reader->getPropertyAnnotation($property, Id::class);
             if ($idAnnot) {
                 $metadata->mapIdentifier($property->getName());
-            } elseif ($transientAnnot) {
-                $metadata->skipTransientField($property->getName());
-            } else {
-                $metadata->mapField(['fieldName' => $property->getName()]);
+
+                // if it's an identifier, can't be also a transient
+                // nor a mapped field
+                continue;
             }
+
+            $transientAnnot = $this->reader->getPropertyAnnotation($property, Transient::class);
+            if ($transientAnnot) {
+                $metadata->skipTransientField($property->getName());
+
+                // if it's a transiend, can't be also a mapped field
+                continue;
+            }
+
+            $metadata->mapField([
+                'fieldName' => $property->getName(),
+            ]);
         }
     }
 

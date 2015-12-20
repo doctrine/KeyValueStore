@@ -23,6 +23,8 @@ namespace Doctrine\KeyValueStore\Mapping;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata as CommonClassMetadata;
 use Doctrine\Common\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Common\Persistence\Mapping\MappingException;
+use InvalidArgumentException;
+use ReflectionClass;
 
 class XmlDriver extends FileDriver
 {
@@ -70,14 +72,14 @@ class XmlDriver extends FileDriver
         try {
             $xmlRoot = $this->getElement($className);
         } catch (MappingException $exception) {
-            throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
+            throw new InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
         }
 
         if ($xmlRoot->getName() != 'entity') {
-            throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
+            throw new InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
         }
 
-        $class = new \ReflectionClass($className);
+        $class = new ReflectionClass($className);
 
         if (isset($xmlRoot['storage-name'])) {
             $metadata->storageName = $xmlRoot['storage-name'];

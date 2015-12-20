@@ -26,7 +26,6 @@ use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
 use PHPUnit_Framework_TestCase;
 use ReflectionClass;
 use RuntimeException;
-use stdClass;
 
 /**
  * @coversDefaultClass Doctrine\KeyValueStore\Query\RangeQuery

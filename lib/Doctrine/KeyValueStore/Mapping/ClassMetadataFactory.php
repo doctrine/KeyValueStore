@@ -21,10 +21,9 @@
 namespace Doctrine\KeyValueStore\Mapping;
 
 use Doctrine\Common\Persistence\Mapping\AbstractClassMetadataFactory;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata as CommonClassMetadata;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\ReflectionService;
-use Doctrine\KeyValueStore\Mapping\ClassMetadata as KeyValueMetadata;
 
 /**
  * Load Metadata of an entity.
@@ -85,7 +84,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
      */
     protected function newClassMetadataInstance($className)
     {
-        return new KeyValueMetadata($className);
+        return new ClassMetadata($className);
     }
 
     /**
@@ -96,10 +95,10 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
         return $this->mappingDriver;
     }
 
-    protected function wakeupReflection(ClassMetadata $class, ReflectionService $reflService)
     /**
      * {@inheritDoc}
      */
+    protected function wakeupReflection(CommonClassMetadata $class, ReflectionService $reflService)
     {
         $class->reflClass = $reflService->getClass($class->name);
         foreach ($class->fields as $fieldName => $mapping) {
@@ -107,10 +106,10 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
         }
     }
 
-    protected function initializeReflection(ClassMetadata $class, ReflectionService $reflService)
     /**
      * {@inheritDoc}
      */
+    protected function initializeReflection(CommonClassMetadata $class, ReflectionService $reflService)
     {
         $class->reflClass = $reflService->getClass($class->name);
         if ($class->reflClass) {
@@ -123,7 +122,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
     /**
      * {@inheritDoc}
      */
-    protected function isEntity(ClassMetadata $class)
+    protected function isEntity(CommonClassMetadata $class)
     {
         return true;
     }
