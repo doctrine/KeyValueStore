@@ -22,6 +22,9 @@ namespace Doctrine\Tests\KeyValueStore\Storage\WindowsAzureTable;
 
 use Doctrine\KeyValueStore\Storage\WindowsAzureTable\SharedKeyLiteAuthorization;
 
+/**
+ * @group legacy
+ */
 class SharedKeyLiteTest extends \PHPUnit_Framework_TestCase
 {
     private $auth;

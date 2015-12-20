@@ -20,6 +20,9 @@
 
 namespace Doctrine\Tests\KeyValueStore\Storage;
 
+/**
+ * @group legacy
+ */
 abstract class AbstractStorageTestCase extends \PHPUnit_Framework_TestCase
 {
     /**

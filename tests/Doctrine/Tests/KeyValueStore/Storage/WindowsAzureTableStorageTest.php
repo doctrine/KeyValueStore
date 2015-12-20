@@ -23,6 +23,9 @@ namespace Doctrine\Tests\KeyValueStore\Storage;
 use Doctrine\KeyValueStore\Http\Response;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTableStorage;
 
+/**
+ * @group legacy
+ */
 class WindowsAzureTableStorageTest extends AbstractStorageTestCase
 {
     private $client;

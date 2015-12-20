@@ -26,6 +26,9 @@ use Doctrine\KeyValueStore\Storage\WindowsAzureTable\SharedKeyLiteAuthorization;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTableStorage;
 use Doctrine\Tests\KeyValueStoreTestCase;
 
+/**
+ * @group legacy
+ */
 class WindowsAzureTableTest extends KeyValueStoreTestCase
 {
     private $storage;

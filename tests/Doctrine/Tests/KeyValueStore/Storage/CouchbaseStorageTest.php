@@ -27,6 +27,7 @@ use Doctrine\KeyValueStore\Storage\CouchbaseStorage;
  *
  * @author Simon Schick <simonsimcity@gmail.com>
  *
+ * @group legacy
  * @requires extension couchbase
  */
 class CouchbaseStorageTest extends \PHPUnit_Framework_TestCase

@@ -27,6 +27,7 @@ use Doctrine\KeyValueStore\Storage\MongoDbStorage;
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  *
+ * @group legacy
  * @requires extension mongo
  */
 class MongoDbStorageTest extends \PHPUnit_Framework_TestCase

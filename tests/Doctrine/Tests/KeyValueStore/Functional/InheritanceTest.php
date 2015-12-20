@@ -25,6 +25,9 @@ use Doctrine\KeyValueStore\Mapping\Annotations as KVS;
 use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
 use Doctrine\Tests\KeyValueStoreTestCase;
 
+/**
+ * @group legacy
+ */
 class InheritanceTest extends KeyValueStoreTestCase
 {
     private $manager;

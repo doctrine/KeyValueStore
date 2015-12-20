@@ -25,6 +25,9 @@ use Doctrine\KeyValueStore\Storage\AzureSdkTableStorage;
 use Doctrine\Tests\KeyValueStoreTestCase;
 use WindowsAzure\Common\ServicesBuilder;
 
+/**
+ * @group legacy
+ */
 class AzureSdkTableTest extends KeyValueStoreTestCase
 {
     private $storage;

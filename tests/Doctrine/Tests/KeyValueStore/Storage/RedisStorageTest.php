@@ -25,6 +25,7 @@ use Doctrine\KeyValueStore\Storage\RedisStorage;
 /**
  * @author Marcel Araujo <admin@marcelaraujo.me>
  *
+ * @group legacy
  * @requires extension redis
  */
 class RedisStorageTest extends \PHPUnit_Framework_TestCase

@@ -23,6 +23,9 @@ namespace Doctrine\Tests\KeyValueStore\Functional;
 use Doctrine\KeyValueStore\Mapping\Annotations as KVS;
 use Doctrine\Tests\KeyValueStoreTestCase;
 
+/**
+ * @group legacy
+ */
 class PersistTest extends KeyValueStoreTestCase
 {
     /**

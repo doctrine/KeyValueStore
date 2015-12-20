@@ -24,6 +24,8 @@ use Doctrine\KeyValueStore\Storage\RiakStorage;
 
 /**
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
+ *
+ * @group legacy
  */
 class RiakStorageTest extends \PHPUnit_Framework_TestCase
 {

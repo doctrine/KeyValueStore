@@ -28,6 +28,7 @@ use Doctrine\KeyValueStore\Storage\CouchDbStorage;
  * @author Emanuele Minotto <minottoemanuele@gmail.com>
  *
  * @covers \Doctrine\KeyValueStore\Storage\CouchDbStorage
+ * @group legacy
  */
 class CouchDbStorageTest extends \PHPUnit_Framework_TestCase
 {

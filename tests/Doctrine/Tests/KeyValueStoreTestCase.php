@@ -26,6 +26,9 @@ use Doctrine\KeyValueStore\EntityManager;
 use Doctrine\KeyValueStore\Mapping;
 use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
 
+/**
+ * @group legacy
+ */
 abstract class KeyValueStoreTestCase extends \PHPUnit_Framework_TestCase
 {
     public function createManager($storage = null, $driver = 'annotation')

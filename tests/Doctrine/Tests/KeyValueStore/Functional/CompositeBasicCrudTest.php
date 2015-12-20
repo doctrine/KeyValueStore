@@ -23,6 +23,9 @@ namespace Doctrine\Tests\KeyValueStore\Functional;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
 
+/**
+ * @group legacy
+ */
 class CompositeBasicCrudTest extends BasicCrudTestCase
 {
     private $cache;

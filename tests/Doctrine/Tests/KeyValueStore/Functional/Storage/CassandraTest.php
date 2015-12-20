@@ -24,6 +24,7 @@ use Cassandra;
 use Doctrine\KeyValueStore\Storage\CassandraStorage;
 
 /**
+ * @group legacy
  * @requires extension cassandra
  */
 class CassandraTest extends \PHPUnit_Framework_TestCase

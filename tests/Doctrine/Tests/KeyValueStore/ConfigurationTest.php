@@ -22,6 +22,9 @@ namespace Doctrine\Tests\KeyValueStore;
 
 use Doctrine\KeyValueStore\Configuration;
 
+/**
+ * @group legacy
+ */
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
     public function testNoMappingDriver()

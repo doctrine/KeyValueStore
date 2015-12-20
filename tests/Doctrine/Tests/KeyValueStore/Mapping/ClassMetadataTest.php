@@ -25,6 +25,7 @@ use ReflectionClass;
 
 /**
  * @coversDefaultClass \Doctrine\KeyValueStore\Mapping\ClassMetadata
+ * @group legacy
  */
 class ClassMetadataTest extends \PHPUnit_Framework_TestCase
 {
