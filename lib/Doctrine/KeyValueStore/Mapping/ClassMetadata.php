@@ -21,6 +21,7 @@
 namespace Doctrine\KeyValueStore\Mapping;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
+use ReflectionClass;
 
 class ClassMetadata implements BaseClassMetadata
 {
@@ -101,6 +102,7 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function getName()
     {
+        return $this->name;
     }
 
     /**
@@ -112,6 +114,7 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function getIdentifier()
     {
+        return $this->identifier;
     }
 
     /**
@@ -121,6 +124,7 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function getReflectionClass()
     {
+        return new ReflectionClass($this->name);
     }
 
     /**
@@ -132,6 +136,7 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function isIdentifier($fieldName)
     {
+        return in_array($fieldName, $this->identifier);
     }
 
     /**
@@ -143,6 +148,7 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function hasField($fieldName)
     {
+        return isset($this->fields[$fieldName]);
     }
 
     /**
@@ -154,6 +160,7 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function hasAssociation($fieldName)
     {
+        return false;
     }
 
     /**
@@ -165,6 +172,7 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function isSingleValuedAssociation($fieldName)
     {
+        return false;
     }
 
     /**
@@ -176,6 +184,7 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function isCollectionValuedAssociation($fieldName)
     {
+        return false;
     }
 
     /**
@@ -187,6 +196,7 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function getFieldNames()
     {
+        return array_column($this->fields, 'fieldName');
     }
 
     /**
@@ -196,6 +206,7 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function getIdentifierFieldNames()
     {
+        return $this->identifier;
     }
 
     /**
@@ -243,6 +254,7 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function isAssociationInverseSide($assocName)
     {
+        return false;
     }
 
     /**
