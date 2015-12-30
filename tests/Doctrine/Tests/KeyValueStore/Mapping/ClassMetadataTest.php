@@ -21,7 +21,11 @@
 namespace Doctrine\Tests\KeyValueStore\Mapping;
 
 use Doctrine\KeyValueStore\Mapping\ClassMetadata;
+use ReflectionClass;
 
+/**
+ * @coversDefaultClass \Doctrine\KeyValueStore\Mapping\ClassMetadata
+ */
 class ClassMetadataTest extends \PHPUnit_Framework_TestCase
 {
     private $metadata;
@@ -67,5 +71,119 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
         $this->metadata->mapField(['fieldName' => 'metadata']);
 
         $this->assertEquals([], $this->metadata->fields);
+    }
+
+    /**
+     * @covers ::getIdentifier
+     */
+    public function testGetIdentifier()
+    {
+        $identifier = $this->metadata->getIdentifier();
+
+        $this->assertInternalType('array', $identifier);
+
+        foreach ($identifier as $key => $value) {
+            $this->assertInternalType('integer', $key);
+            $this->assertInternalType('string', $value);
+        }
+    }
+
+    /**
+     * @covers ::getReflectionClass
+     */
+    public function testGetReflectionClass()
+    {
+        $reflectionClass = $this->metadata->getReflectionClass();
+
+        $this->assertInstanceOf(ReflectionClass::class, $reflectionClass);
+        $this->assertSame(__CLASS__, $reflectionClass->name);
+    }
+
+    /**
+     * @covers ::isIdentifier
+     */
+    public function testIsIdentifier()
+    {
+        $this->metadata->mapIdentifier('id');
+
+        $this->assertTrue($this->metadata->isIdentifier('id'));
+        $this->assertFalse($this->metadata->isIdentifier('test'));
+    }
+
+    /**
+     * @covers ::hasField
+     */
+    public function testHasField()
+    {
+        $this->metadata->mapField(['fieldName' => 'foo']);
+
+        $this->assertTrue($this->metadata->hasField('foo'));
+        $this->assertFalse($this->metadata->hasField('bar'));
+    }
+
+    /**
+     * @covers ::hasAssociation
+     */
+    public function testHasAssociation()
+    {
+        $this->assertFalse($this->metadata->hasAssociation(sha1(rand())));
+    }
+
+    /**
+     * @covers ::isSingleValuedAssociation
+     */
+    public function testIsSingleValuedAssociation()
+    {
+        $this->assertFalse($this->metadata->isSingleValuedAssociation(sha1(rand())));
+    }
+
+    /**
+     * @covers ::isCollectionValuedAssociation
+     */
+    public function testIsCollectionValuedAssociation()
+    {
+        $this->assertFalse($this->metadata->isCollectionValuedAssociation(sha1(rand())));
+    }
+
+    /**
+     * @covers ::getFieldNames
+     */
+    public function testGetFieldNames()
+    {
+        $this->metadata->mapField(['fieldName' => 'foo']);
+
+        $fieldNames = $this->metadata->getFieldNames();
+
+        $this->assertInternalType('array', $fieldNames);
+
+        foreach ($fieldNames as $key => $value) {
+            $this->assertInternalType('integer', $key);
+            $this->assertInternalType('string', $value);
+        }
+
+        $this->assertSame(['foo'], $fieldNames);
+    }
+
+    /**
+     * @covers ::getIdentifierFieldNames
+     */
+    public function testGetIdentifierFieldNames()
+    {
+        $identifierFieldNames = $this->metadata->getIdentifierFieldNames();
+
+        $this->assertInternalType('array', $identifierFieldNames);
+
+        foreach ($identifierFieldNames as $key => $value) {
+            $this->assertInternalType('integer', $key);
+            $this->assertInternalType('string', $value);
+        }
+    }
+
+    /**
+     * @covers ::isAssociationInverseSide
+     */
+    public function testIsAssociationInverseSide()
+    {
+        $this->assertFalse($this->metadata->isAssociationInverseSide(sha1(rand())));
     }
 }
