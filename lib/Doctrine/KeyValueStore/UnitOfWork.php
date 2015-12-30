@@ -91,7 +91,7 @@ class UnitOfWork
         $id    = $this->idHandler->normalizeId($class, $key);
         $data  = $this->storageDriver->find($class->storageName, $id);
 
-        if ( ! $data) {
+        if (! $data) {
             throw new NotFoundException();
         }
 
@@ -143,7 +143,7 @@ class UnitOfWork
         $originalData = $this->originalData[spl_object_hash($object)];
 
         foreach ($snapshot as $field => $value) {
-            if ( ! isset($originalData[$field]) || $originalData[$field] !== $value) {
+            if (! isset($originalData[$field]) || $originalData[$field] !== $value) {
                 $changeSet[$field] = $value;
             }
         }
@@ -159,13 +159,13 @@ class UnitOfWork
         $data = [];
 
         foreach ($class->reflFields as $fieldName => $reflProperty) {
-            if ( ! isset($class->fields[$fieldName]['id'])) {
+            if (! isset($class->fields[$fieldName]['id'])) {
                 $data[$fieldName] = $reflProperty->getValue($object);
             }
         }
 
         foreach (get_object_vars($object) as $property => $value) {
-            if ( ! isset($data[$property])) {
+            if (! isset($data[$property])) {
                 $data[$property] = $value;
             }
         }
@@ -183,7 +183,7 @@ class UnitOfWork
         $class = $this->cmf->getMetadataFor(get_class($object));
         $id    = $this->idHandler->getIdentifier($class, $object);
 
-        if ( ! $id) {
+        if (! $id) {
             throw new \RuntimeException('Trying to persist entity that has no id.');
         }
 
@@ -200,7 +200,7 @@ class UnitOfWork
     public function scheduleForDelete($object)
     {
         $oid = spl_object_hash($object);
-        if ( ! isset($this->identifiers[$oid])) {
+        if (! isset($this->identifiers[$oid])) {
             throw new \RuntimeException(
                 'Object scheduled for deletion is not managed. Only managed objects can be deleted.'
             );
@@ -242,7 +242,7 @@ class UnitOfWork
             $id    = $this->idHandler->getIdentifier($class, $object);
             $id    = $this->idConverter->serialize($class, $id);
 
-            if ( ! $id) {
+            if (! $id) {
                 throw new \RuntimeException('Trying to persist entity that has no id.');
             }
 

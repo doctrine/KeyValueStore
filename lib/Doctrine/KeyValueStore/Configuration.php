@@ -45,7 +45,7 @@ class Configuration
      */
     public function getMappingDriverImpl()
     {
-        if ( ! isset($this->config['mappingDriver'])) {
+        if (! isset($this->config['mappingDriver'])) {
             throw KeyValueStoreException::mappingDriverMissing();
         }
 
@@ -85,7 +85,7 @@ class Configuration
      */
     public function getMetadataCache()
     {
-        if ( ! isset($this->config['metadataCache'])) {
+        if (! isset($this->config['metadataCache'])) {
             $this->config['metadataCache'] = new ArrayCache();
         }
 
@@ -112,7 +112,7 @@ class Configuration
      */
     public function getIdConverterStrategy()
     {
-        if ( ! isset($this->config['idConverter'])) {
+        if (! isset($this->config['idConverter'])) {
             $this->config['idConverter'] = new NullIdConverter();
         }
 

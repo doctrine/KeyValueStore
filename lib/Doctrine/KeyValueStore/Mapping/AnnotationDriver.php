@@ -52,14 +52,14 @@ class AnnotationDriver implements MappingDriver
     public function loadMetadataForClass($className, ClassMetadata $metadata)
     {
         $class = $metadata->getReflectionClass();
-        if ( ! $class) {
+        if (! $class) {
             // this happens when running annotation driver in combination with
             // static reflection services. This is not the nicest fix
             $class = new \ReflectionClass($metadata->name);
         }
 
         $entityAnnot = $this->reader->getClassAnnotation($class, 'Doctrine\KeyValueStore\Mapping\Annotations\Entity');
-        if ( ! $entityAnnot) {
+        if (! $entityAnnot) {
             throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
         }
         $metadata->storageName = $entityAnnot->storageName;

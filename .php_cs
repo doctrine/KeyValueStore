@@ -61,7 +61,6 @@ $config = Symfony\CS\Config\Config::create()
         'align_equals',
         'concat_with_spaces',
         'header_comment',
-        'logical_not_operators_with_spaces',
         'logical_not_operators_with_successor_space',
         'multiline_spaces_before_semicolon',
         'newline_after_open_tag',

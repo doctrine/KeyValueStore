@@ -142,7 +142,7 @@ class DBALStorage implements Storage
 
         $data = $stmt->fetchColumn();
 
-        if ( ! $data) {
+        if (! $data) {
             throw new NotFoundException();
         }
 
