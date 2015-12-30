@@ -131,6 +131,26 @@ as a storage layer through the Windows Azure PHP SDK:
 
    $storage = new AzureSdkTableStorage($client);
 
+Cassandra
+---------
+
+Cassandra is supported through the `PECL extension <https://pecl.php.net/package/cassandra>`_
+and the `DataStax PHP driver <https://github.com/datastax/php-driver>`_:
+
+.. code-block:: php
+
+    <?php
+
+    use Cassandra;
+    use Cassandra\SimpleStatement;
+    use Doctrine\KeyValueStore\Storage\CassandraStorage;
+
+    $cluster = Cassandra::cluster()->build();
+    $session = $cluster->connect();
+    $session->execute(new SimpleStatement('USE doctrine'));
+
+    $storage = new CassandraStorage($session);
+
 Couchbase
 ---------
 
