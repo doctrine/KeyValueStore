@@ -18,12 +18,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\KeyValueStore;
+namespace Doctrine\KeyValueStore\Storage\Exception;
 
-class KeyValueStoreException extends \Exception
+use Doctrine\KeyValueStore\Exception\InvalidArgumentException as BaseInvalidArgumentException;
+
+class InvalidArgumentException extends BaseInvalidArgumentException
 {
-    public static function mappingDriverMissing()
-    {
-        return new self('No mapping driver was assigned to the configuration. Use $config->setMappingDriverImpl()');
-    }
 }

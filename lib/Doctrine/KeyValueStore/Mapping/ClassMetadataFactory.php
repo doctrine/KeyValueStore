@@ -46,7 +46,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
 
     protected function getFqcnFromAlias($namespaceAlias, $simpleClassName)
     {
-        throw new \InvalidArgumentException('aliasing is not supported.');
+        throw new Exception\InvalidArgumentException('aliasing is not supported.');
     }
 
     protected function doLoadMetadata($class, $parent, $rootEntityFound, array $nonSuperclassParents)
@@ -64,7 +64,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
         }
 
         if (! $class->identifier) {
-            throw new \InvalidArgumentException('Class ' . $class->name . ' has no identifier.');
+            throw new Exception\InvalidArgumentException('Class ' . $class->name . ' has no identifier.');
         }
     }
 

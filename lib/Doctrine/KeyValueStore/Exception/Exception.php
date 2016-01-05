@@ -18,10 +18,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\KeyValueStore\Storage;
+namespace Doctrine\KeyValueStore\Exception;
 
-use Doctrine\KeyValueStore\KeyValueStoreException;
+use Doctrine\KeyValueStore\Exception as BaseException;
 
-class StorageException extends KeyValueStoreException
+class Exception extends \Exception implements BaseException
 {
 }

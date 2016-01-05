@@ -18,37 +18,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Tests\KeyValueStore;
+namespace Doctrine\KeyValueStore\Exception;
 
-use Doctrine\KeyValueStore\Configuration;
-use Doctrine\KeyValueStore\Exception\Exception;
+use Doctrine\KeyValueStore\Exception as BaseException;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class InvalidArgumentException extends \InvalidArgumentException implements BaseException
 {
-    public function testNoMappingDriver()
-    {
-        $config = new Configuration();
-
-        $this->setExpectedException(
-            Exception::class,
-            'No mapping driver was assigned to the configuration. Use $config->setMappingDriverImpl()'
-        );
-        $config->getMappingDriverImpl();
-    }
-
-    public function testDefaultCacheDriver()
-    {
-        $config = new Configuration();
-        $cache  = $config->getMetadataCache();
-
-        $this->assertInstanceOf('Doctrine\Common\Cache\Cache', $cache);
-    }
-
-    public function testDefaultIdConverterStrategy()
-    {
-        $config   = new Configuration();
-        $strategy = $config->getIdConverterStrategy();
-
-        $this->assertInstanceOf('Doctrine\KeyValueStore\Id\NullIdConverter', $strategy);
-    }
 }

@@ -68,7 +68,7 @@ class AzureSdkTableTest extends KeyValueStoreTestCase
 
         $storage->delete('test', $key);
 
-        $this->setExpectedException("Doctrine\KeyValueStore\NotFoundException");
+        $this->setExpectedException("Doctrine\KeyValueStore\Exception\NotFoundException");
         $storage->find('test', $key);
     }
 

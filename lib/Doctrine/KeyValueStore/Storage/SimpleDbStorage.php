@@ -23,8 +23,8 @@ namespace Doctrine\KeyValueStore\Storage;
 use Aws\SimpleDb\Exception\NoSuchDomainException;
 use Aws\SimpleDb\Exception\SimpleDbException;
 use Aws\SimpleDb\SimpleDbClient;
-use Doctrine\KeyValueStore\KeyValueStoreException;
-use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\Exception\Exception as KeyValueStoreException;
+use Doctrine\KeyValueStore\Exception\NotFoundException;
 
 /**
  * SimpleDb storage

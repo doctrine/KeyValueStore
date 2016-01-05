@@ -92,7 +92,7 @@ class UnitOfWork
         $data  = $this->storageDriver->find($class->storageName, $id);
 
         if (! $data) {
-            throw new NotFoundException();
+            throw new Exception\NotFoundException();
         }
 
         return $this->createEntity($class, $id, $data);
@@ -102,7 +102,7 @@ class UnitOfWork
     {
         if (isset($data['php_class'])) {
             if ($data['php_class'] !== $class->name && ! is_subclass_of($data['php_class'], $class->name)) {
-                throw new \RuntimeException(
+                throw new Exception\RuntimeException(
                     "Row is of class '" . $data['php_class'] . "' which is not a subtype of expected " . $class->name
                 );
             }
@@ -184,13 +184,13 @@ class UnitOfWork
         $id    = $this->idHandler->getIdentifier($class, $object);
 
         if (! $id) {
-            throw new \RuntimeException('Trying to persist entity that has no id.');
+            throw new Exception\RuntimeException('Trying to persist entity that has no id.');
         }
 
         $idHash = $this->idHandler->hash($id);
 
         if (isset($this->identityMap[$class->name][$idHash])) {
-            throw new \RuntimeException('Object with ID already exists.');
+            throw new Exception\RuntimeException('Object with ID already exists.');
         }
 
         $this->scheduledInsertions[$oid]          = $object;
@@ -201,7 +201,7 @@ class UnitOfWork
     {
         $oid = spl_object_hash($object);
         if (! isset($this->identifiers[$oid])) {
-            throw new \RuntimeException(
+            throw new Exception\RuntimeException(
                 'Object scheduled for deletion is not managed. Only managed objects can be deleted.'
             );
         }
@@ -243,7 +243,7 @@ class UnitOfWork
             $id    = $this->idConverter->serialize($class, $id);
 
             if (! $id) {
-                throw new \RuntimeException('Trying to persist entity that has no id.');
+                throw new Exception\RuntimeException('Trying to persist entity that has no id.');
             }
 
             $data              = $this->getObjectSnapshot($class, $object);

@@ -18,8 +18,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\KeyValueStore;
+namespace Doctrine\KeyValueStore\Exception;
 
-class NotFoundException extends KeyValueStoreException
+use Doctrine\KeyValueStore\Exception as BaseException;
+
+class RuntimeException extends \RuntimeException implements BaseException
 {
 }

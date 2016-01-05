@@ -60,7 +60,7 @@ class AnnotationDriver implements MappingDriver
 
         $entityAnnot = $this->reader->getClassAnnotation($class, 'Doctrine\KeyValueStore\Mapping\Annotations\Entity');
         if (! $entityAnnot) {
-            throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
+            throw new Exception\InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
         }
         $metadata->storageName = $entityAnnot->storageName;
 

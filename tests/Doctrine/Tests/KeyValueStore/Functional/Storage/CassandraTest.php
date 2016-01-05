@@ -110,7 +110,7 @@ class CassandraTest extends \PHPUnit_Framework_TestCase
         $this->storage->insert('books', ['id' => 4], $data);
         $this->storage->delete('books', ['id' => 4]);
 
-        $this->setExpectedException('Doctrine\KeyValueStore\NotFoundException');
+        $this->setExpectedException('Doctrine\KeyValueStore\Exception\NotFoundException');
 
         $this->storage->find('books', ['id' => 4]);
     }

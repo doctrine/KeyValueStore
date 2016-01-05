@@ -209,7 +209,7 @@ class RangeQuery
         $storage = $this->em->unwrap();
 
         if (! $storage instanceof RangeQueryStorage) {
-            throw new \RuntimeException(
+            throw new Exception\RuntimeException(
                 'The storage backend ' . $storage->getName() . ' does not support range queries.'
             );
         }

@@ -116,7 +116,7 @@ final class CouchDbStorage implements Storage
     /**
      * @param string       $storageName
      * @param array|string $key
-     * 
+     *
      * @return string
      */
     private function flattenKey($storageName, $key)
@@ -128,7 +128,7 @@ final class CouchDbStorage implements Storage
         }
 
         if (! is_array($key)) {
-            throw new \InvalidArgumentException('The key should be a string or a flat array.');
+            throw new Exception\InvalidArgumentException('The key should be a string or a flat array.');
         }
 
         foreach ($key as $property => $value) {

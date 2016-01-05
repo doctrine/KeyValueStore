@@ -29,12 +29,12 @@ class CompositeIdHandler implements IdHandlingStrategy
         if (! $metadata->isCompositeKey && ! is_array($key)) {
             $id = [$metadata->identifier[0] => $key];
         } elseif (! is_array($key)) {
-            throw new \InvalidArgumentException('Array of identifier key-value pairs is expected!');
+            throw new Exception\InvalidArgumentException('Array of identifier key-value pairs is expected!');
         } else {
             $id = [];
             foreach ($metadata->identifier as $field) {
                 if (! isset($key[$field])) {
-                    throw new \InvalidArgumentException(
+                    throw new Exception\InvalidArgumentException(
                         "Missing identifier field $field in request for the primary key."
                     );
                 }

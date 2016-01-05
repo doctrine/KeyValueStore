@@ -210,7 +210,7 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\KeyValueStore\NotFoundException
+     * @expectedException Doctrine\KeyValueStore\Exception\NotFoundException
      */
     public function testFindWithNotExistKey()
     {

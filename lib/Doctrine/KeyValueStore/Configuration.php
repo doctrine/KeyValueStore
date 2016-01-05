@@ -46,7 +46,9 @@ class Configuration
     public function getMappingDriverImpl()
     {
         if (! isset($this->config['mappingDriver'])) {
-            throw KeyValueStoreException::mappingDriverMissing();
+            throw new Exception\Exception(
+                'No mapping driver was assigned to the configuration. Use $config->setMappingDriverImpl()'
+            );
         }
 
         return $this->config['mappingDriver'];

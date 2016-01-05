@@ -20,7 +20,7 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\Exception\NotFoundException;
 
 /**
  * MongoDb storage
@@ -71,10 +71,10 @@ class MongoDbStorage implements Storage
         }
 
         if (empty($this->dbOptions['database'])) {
-            throw new \RuntimeException('The option "database" must be set');
+            throw new Exception\RuntimeException('The option "database" must be set');
         }
         if (empty($this->dbOptions['collection'])) {
-            throw new \RuntimeException('The option "collection" must be set');
+            throw new Exception\RuntimeException('The option "collection" must be set');
         }
 
         $this->collection = $this

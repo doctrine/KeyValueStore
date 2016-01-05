@@ -62,7 +62,7 @@ class YamlDriver extends FileDriver
         try {
             $element = $this->getElement($className);
         } catch (MappingException $exception) {
-            throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
+            throw new Exception\InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
         }
 
         $class = new \ReflectionClass($className);

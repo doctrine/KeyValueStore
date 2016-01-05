@@ -70,11 +70,11 @@ class XmlDriver extends FileDriver
         try {
             $xmlRoot = $this->getElement($className);
         } catch (MappingException $exception) {
-            throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
+            throw new Exception\InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
         }
 
         if ($xmlRoot->getName() != 'entity') {
-            throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
+            throw new Exception\InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
         }
 
         $class = new \ReflectionClass($className);

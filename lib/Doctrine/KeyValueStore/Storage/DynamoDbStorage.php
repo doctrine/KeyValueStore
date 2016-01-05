@@ -23,7 +23,7 @@ namespace Doctrine\KeyValueStore\Storage;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\ResourceNotFoundException;
 use Aws\DynamoDb\Iterator\ItemIterator;
-use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\Exception\NotFoundException;
 
 /**
  * DyanmoDb storage

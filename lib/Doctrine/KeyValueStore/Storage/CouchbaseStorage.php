@@ -20,7 +20,7 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\Exception\NotFoundException;
 
 /**
  * @author Simon Schick <simonsimcity@gmail.com>

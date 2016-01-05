@@ -20,7 +20,7 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\Exception\NotFoundException;
 use Doctrine\KeyValueStore\Query\RangeQuery;
 use Doctrine\KeyValueStore\Query\RangeQueryStorage;
 use WindowsAzure\Common\ServiceException;
@@ -82,7 +82,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
             if ($e->getCode() == 404) {
                 $this->client->createTable($storageName);
             } else {
-                throw new StorageException(
+                throw new Exception\Exception(
                     'Could not save entity in table, WindowsAzure SDK client reported error: ' . $e->getMessage(),
                     $e->getCode(),
                     $e
@@ -101,7 +101,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
         try {
             $this->client->updateEntity($storageName, $entity);
         } catch (ServiceException $e) {
-            throw new StorageException(
+            throw new Exception\Exception(
                 'Could not update entity in table, WindowsAzure SDK client reported error: ' . $e->getMessage(),
                 $e->getCode(),
                 $e
@@ -119,7 +119,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
         try {
             $this->client->deleteEntity($storageName, $partitonKey, $rowKey);
         } catch (ServiceException $e) {
-            throw new StorageException(
+            throw new Exception\Exception(
                 'Could not delete entity in table, WindowsAzure SDK client reported error: ' . $e->getMessage(),
                 $e->getCode(),
                 $e
@@ -140,7 +140,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
             if ($e->getCode() === 404) {
                 throw new NotFoundException();
             } else {
-                throw new StorageException(
+                throw new Exception\Exception(
                     'Could not find entity in table, WindowsAzure SDK client reported error: ' . $e->getMessage(),
                     $e->getCode(),
                     $e
@@ -185,7 +185,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
 
         foreach ($query->getConditions() as $condition) {
             if (! in_array($condition[0], ['eq', 'neq', 'le', 'lt', 'ge', 'gt'])) {
-                throw new \InvalidArgumentException(
+                throw new Exception\InvalidArgumentException(
                     'Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions.'
                 );
             }

@@ -99,7 +99,7 @@ interface Storage
      * @param string       $storageName
      * @param array|string $key
      *
-     * @throws Doctrine\KeyValueStore\NotFoundException When data with key is not found.
+     * @throws Doctrine\KeyValueStore\Exception\NotFoundException When data with key is not found.
      *
      * @return array
      */

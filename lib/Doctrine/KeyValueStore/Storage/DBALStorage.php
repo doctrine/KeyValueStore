@@ -21,7 +21,7 @@
 namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\Exception\NotFoundException;
 
 /**
  * Relational databased backed system.

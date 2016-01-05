@@ -22,7 +22,7 @@ namespace Doctrine\KeyValueStore\Storage;
 
 use Cassandra\ExecutionOptions;
 use Cassandra\Session;
-use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\Exception\NotFoundException;
 
 /**
  * Cassandra Storage Engine for KeyValueStore.
