@@ -148,14 +148,17 @@ class ClassMetadataTest extends PHPUnit_Framework_TestCase
      */
     public function testGetIdentifierValues()
     {
-        $identifierValues = $this->object->getIdentifierValues('stdClass');
+        $identifierValues = $this->object->getIdentifierValues(new stdClass);
 
         $this->assertInternalType('array', $identifierValues);
         $this->assertEmpty($identifierValues);
 
+        $object     = new stdClass;
+        $object->id = rand();
+
         $this->object->mapIdentifier('id');
 
-        $identifierValues = $this->object->getIdentifierValues('stdClass');
+        $identifierValues = $this->object->getIdentifierValues($object);
 
         $this->assertInternalType('array', $identifierValues);
         $this->assertNotEmpty($identifierValues);

@@ -143,20 +143,18 @@ class ClassMetadata implements BaseClassMetadata
     /**
      * Get identifiers values.
      *
-     * @param string|object $object
+     * @param object $object
      *
      * @return array
      */
     public function getIdentifierValues($object)
     {
-        $id = [];
-        foreach ($this->identifier as $field) {
-            $value = $this->reflFields[$field]->getValue($object);
-            if ($value !== null) {
-                $id[$field] = $value;
-            }
-        }
-        return $id;
+        $instance = $object ?: $this->newInstance();
+
+        return array_intersect_key(
+            get_object_vars($instance),
+            array_flip($this->identifier)
+        );
     }
 
     /**
