@@ -66,11 +66,16 @@ class ClassMetadata implements BaseClassMetadata
     private $prototype;
 
     /**
-     * @param string $className
+     * @param string|object $class
      */
-    public function __construct($className)
+    public function __construct($class)
     {
-        $this->name = $className;
+        if (is_object($class)) {
+            $reflectionClass = new ReflectionClass($class);
+            $class           = $reflectionClass->getName();
+        }
+
+        $this->name = $class;
     }
 
     /**

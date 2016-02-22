@@ -23,6 +23,7 @@ namespace Doctrine\KeyValueStore\Mapping;
 use PHPUnit_Framework_Assert;
 use PHPUnit_Framework_TestCase;
 use ReflectionClass;
+use stdClass;
 
 /**
  * @coversDefaultClass Doctrine\KeyValueStore\Mapping\ClassMetadata
@@ -40,7 +41,9 @@ class ClassMetadataTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new ClassMetadata('\stdClass');
+        $class = rand(0, 1) ? stdClass::class : new stdClass;
+
+        $this->object = new ClassMetadata($class);
     }
 
     /**
