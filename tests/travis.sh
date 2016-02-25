@@ -9,4 +9,5 @@ cd ext && ./install.sh && cd "$TRAVIS_BUILD_DIR"
 echo "extension=cassandra.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 # PHP extensions
 yes | pecl install mongo
-yes | pecl install redis
+# PECL extensions
+echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
