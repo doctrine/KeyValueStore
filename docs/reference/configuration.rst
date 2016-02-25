@@ -52,6 +52,7 @@ database backends, you have to configure the actual storage you want to use.
 This configuration is obviously specific to all the different storage drivers.
 So far the following drivers exist (and are documented here):
 
+* PHP Array
 * Doctrine Cache Backend
 * SQL Backend with Doctrine DBAL
 * Microsoft Windows Azure Table
@@ -62,6 +63,19 @@ So far the following drivers exist (and are documented here):
 
 Also all those storage backends obviously have different dependencies in terms
 of PHP libraries or PHP PECL extensions.
+
+PHP Array
+---------
+
+PHP array is used mainly for development and teesting purposes.
+
+.. code-block:: php
+
+   <?php
+
+   use Doctrine\KeyValueStore\Storage\ArrayStorage;
+
+   $storage = new ArrayStorage();
 
 Doctrine Cache Backend
 ----------------------
