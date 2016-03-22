@@ -20,12 +20,12 @@
 
 namespace Doctrine\Tests\KeyValueStore\Storage;
 
-use Doctrine\KeyValueStore\Storage\AmazonDynamoDbStorage;
+use Doctrine\KeyValueStore\Storage\DynamoDbStorage;
 
 /**
- * @covers \Doctrine\KeyValueStory\Storage\AmazonDynamoDbStorage
+ * @covers \Doctrine\KeyValueStore\Storage\DynamoDbStorage
  */
-class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
+class DynamoDbTest extends \PHPUnit_Framework_TestCase
 {
     private function getDynamoDbMock($methods = [])
     {
@@ -53,21 +53,21 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     {
         $client = $this->getDynamoDbMock();
 
-        $storage = new AmazonDynamoDbStorage($client);
-        $this->assertSame('amazon_dynamodb', $storage->getName());
+        $storage = new DynamoDbStorage($client);
+        $this->assertSame('dynamodb', $storage->getName());
     }
 
     public function testDefaultKeyName()
     {
         $client = $this->getDynamoDbMock();
-        $storage = new AmazonDynamoDbStorage($client);
+        $storage = new DynamoDbStorage($client);
         $this->assertAttributeSame('Id', 'defaultKeyName', $storage);
     }
 
     public function testThatTableKeysInitiallyEmpty()
     {
         $client = $this->getDynamoDbMock();
-        $storage = new AmazonDynamoDbStorage($client);
+        $storage = new DynamoDbStorage($client);
         $this->assertAttributeSame([], 'tableKeys', $storage);
     }
 
@@ -78,7 +78,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
             '\Doctrine\KeyValueStore\KeyValueStoreException',
             'The key must be a string, got "array" instead.'
         );
-        new AmazonDynamoDbStorage($client, null, []);
+        new DynamoDbStorage($client, null, []);
     }
 
     public function testTableKeysMustAllBeStringsOrElse()
@@ -88,18 +88,17 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
             '\Doctrine\KeyValueStore\KeyValueStoreException',
             'The key must be a string, got "object" instead.'
         );
-        new AmazonDynamoDbStorage($client, null, null, ['mytable' => 'hello', 'yourtable' => new \stdClass()]);
+        new DynamoDbStorage($client, null, null, ['mytable' => 'hello', 'yourtable' => new \stdClass()]);
     }
 
     public function testKeyNameMustBeUnder255Bytes()
     {
         $client = $this->getDynamoDbMock();
-        $storage = new AmazonDynamoDbStorage($client);
         $this->setExpectedException(
             '\Doctrine\KeyValueStore\KeyValueStoreException',
             'The name must be at least 1 but no more than 255 chars.'
         );
-        $storage->setDefaultKeyName(str_repeat('a', 256));
+        new DynamoDbStorage($client, null, str_repeat('a', 256));
     }
 
     public function invalidTableNames()
@@ -135,13 +134,21 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
         return $method->invoke($obj);
     }
 
+    public function testTableNameMustBeAString()
+    {
+        $client = $this->getDynamoDbMock();
+        $storage = new DynamoDbStorage($client);
+        $this->setExpectedException('\Doctrine\KeyValueStore\InvalidArgumentException');
+        $this->invokeMethod('setKeyForTable', $storage, [[], 'Id']);
+    }
+
     /**
      * @dataProvider invalidTableNames
      */
     public function testTableNameValidatesAgainstInvalidTableNames($tableName)
     {
         $client = $this->getDynamoDbMock();
-        $storage = new AmazonDynamoDbStorage($client);
+        $storage = new DynamoDbStorage($client);
         $this->setExpectedException('\Doctrine\KeyValueStore\KeyValueStoreException');
         $this->invokeMethod('setKeyForTable', $storage, [$tableName, 'Id']);
     }
@@ -152,7 +159,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     public function testTableNameValidatesAgainstValidTableNames($tableName)
     {
         $client = $this->getDynamoDbMock();
-        $storage = new AmazonDynamoDbStorage($client);
+        $storage = new DynamoDbStorage($client);
         $this->invokeMethod('setKeyForTable', $storage, [$tableName, 'Id']);
 
         $this->assertAttributeSame([$tableName => 'Id'], 'tableKeys', $storage);
@@ -161,7 +168,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     public function testThatYouCanHaveMultipleTablesWithOverrides()
     {
         $client = $this->getDynamoDbMock();
-        $storage = new AmazonDynamoDbStorage($client);
+        $storage = new DynamoDbStorage($client);
         $this->invokeMethod('setKeyForTable', $storage, ['Aaa', '2']);
         $this->invokeMethod('setKeyForTable', $storage, ['Bbb', '1']);
 
@@ -171,21 +178,21 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     public function testGetterForDefaultKeyName()
     {
         $client = $this->getDynamoDbMock();
-        $storage = new AmazonDynamoDbStorage($client, null, 'CustomKey');
+        $storage = new DynamoDbStorage($client, null, 'CustomKey');
         $this->assertSame('CustomKey', $storage->getDefaultKeyName());
     }
 
     public function testGetWillReturnDefaultKeyForUnrecognizedTableName()
     {
         $client = $this->getDynamoDbMock();
-        $storage = new AmazonDynamoDbStorage($client, null, 'CustomKey');
+        $storage = new DynamoDbStorage($client, null, 'CustomKey');
         $this->assertSame('CustomKey', $this->invokeMethod('getKeyNameForTable', $storage, ['whatever_this_is']));
     }
 
     public function testGetWillReturnCorrectKeyForRecognizedTableName()
     {
         $client = $this->getDynamoDbMock();
-        $storage = new AmazonDynamoDbStorage($client, null, 'CustomKey', ['MyTable' => 'Yesss']);
+        $storage = new DynamoDbStorage($client, null, 'CustomKey', ['MyTable' => 'Yesss']);
         $this->assertSame('Yesss', $this->invokeMethod('getKeyNameForTable', $storage, ['MyTable']));
     }
 
@@ -193,7 +200,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     {
         $client = $this->getDynamoDbMock();
 
-        $storage = new AmazonDynamoDbStorage($client, null, 'sauce', ['this' => 'that', 'yolo' => 'now']);
+        $storage = new DynamoDbStorage($client, null, 'sauce', ['this' => 'that', 'yolo' => 'now']);
 
         $this->assertSame(['that' => ['N' => '111']], $this->invokeMethod('prepareKey', $storage, ['this', 111]));
     }
@@ -202,7 +209,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
     {
         $client = $this->getDynamoDbMock();
 
-        $storage = new AmazonDynamoDbStorage($client, null, 'sauce', ['this' => 'that', 'yolo' => 'now']);
+        $storage = new DynamoDbStorage($client, null, 'sauce', ['this' => 'that', 'yolo' => 'now']);
 
         $this->assertSame(['sauce' => ['S' => 'hello']], $this->invokeMethod('prepareKey', $storage, ['MyTable', "hello"]));
     }
@@ -220,8 +227,28 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
             ]
         ]));
 
-        $storage = new AmazonDynamoDbStorage($client);
+        $storage = new DynamoDbStorage($client);
         $storage->insert('MyTable', 'stuff', ['hi' => 'there', 'yo' => false]);
+    }
+
+    public function testInsertingPreparesNestedAttributes()
+    {
+        $client = $this->getDynamoDbMock(['putItem']);
+
+        $client->expects($this->once())->method('putItem')->with($this->equalTo([
+          'TableName' => 'MyTable',
+          'Item' => [
+            'Id' => ['S' => 'stuff'],
+            'hi' => ['S' => 'there'],
+            'what' => ['L' => [
+                ['S' => 'Yep']
+            ]],
+            'yo' => ['BOOL' => false],
+          ]
+        ]));
+
+        $storage = new DynamoDbStorage($client);
+        $storage->insert('MyTable', 'stuff', ['hi' => 'there', 'yo' => false, 'what' => ['Yep', '']]);
     }
 
     public function testUpdateActuallyAlsoCallsInsert()
@@ -237,7 +264,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
             ]
         ]));
 
-        $storage = new AmazonDynamoDbStorage($client);
+        $storage = new DynamoDbStorage($client);
         $storage->update('MyTable', 'stuff', ['hi' => 'there', 'yo' => false]);
     }
 
@@ -250,8 +277,21 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
             'Key' => ['Id' => ['S' => 'abc123']]
         ]));
 
-        $storage = new AmazonDynamoDbStorage($client);
+        $storage = new DynamoDbStorage($client);
         $storage->delete('MyTable', 'abc123');
+    }
+
+    public function testDeleteItemWithKeyValuePair()
+    {
+        $client = $this->getDynamoDbMock(['deleteItem']);
+
+        $client->expects($this->once())->method('deleteItem')->with($this->equalTo([
+          'TableName' => 'MyTable',
+          'Key' => ['Id' => ['S' => 'abc123']]
+        ]));
+
+        $storage = new DynamoDbStorage($client);
+        $storage->delete('MyTable', ['Id' => 'abc123']);
     }
 
     public function testPassingArrayAsKeyIsAPassthruToInsert()
@@ -263,7 +303,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
             'Key' => ['Id' => ['S' => 'abc123']]
         ]));
 
-        $storage = new AmazonDynamoDbStorage($client);
+        $storage = new DynamoDbStorage($client);
         $storage->delete('MyTable', 'abc123');
     }
 
@@ -276,7 +316,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
             'Key' => ['Id' => ['N' => '1000']]
         ]))->willReturn(null);
 
-        $storage = new AmazonDynamoDbStorage($client);
+        $storage = new DynamoDbStorage($client);
         $this->setExpectedException(
             '\Doctrine\KeyValueStore\NotFoundException',
             'Could not find an item with key: 1000'
@@ -298,7 +338,7 @@ class AmazonDynamoDbTest extends \PHPUnit_Framework_TestCase
             'Key' => ['Id' => ['N' => '1000']]
         ]))->willReturn($result);
 
-        $storage = new AmazonDynamoDbStorage($client);
+        $storage = new DynamoDbStorage($client);
         $actualResult = $storage->find('MyTable', 1000);
 
         $this->assertSame(['hello' => 'world'], $actualResult);
