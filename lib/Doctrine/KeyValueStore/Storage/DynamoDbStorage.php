@@ -195,7 +195,8 @@ class DynamoDbStorage implements Storage
      * Prepares a key to be in a valid format for lookups for DynamoDB. If passing an array, that means that the key
      * is the name of the key and the value is the actual value for the lookup.
      *
-     * @param string $storageName
+     * @param string $storageName Table name.
+     * @param string $key Key name.
      *
      * @return array The key in DynamoDB format.
      */
