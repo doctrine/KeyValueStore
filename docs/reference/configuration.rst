@@ -187,7 +187,7 @@ CouchDB storage setup based on `doctrine/couchdb-client <https://github.com/doct
 DynamoDb
 ---------
 
-DynamoDb is supported through the `AWS SDK for PHO <https://aws.amazon.com/sdk-for-php/>`_
+DynamoDb is supported through the `AWS SDK for PHP <https://aws.amazon.com/sdk-for-php/>`_
 Create your tables via the AWS DynamoDb console or using the `PHP based API <http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/LowLevelPHPTableOperationsExample.html>`_
 
 .. code-block:: php
