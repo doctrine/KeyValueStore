@@ -59,14 +59,14 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultKeyName()
     {
-        $client = $this->getDynamoDbMock();
+        $client  = $this->getDynamoDbMock();
         $storage = new DynamoDbStorage($client);
         $this->assertAttributeSame('Id', 'defaultKeyName', $storage);
     }
 
     public function testThatTableKeysInitiallyEmpty()
     {
-        $client = $this->getDynamoDbMock();
+        $client  = $this->getDynamoDbMock();
         $storage = new DynamoDbStorage($client);
         $this->assertAttributeSame([], 'tableKeys', $storage);
     }
@@ -107,7 +107,7 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
             ['a2'],
             ['yo%'],
             ['что'],
-            ['h@llo']
+            ['h@llo'],
         ];
     }
 
@@ -117,13 +117,13 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
             ['MyTable'],
             ['This_is0k-...'],
             ['hello_world'],
-            ['...........00....']
+            ['...........00....'],
         ];
     }
 
     private function invokeMethod($methodName, $obj, array $args = null)
     {
-        $relf = new \ReflectionObject($obj);
+        $relf   = new \ReflectionObject($obj);
         $method = $relf->getMethod($methodName);
         $method->setAccessible(true);
 
@@ -136,7 +136,7 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
 
     public function testTableNameMustBeAString()
     {
-        $client = $this->getDynamoDbMock();
+        $client  = $this->getDynamoDbMock();
         $storage = new DynamoDbStorage($client);
         $this->setExpectedException('\Doctrine\KeyValueStore\InvalidArgumentException');
         $this->invokeMethod('setKeyForTable', $storage, [[], 'Id']);
@@ -147,7 +147,7 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
      */
     public function testTableNameValidatesAgainstInvalidTableNames($tableName)
     {
-        $client = $this->getDynamoDbMock();
+        $client  = $this->getDynamoDbMock();
         $storage = new DynamoDbStorage($client);
         $this->setExpectedException('\Doctrine\KeyValueStore\KeyValueStoreException');
         $this->invokeMethod('setKeyForTable', $storage, [$tableName, 'Id']);
@@ -158,7 +158,7 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
      */
     public function testTableNameValidatesAgainstValidTableNames($tableName)
     {
-        $client = $this->getDynamoDbMock();
+        $client  = $this->getDynamoDbMock();
         $storage = new DynamoDbStorage($client);
         $this->invokeMethod('setKeyForTable', $storage, [$tableName, 'Id']);
 
@@ -167,7 +167,7 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
 
     public function testThatYouCanHaveMultipleTablesWithOverrides()
     {
-        $client = $this->getDynamoDbMock();
+        $client  = $this->getDynamoDbMock();
         $storage = new DynamoDbStorage($client);
         $this->invokeMethod('setKeyForTable', $storage, ['Aaa', '2']);
         $this->invokeMethod('setKeyForTable', $storage, ['Bbb', '1']);
@@ -177,21 +177,21 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
 
     public function testGetterForDefaultKeyName()
     {
-        $client = $this->getDynamoDbMock();
+        $client  = $this->getDynamoDbMock();
         $storage = new DynamoDbStorage($client, null, 'CustomKey');
         $this->assertSame('CustomKey', $storage->getDefaultKeyName());
     }
 
     public function testGetWillReturnDefaultKeyForUnrecognizedTableName()
     {
-        $client = $this->getDynamoDbMock();
+        $client  = $this->getDynamoDbMock();
         $storage = new DynamoDbStorage($client, null, 'CustomKey');
         $this->assertSame('CustomKey', $this->invokeMethod('getKeyNameForTable', $storage, ['whatever_this_is']));
     }
 
     public function testGetWillReturnCorrectKeyForRecognizedTableName()
     {
-        $client = $this->getDynamoDbMock();
+        $client  = $this->getDynamoDbMock();
         $storage = new DynamoDbStorage($client, null, 'CustomKey', ['MyTable' => 'Yesss']);
         $this->assertSame('Yesss', $this->invokeMethod('getKeyNameForTable', $storage, ['MyTable']));
     }
@@ -211,7 +211,7 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
 
         $storage = new DynamoDbStorage($client, null, 'sauce', ['this' => 'that', 'yolo' => 'now']);
 
-        $this->assertSame(['sauce' => ['S' => 'hello']], $this->invokeMethod('prepareKey', $storage, ['MyTable', "hello"]));
+        $this->assertSame(['sauce' => ['S' => 'hello']], $this->invokeMethod('prepareKey', $storage, ['MyTable', 'hello']));
     }
 
     public function testInsertingCallsAPutItem()
@@ -220,11 +220,11 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
 
         $client->expects($this->once())->method('putItem')->with($this->equalTo([
             'TableName' => 'MyTable',
-            'Item' => [
+            'Item'      => [
                 'Id' => ['S' => 'stuff'],
                 'hi' => ['S' => 'there'],
                 'yo' => ['BOOL' => false],
-            ]
+            ],
         ]));
 
         $storage = new DynamoDbStorage($client);
@@ -237,14 +237,14 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
 
         $client->expects($this->once())->method('putItem')->with($this->equalTo([
           'TableName' => 'MyTable',
-          'Item' => [
-            'Id' => ['S' => 'stuff'],
-            'hi' => ['S' => 'there'],
+          'Item'      => [
+            'Id'   => ['S' => 'stuff'],
+            'hi'   => ['S' => 'there'],
             'what' => ['L' => [
-                ['S' => 'Yep']
+                ['S' => 'Yep'],
             ]],
             'yo' => ['BOOL' => false],
-          ]
+          ],
         ]));
 
         $storage = new DynamoDbStorage($client);
@@ -257,11 +257,11 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
 
         $client->expects($this->once())->method('putItem')->with($this->equalTo([
             'TableName' => 'MyTable',
-            'Item' => [
+            'Item'      => [
                 'Id' => ['S' => 'stuff'],
                 'hi' => ['S' => 'there'],
                 'yo' => ['BOOL' => false],
-            ]
+            ],
         ]));
 
         $storage = new DynamoDbStorage($client);
@@ -274,7 +274,7 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
 
         $client->expects($this->once())->method('deleteItem')->with($this->equalTo([
             'TableName' => 'MyTable',
-            'Key' => ['Id' => ['S' => 'abc123']]
+            'Key'       => ['Id' => ['S' => 'abc123']],
         ]));
 
         $storage = new DynamoDbStorage($client);
@@ -287,7 +287,7 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
 
         $client->expects($this->once())->method('deleteItem')->with($this->equalTo([
           'TableName' => 'MyTable',
-          'Key' => ['Id' => ['S' => 'abc123']]
+          'Key'       => ['Id' => ['S' => 'abc123']],
         ]));
 
         $storage = new DynamoDbStorage($client);
@@ -300,7 +300,7 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
 
         $client->expects($this->once())->method('deleteItem')->with($this->equalTo([
             'TableName' => 'MyTable',
-            'Key' => ['Id' => ['S' => 'abc123']]
+            'Key'       => ['Id' => ['S' => 'abc123']],
         ]));
 
         $storage = new DynamoDbStorage($client);
@@ -311,9 +311,9 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
     {
         $client = $this->getDynamoDbMock(['getItem']);
         $client->expects($this->once())->method('getItem')->with($this->equalTo([
-            'TableName' => 'MyTable',
+            'TableName'      => 'MyTable',
             'ConsistentRead' => true,
-            'Key' => ['Id' => ['N' => '1000']]
+            'Key'            => ['Id' => ['N' => '1000']],
         ]))->willReturn(null);
 
         $storage = new DynamoDbStorage($client);
@@ -328,17 +328,17 @@ class DynamoDbTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->getDynamoDbResultMock(['get']);
         $result->expects($this->once())->method('get')->with('Item')->willReturn([
-            'hello' => ['S' => 'world']
+            'hello' => ['S' => 'world'],
         ]);
 
         $client = $this->getDynamoDbMock(['getItem']);
         $client->expects($this->once())->method('getItem')->with($this->equalTo([
-            'TableName' => 'MyTable',
+            'TableName'      => 'MyTable',
             'ConsistentRead' => true,
-            'Key' => ['Id' => ['N' => '1000']]
+            'Key'            => ['Id' => ['N' => '1000']],
         ]))->willReturn($result);
 
-        $storage = new DynamoDbStorage($client);
+        $storage      = new DynamoDbStorage($client);
         $actualResult = $storage->find('MyTable', 1000);
 
         $this->assertSame(['hello' => 'world'], $actualResult);

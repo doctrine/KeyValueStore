@@ -75,11 +75,11 @@ class DynamoDbStorage implements Storage
     private $tableKeys = [];
 
     /**
-     * @param DynamoDbClient $client    The client for connecting to AWS DynamoDB.
-     * @param Marshaler|null $marshaler (optional) Marshaller for converting data to/from DynamoDB format.
-     * @param string         $defaultKeyName   (optional) Default name to use for keys.
-     * @param array $tableKeys $tableKeys (optional) An associative array for keys representing table names and values
-     * representing key names for those tables.
+     * @param DynamoDbClient $client         The client for connecting to AWS DynamoDB.
+     * @param Marshaler|null $marshaler      (optional) Marshaller for converting data to/from DynamoDB format.
+     * @param string         $defaultKeyName (optional) Default name to use for keys.
+     * @param array          $tableKeys      $tableKeys (optional) An associative array for keys representing table names and values
+     *                                       representing key names for those tables.
      */
     public function __construct(
       DynamoDbClient $client,
@@ -87,7 +87,7 @@ class DynamoDbStorage implements Storage
       $defaultKeyName = null,
       array $tableKeys = []
     ) {
-        $this->client = $client;
+        $this->client    = $client;
         $this->marshaler = $marshaler ?: new Marshaler();
 
         if ($defaultKeyName !== null) {
@@ -106,9 +106,9 @@ class DynamoDbStorage implements Storage
      *
      * @throws InvalidArgumentException When the key name is invalid.
      */
-    private function  validateKeyName($name)
+    private function validateKeyName($name)
     {
-        if (!is_string($name)) {
+        if (! is_string($name)) {
             throw InvalidArgumentException::invalidType('key', 'string', $name);
         }
 
@@ -127,13 +127,13 @@ class DynamoDbStorage implements Storage
      *
      * @throws InvalidArgumentException When the name is invalid.
      */
-    private function  validateTableName($name)
+    private function validateTableName($name)
     {
-        if (!is_string($name)) {
+        if (! is_string($name)) {
             throw InvalidArgumentException::invalidType('key', 'string', $name);
         }
 
-        if (!preg_match('/^[a-z0-9_.-]{3,255}$/i', $name)) {
+        if (! preg_match('/^[a-z0-9_.-]{3,255}$/i', $name)) {
             throw InvalidArgumentException::invalidTableName($name);
         }
     }
@@ -196,7 +196,7 @@ class DynamoDbStorage implements Storage
      * is the name of the key and the value is the actual value for the lookup.
      *
      * @param string $storageName Table name.
-     * @param string $key Key name.
+     * @param string $key         Key name.
      *
      * @return array The key in DynamoDB format.
      */
@@ -204,10 +204,10 @@ class DynamoDbStorage implements Storage
     {
         if (is_array($key)) {
             $keyValue = reset($key);
-            $keyName = key($key);
+            $keyName  = key($key);
         } else {
             $keyValue = $key;
-            $keyName = $this->getKeyNameForTable($storageName);
+            $keyName  = $this->getKeyNameForTable($storageName);
         }
 
         return $this->marshaler->marshalItem([$keyName => $keyValue]);
@@ -280,7 +280,7 @@ class DynamoDbStorage implements Storage
           self::TABLE_KEY           => $this->prepareKey($storageName, $key),
         ]);
 
-        if (!$item) {
+        if (! $item) {
             throw NotFoundException::notFoundByKey($key);
         }
 
@@ -302,7 +302,7 @@ class DynamoDbStorage implements Storage
     /**
      * Prepare data by removing empty item attributes.
      *
-     * @param array  $data
+     * @param array $data
      *
      * @return array
      */
