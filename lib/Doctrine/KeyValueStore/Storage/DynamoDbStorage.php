@@ -302,7 +302,6 @@ class DynamoDbStorage implements Storage
     /**
      * Prepare data by removing empty item attributes.
      *
-     * @param string $key
      * @param array  $data
      *
      * @return array
