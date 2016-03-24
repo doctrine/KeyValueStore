@@ -189,23 +189,14 @@ DynamoDb
 
 DynamoDb is supported through the `AWS SDK for PHP <https://aws.amazon.com/sdk-for-php/>`_
 Create your tables via the AWS DynamoDb console or using the `PHP based API <http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/LowLevelPHPTableOperationsExample.html>`_
+See the `AWS docs <http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/UsingPHP.html#PHPSDKCredentialsSet>`_ for more information on configuring credentials for the client.
 
 .. code-block:: php
 
     <?php
 
-    $connection_settings = [
-      'profile' => 'default',
-      'region' => \Aws\Common\Enum\Region::AP_SOUTHEAST_2,
-      'key' => 'Your key here, unless you are using IAM roles or .credentials files',
-      'secret' => 'Your secret here, unless you are using IAM roles or .credentials files',
-    ];
-
-    // If you are using local dynamodb for testing, you can set a local url.
-    // $connection_settings['base_url'] = 'http://localhost:8000';
-
-
-    $client = \Aws\DynamoDb\DynamoDbClient::factory($connection_settings);
+    $sdk = new \Aws\Sdk([...]);
+    $client = $sdk->createDynamoDb();
 
     $storage = new DynamoDbStorage(
         $client,
