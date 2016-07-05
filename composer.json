@@ -8,6 +8,7 @@
         "datastax/php-driver": "^1.0",
         "doctrine/couchdb": "^1.0.0-beta4",
         "phpunit/phpunit": "^4.8|^5.0",
+        "aws/aws-sdk-php": "^3.8",
         "riak/riak-client": "dev-master"
     },
     "suggest": {

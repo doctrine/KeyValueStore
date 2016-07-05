@@ -198,6 +198,29 @@ CouchDB storage setup based on `doctrine/couchdb-client <https://github.com/doct
 
     $storage = new CouchDbStorage($client);
 
+DynamoDb
+---------
+
+DynamoDb is supported through the `AWS SDK for PHP <https://aws.amazon.com/sdk-for-php/>`_
+Create your tables via the AWS DynamoDb console or using the `PHP based API <http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/LowLevelPHPTableOperationsExample.html>`_
+See the `AWS docs <http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/UsingPHP.html#PHPSDKCredentialsSet>`_ for more information on configuring credentials for the client.
+
+.. code-block:: php
+
+    <?php
+
+    $sdk = new \Aws\Sdk([...]);
+    $client = $sdk->createDynamoDb();
+
+    $storage = new DynamoDbStorage(
+        $client,
+        // Optional key name, defaults to Id.
+        null,
+        // Optional table name/ key name pairs.
+        // This example uses a table called Awesome keyed by MyKey.
+        ['storage_keys' => ['Awesome' => 'MyKey']]
+    );
+
 MongoDB
 -------
 

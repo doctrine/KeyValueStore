@@ -20,10 +20,29 @@
 
 namespace Doctrine\KeyValueStore;
 
-class NotFoundException extends KeyValueStoreException
+class InvalidArgumentException extends KeyValueStoreException
 {
-    public static function notFoundByKey($key)
+    public static function invalidType($name, $expectedType, &$actual)
     {
-        return new static(sprintf('Could not find an item with key: %s', $key), 0);
+        return new static(
+            sprintf('The %s must be a %s, got "%s" instead.', $name, $expectedType, gettype($actual)),
+            0
+        );
+    }
+
+    public static function invalidLength($name, $min, $max)
+    {
+        return new static(
+            sprintf('The %s must be at least %d but no more than %d chars.', $name, $min, $max),
+            0
+        );
+    }
+
+    public static function invalidTableName($name)
+    {
+        return new static(
+            sprintf('Invalid table name: %s', $name),
+            0
+        );
     }
 }
