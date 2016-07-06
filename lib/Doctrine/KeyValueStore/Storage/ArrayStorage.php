@@ -20,7 +20,6 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\KeyValueStore\NotFoundException;
 
 /**
@@ -79,7 +78,7 @@ class ArrayStorage implements Storage
      */
     public function update($storageName, $key, array $data)
     {
-        if (!isset($this->data[$storageName])) {
+        if (! isset($this->data[$storageName])) {
             $this->data[$storageName] = [];
         }
 
@@ -93,11 +92,11 @@ class ArrayStorage implements Storage
      */
     public function delete($storageName, $key)
     {
-        if (!isset($this->data[$storageName])) {
+        if (! isset($this->data[$storageName])) {
             return;
         }
 
-        if (!isset($this->data[$storageName][serialize($key)])) {
+        if (! isset($this->data[$storageName][serialize($key)])) {
             return;
         }
 
@@ -113,11 +112,11 @@ class ArrayStorage implements Storage
      */
     public function find($storageName, $key)
     {
-        if (!isset($this->data[$storageName])) {
+        if (! isset($this->data[$storageName])) {
             throw new NotFoundException();
         }
 
-        if (!isset($this->data[$storageName][serialize($key)])) {
+        if (! isset($this->data[$storageName][serialize($key)])) {
             throw new NotFoundException();
         }
 
