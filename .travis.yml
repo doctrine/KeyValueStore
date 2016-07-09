@@ -21,6 +21,9 @@ before_install:
 install:
   - composer install --prefer-dist --no-interaction --no-progress
 
+before_script:
+  - vendor/bin/php-cs-fixer -v fix --diff --dry-run
+
 script:
   - vendor/bin/phpunit --verbose
 
