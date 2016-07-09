@@ -183,7 +183,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $tableNode->appendChild($dom->createTextNode($tableName));
         $xml = $dom->saveXML();
 
-        $url      = $this->baseUrl .  '/Tables';
+        $url      = $this->baseUrl . '/Tables';
         $response = $this->request('POST', $url, $xml, $headers);
 
         if ($response->getStatusCode() != 201) {
