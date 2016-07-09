@@ -19,13 +19,17 @@ before_install:
   - composer self-update
 
 install:
+  - composer require satooshi/php-coveralls:~0.6@stable --no-update
   - composer install --prefer-dist --no-interaction --no-progress
 
 before_script:
   - vendor/bin/php-cs-fixer -v fix --diff --dry-run
 
 script:
-  - vendor/bin/phpunit --verbose
+  - vendor/bin/phpunit --verbose --coverage-text --coverage-clover=coverage.clover
+
+after_script:
+  - if [[ $TRAVIS_PHP_VERSION != "5.6" && $TRAVIS_PULL_REQUEST == "false" ]]; then php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover; fi
 
 notifications:
   email: false
