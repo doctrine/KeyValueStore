@@ -23,3 +23,6 @@ install:
 
 script:
   - vendor/bin/phpunit --verbose
+
+notifications:
+  email: false
