@@ -33,7 +33,10 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        $this->mongo = $this->getMock('\Mongo');
+        $this->mongo = $this
+            ->getMockBuilder('\Mongo')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->mongodb = $this->getMockBuilder('\MongoDB')->disableOriginalConstructor()->getMock();
 

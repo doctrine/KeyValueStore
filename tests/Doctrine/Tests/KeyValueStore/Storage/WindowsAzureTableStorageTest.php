@@ -20,7 +20,9 @@
 
 namespace Doctrine\Tests\KeyValueStore\Storage;
 
+use Doctrine\KeyValueStore\Http\Client;
 use Doctrine\KeyValueStore\Http\Response;
+use Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema;
 use Doctrine\KeyValueStore\Storage\WindowsAzureTableStorage;
 
 class WindowsAzureTableStorageTest extends AbstractStorageTestCase
@@ -29,8 +31,14 @@ class WindowsAzureTableStorageTest extends AbstractStorageTestCase
 
     protected function createStorage()
     {
-        $this->client = $this->getMock('Doctrine\KeyValueStore\Http\Client');
-        $auth         = $this->getMock('Doctrine\KeyValueStore\Storage\WindowsAzureTable\AuthorizationSchema');
+        $this->client = $this
+            ->getMockBuilder(Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $auth = $this
+            ->getMockBuilder(AuthorizationSchema::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $auth->expects($this->any())->method('signRequest')->will($this->returnValue('Authorization: SharedKeyLite testaccount1:uay+rilMVayH/SVI8X+a3fL8k/NxCnIePdyZSkqvydM='));
 
         $storage = new WindowsAzureTableStorage(
