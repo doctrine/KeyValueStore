@@ -39,6 +39,10 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
 
     protected function setup()
     {
+        if (PHP_MAJOR_VERSION >= 7) {
+            $this->markTestSkipped('Riak extension is not available for PHP versions >= 7');
+        }
+
         $this->riak = $this->getMockBuilder('Riak\\Client')
             ->disableOriginalConstructor()
             ->getMock();
