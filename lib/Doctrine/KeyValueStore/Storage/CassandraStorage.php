@@ -23,6 +23,8 @@ namespace Doctrine\KeyValueStore\Storage;
 use Cassandra\ExecutionOptions;
 use Cassandra\Session;
 use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\Query\RangeQuery;
+use Doctrine\KeyValueStore\Query\RangeQueryStorage;
 
 /**
  * Cassandra Storage Engine for KeyValueStore.
@@ -31,7 +33,7 @@ use Doctrine\KeyValueStore\NotFoundException;
  *
  * @uses https://github.com/datastax/php-driver
  */
-class CassandraStorage implements Storage
+class CassandraStorage implements Storage, RangeQueryStorage
 {
     /**
      * @var \Cassandra\Session
@@ -174,6 +176,13 @@ class CassandraStorage implements Storage
         }
 
         return $data;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null)
+    {
     }
 
     /**
