@@ -21,6 +21,9 @@
 namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\CouchDB\CouchDBClient;
+use Doctrine\CouchDB\Mango\MangoQuery;
+use Doctrine\KeyValueStore\Query\RangeQuery;
+use Doctrine\KeyValueStore\Query\RangeQueryStorage;
 
 /**
  * Key-Value-Storage using a Doctrine CouchDB Client library as backend.
@@ -30,7 +33,7 @@ use Doctrine\CouchDB\CouchDBClient;
  *
  * @author Emanuele Minotto <minottoemanuele@gmail.com>
  */
-final class CouchDbStorage implements Storage
+final class CouchDbStorage implements Storage, RangeQueryStorage
 {
     /**
      * @var CouchDBClient
@@ -116,7 +119,7 @@ final class CouchDbStorage implements Storage
     /**
      * @param string       $storageName
      * @param array|string $key
-     * 
+     *
      * @return string
      */
     private function flattenKey($storageName, $key)
@@ -136,5 +139,73 @@ final class CouchDbStorage implements Storage
         }
 
         return $finalKey;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null)
+    {
+        $mangoQuery = new MangoQuery();
+        $partitionKey = $query->getPartitionKey();
+
+        $conditions = [];
+        foreach ($query->getConditions() as $condition) {
+            switch ($condition[0]) {
+                case RangeQuery::CONDITION_LE:
+                    $conditions[] = [
+                        $partitionKey => [
+                            '$lte' => $condition[1],
+                        ],
+                    ];
+                    break;
+
+                case RangeQuery::CONDITION_GE:
+                    $conditions[] = [
+                        $partitionKey => [
+                            '$gte' => $condition[1],
+                        ],
+                    ];
+                    break;
+
+                case RangeQuery::CONDITION_NEQ:
+                    $conditions[] = [
+                        $partitionKey => [
+                            '$ne' => $condition[1],
+                        ],
+                    ];
+                    break;
+
+                case RangeQuery::CONDITION_STARTSWITH:
+                    $conditions[] = [
+                        $partitionKey => [
+                            '$regex' => '^'.$condition[1],
+                        ],
+                    ];
+                    break;
+
+                default:
+                    $conditions[] = [
+                        $partitionKey => [
+                            '$'.$condition[0] => $condition[1],
+                        ],
+                    ];
+                    break;
+            }
+        }
+
+        $mangoQuery
+            ->select(['_id', $key])
+            ->where(['$and' => $conditions])
+            ->limit($query->getLimit());
+
+        $results = [];
+        $mangoResults = $this->client->find($query);
+
+        foreach ($mangoResults as $mangoResult) {
+            $results[] = $hydrateRow($mangoResult);
+        }
+
+        return $results;
     }
 }
