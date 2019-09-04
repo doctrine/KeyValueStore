@@ -202,7 +202,7 @@ class RangeQuery
     /**
      * Execute query and return a result iterator.
      *
-     * @return ResultIterator
+     * @return array
      */
     public function execute()
     {

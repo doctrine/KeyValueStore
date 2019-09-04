@@ -29,14 +29,14 @@ namespace Doctrine\KeyValueStore\Query;
 interface RangeQueryStorage
 {
     /**
-     * Execute the range query and return a ResultIterator
+     * Execute the range query and return an array
      *
      * @param RangeQuery $query
      * @param string     $storageName
      * @param array      $key
      * @param Closure    $hydrateRow
      *
-     * @return ResultIterator
+     * @return array
      */
     public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null);
 }
