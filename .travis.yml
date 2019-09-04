@@ -1,6 +1,8 @@
 language: php
 
 services:
+  - cassandra
+  - couchdb
   - mongodb
   - redis-server
 
