@@ -21,7 +21,14 @@
 namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\NotFoundException;
-use Riak\Client;
+use Riak\Client\Command\Kv\DeleteValue;
+use Riak\Client\Command\Kv\FetchValue;
+use Riak\Client\Command\Kv\StoreValue;
+use Riak\Client\Core\Query\RiakLocation;
+use Riak\Client\Core\Query\RiakNamespace;
+use Riak\Client\Core\Query\RiakObject;
+use Riak\Client\RiakClient;
+use Riak\Client\RiakException;
 
 /**
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
@@ -29,17 +36,11 @@ use Riak\Client;
 class RiakStorage implements Storage
 {
     /**
-     * @var \Riak\Client
+     * @var RiakClient
      */
-    protected $client;
+    private $client;
 
-    /**
-     * Constructor
-     *
-     * @param \Riak\Client $riak
-     * @param string       $bucketName
-     */
-    public function __construct(Client $riak)
+    public function __construct(RiakClient $riak)
     {
         $this->client = $riak;
     }
@@ -68,14 +69,25 @@ class RiakStorage implements Storage
         return false;
     }
 
+    private function store($storageName, $key, array $data)
+    {
+        $location = $this->getRiakLocation($storageName, $key);
+
+        $riakObject = new RiakObject();
+        $riakObject->setContentType('application/json');
+        $riakObject->setValue(json_encode($data));
+
+        $store = StoreValue::builder($location, $riakObject)->build();
+
+        $this->client->execute($store);
+    }
+
     /**
      * {@inheritDoc}
      */
     public function insert($storageName, $key, array $data)
     {
-        $bucket = $this->client->bucket($storageName);
-        $object = $bucket->newObject($key, $data);
-        $object->store();
+        $this->store($storageName, $key, $data);
     }
 
     /**
@@ -83,12 +95,7 @@ class RiakStorage implements Storage
      */
     public function update($storageName, $key, array $data)
     {
-        $bucket = $this->client->bucket($storageName);
-        /** @var $object \Riak\Object */
-        $object = $bucket->get($key);
-
-        $object->setData($data);
-        $object->store();
+        $this->store($storageName, $key, $data);
     }
 
     /**
@@ -96,17 +103,15 @@ class RiakStorage implements Storage
      */
     public function delete($storageName, $key)
     {
-        $bucket = $this->client->bucket($storageName);
+        $location = $this->getRiakLocation($storageName, $key);
 
-        /** @var $object \Riak\Object */
-        $object = $bucket->get($key);
+        $delete = DeleteValue::builder($location)->build();
 
-        if (! $object->exists()) {
-            // object does not exist, do nothing
-            return;
+        try {
+            $this->client->execute($delete);
+        } catch (RiakException $exception) {
+            // deletion can fail silent
         }
-
-        $object->delete();
     }
 
     /**
@@ -114,16 +119,29 @@ class RiakStorage implements Storage
      */
     public function find($storageName, $key)
     {
-        $bucket = $this->client->bucket($storageName);
+        $location = $this->getRiakLocation($storageName, $key);
 
-        /** @var $object \Riak\Object */
-        $object = $bucket->get($key);
+        // fetch object
+        $fetch = FetchValue::builder($location)->build();
 
-        if (! $object->exists()) {
-            throw new NotFoundException;
+        try {
+            $result = $this->client->execute($fetch);
+        } catch (RiakException $exception) {
+            throw new NotFoundException();
         }
 
-        return $object->getData();
+        $json = (string) $result
+            ->getValue()
+            ->getValue();
+
+        return json_decode($json, true);
+    }
+
+    private function getRiakLocation($storageName, $key)
+    {
+        $namespace = new RiakNamespace('default', $storageName);
+
+        return new RiakLocation($namespace, $key);
     }
 
     /**

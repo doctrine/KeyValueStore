@@ -20,34 +20,46 @@
 
 namespace Doctrine\Tests\KeyValueStore\Storage;
 
+use Doctrine\KeyValueStore\NotFoundException;
 use Doctrine\KeyValueStore\Storage\RiakStorage;
+use PHPUnit_Framework_TestCase;
+use Riak\Client\Command\Kv\Builder\ListKeysBuilder;
+use Riak\Client\Command\Kv\FetchValue;
+use Riak\Client\Core\Query\RiakLocation;
+use Riak\Client\Core\Query\RiakNamespace;
+use Riak\Client\Core\Query\RiakObject;
+use Riak\Client\Core\Transport\RiakTransportException;
+use Riak\Client\RiakClient;
+use Riak\Client\RiakClientBuilder;
 
 /**
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  */
-class RiakStorageTest extends \PHPUnit_Framework_TestCase
+class RiakStorageTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var RiakClient
+     */
+    private $client;
+
     /**
      * @var RiakStorage
      */
     private $storage;
 
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    private $riak;
-
-    protected function setup()
+    protected function setUp()
     {
-        if (PHP_MAJOR_VERSION >= 7) {
-            $this->markTestSkipped('Riak extension is not available for PHP versions >= 7');
+        $dns = getenv('RIAK_DNS');
+
+        if (empty($dns)) {
+            $this->markTestSkipped('Missing Riak DNS');
         }
 
-        $this->riak = $this->getMockBuilder('Riak\\Client')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->client = (new RiakClientBuilder())
+            ->withNodeUri($dns)
+            ->build();
 
-        $this->storage = new RiakStorage($this->riak);
+        $this->storage = new RiakStorage($this->client);
     }
 
     public function testSupportsPartialUpdates()
@@ -67,186 +79,124 @@ class RiakStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testInsert()
     {
-        $bucket = $this->getMockBuilder('Riak\Bucket')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $data = [
+            'title' => 'Riak test',
+        ];
 
-        $this->riak->expects($this->once())
-            ->method('bucket')
-            ->will($this->returnValue($bucket));
+        $this->storage->insert('riak-test', 'foobar', $data);
 
-        $objectMock = $this->getMockBuilder('Riak\Object')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $location = $this->getRiakLocation();
 
-        $objectMock->expects($this->once())
-            ->method('store');
+        $fetch = FetchValue::builder($location)->build();
 
-        $that = $this;
-        $bucket->expects($this->once())
-            ->method('newObject')
-            ->will($this->returnCallback(function ($key, $data) use ($objectMock, $that) {
-                $that->assertEquals('foobar', $key);
-                $that->assertEquals(['title' => 'Riak test'], $data);
-                return $objectMock;
-            }));
+        $json = (string) $this->client
+            ->execute($fetch)
+            ->getValue()
+            ->getValue();
 
-        $this->storage->insert('riak-test', 'foobar', ['title' => 'Riak test']);
-    }
-
-    public function testUpdate()
-    {
-        $objectMock = $this->getMockBuilder('Riak\Object')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $bucket = $this->getMockBuilder('Riak\Bucket')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->riak->expects($this->once())
-            ->method('bucket')
-            ->will($this->returnValue($bucket));
-
-        $bucket->expects($this->once())
-             ->method('get')
-             ->will($this->returnValue($objectMock));
-
-        $that = $this;
-        $objectMock->expects($this->once())
-            ->method('setData')
-            ->will($this->returnCallback(function ($data) use ($that) {
-                $that->assertEquals(['title' => 'Riak cookbook'], $data);
-            }));
-
-        $objectMock->expects($this->once())
-            ->method('store');
-
-        $this->storage->update('riak-test', 'foobar', ['title' => 'Riak cookbook']);
-    }
-
-    public function testDelete()
-    {
-        $objectMock = $this->getMockBuilder('Riak\Object')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $bucket = $this->getMockBuilder('Riak\Bucket')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->riak->expects($this->once())
-            ->method('bucket')
-            ->will($this->returnValue($bucket));
-
-        $bucket->expects($this->once())
-            ->method('get')
-            ->with('foobar')
-            ->will($this->returnValue($objectMock));
-
-        $objectMock->expects($this->once())
-            ->method('exists')
-            ->will($this->returnValue(true));
-
-        $objectMock->expects($this->once())
-            ->method('delete');
-
-        $this->storage->delete('riak-test', 'foobar');
-    }
-
-    public function testDeleteWithNotExistKey()
-    {
-        $objectMock = $this->getMockBuilder('Riak\Object')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $bucket = $this->getMockBuilder('Riak\Bucket')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->riak->expects($this->once())
-            ->method('bucket')
-            ->will($this->returnValue($bucket));
-
-        $bucket->expects($this->once())
-            ->method('get')
-            ->with('foobar')
-            ->will($this->returnValue($objectMock));
-
-        $objectMock->expects($this->once())
-            ->method('exists')
-            ->will($this->returnValue(false));
-
-        $objectMock->expects($this->never())
-            ->method('delete');
-
-        $this->storage->delete('riak-test', 'foobar');
-    }
-
-    public function testFind()
-    {
-        $objectMock = $this->getMockBuilder('Riak\Object')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $bucket = $this->getMockBuilder('Riak\Bucket')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->riak->expects($this->once())
-            ->method('bucket')
-            ->will($this->returnValue($bucket));
-
-        $bucket->expects($this->once())
-            ->method('get')
-            ->with('foobar')
-            ->will($this->returnValue($objectMock));
-
-        $objectMock->expects($this->once())
-            ->method('exists')
-            ->will($this->returnValue(true));
-
-        $objectMock->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue(['title' => 'Riak Test']));
-
-        $this->assertEquals(['title' => 'Riak Test'], $this->storage->find('riaktest', 'foobar'));
+        $this->assertSame($data, json_decode($json, true));
     }
 
     /**
-     * @expectedException Doctrine\KeyValueStore\NotFoundException
+     * @depends testInsert
      */
+    public function testUpdate()
+    {
+        $data = [
+            'title' => 'Riak update',
+        ];
+
+        $this->storage->insert('riak-test', 'foobar', [
+            'title' => 'Riak insert',
+        ]);
+
+        $location = $this->getRiakLocation();
+
+        $this->assertTotalBucketKeys(1, $location);
+
+        $this->storage->update('riak-test', 'foobar', $data);
+
+        $fetch = FetchValue::builder($location)->build();
+
+        $json = (string) $this->client
+            ->execute($fetch)
+            ->getValue()
+            ->getValue();
+
+        $this->assertSame($data, json_decode($json, true));
+        $this->assertTotalBucketKeys(1, $location);
+    }
+
+    /**
+     * @depends testInsert
+     */
+    public function testDelete()
+    {
+        $this->testInsert();
+
+        $this->storage->delete('riak-test', 'foobar');
+
+        $location = $this->getRiakLocation();
+
+        $fetch = FetchValue::builder($location)->build();
+
+        $this->setExpectedException(RiakTransportException::class);
+        $this->client->execute($fetch);
+
+        $this->assertTotalBucketKeys(0, $location);
+    }
+
+    /**
+     * @depends testDelete
+     */
+    public function testDeleteWithNotExistKey()
+    {
+        $this->storage->delete('riak-test', 'foobar');
+        $this->storage->delete('riak-test', 'foobar');
+    }
+
+    /**
+     * @depends testInsert
+     */
+    public function testFind()
+    {
+        $data = [
+            'title' => 'Riak test',
+        ];
+
+        $this->storage->insert('riak-test', 'foobar', $data);
+
+        $result = $this->storage->find('riak-test', 'foobar');
+
+        $this->assertSame($data, $result);
+    }
+
     public function testFindWithNotExistKey()
     {
-        $objectMock = $this->getMockBuilder('Riak\Object')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $bucket = $this->getMockBuilder('Riak\Bucket')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->riak->expects($this->once())
-            ->method('bucket')
-            ->will($this->returnValue($bucket));
-
-        $bucket->expects($this->once())
-            ->method('get')
-            ->with('foobar')
-            ->will($this->returnValue($objectMock));
-
-        $objectMock->expects($this->once())
-            ->method('exists')
-            ->will($this->returnValue(false));
-
-        $objectMock->expects($this->never())
-            ->method('getData');
-
-        $this->storage->find('riak-test', 'foobar');
+        $this->setExpectedException(NotFoundException::class);
+        $this->storage->find('riak-test', 'foobar-1');
     }
 
     public function testGetName()
     {
         $this->assertEquals('riak', $this->storage->getName());
+    }
+
+    private function assertTotalBucketKeys($expectedTotal, $location)
+    {
+        $command = (new ListKeysBuilder($location->getNamespace()))->build();
+
+        $iterator = $this->client
+            ->execute($command)
+            ->getIterator();
+
+        $this->assertCount($expectedTotal, iterator_to_array($iterator));
+    }
+
+    private function getRiakLocation()
+    {
+        $namespace = new RiakNamespace('default', 'riak-test');
+
+        return new RiakLocation($namespace, 'foobar');
     }
 }

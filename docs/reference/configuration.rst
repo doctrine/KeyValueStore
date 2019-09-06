@@ -242,15 +242,17 @@ instance.
 Riak
 ----
 
-Riak support is provided through the library `riak/riak-client <https://github.com/nacmartin/riak-client>`_ :
+Riak support is provided through the library `php-riak/riak-client <https://github.com/php-riak/riak-client>`_ :
 
 .. code-block:: php
 
     <?php
 
     use Doctrine\KeyValueStore\Storage\RiakStorage;
-    use Riak\Client;
+    use Riak\Client\RiakClientBuilder;
 
-    $conn = new Riak(/* connection parameters */);
+    $conn = (new RiakClientBuilder())
+        ->withNodeUri(/* connection DNS */)
+        ->build();
 
     $storage = new RiakStorage($conn);
