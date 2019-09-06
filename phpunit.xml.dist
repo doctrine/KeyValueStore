@@ -16,5 +16,6 @@
         <var name="DOCTRINE_KEYVALUE_AZURE_AUTHSCHEMA" value="sharedlite" />
         <var name="DOCTRINE_KEYVALUE_AZURE_NAME" value="" />
         <var name="DOCTRINE_KEYVALUE_AZURE_KEY" value="" />
+        <env name="RIAK_DNS" value="" />
     </php>
 </phpunit>
