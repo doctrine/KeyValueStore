@@ -18,6 +18,7 @@ php:
   - 7.3
 
 before_install:
+  - pecl install --force mongodb
   - if [[ ${TRAVIS_PHP_VERSION:0:1} != "7" ]]; then sh ./tests/travis.sh; fi
   - composer self-update
 
