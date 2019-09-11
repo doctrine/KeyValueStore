@@ -21,6 +21,7 @@
 namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\NotFoundException;
+use MongoDB\Database;
 
 /**
  * MongoDb storage
@@ -30,57 +31,16 @@ use Doctrine\KeyValueStore\NotFoundException;
 class MongoDbStorage implements Storage
 {
     /**
-     * @var \Mongo
+     * @var Database
      */
-    protected $mongo;
+    private $database;
 
     /**
-     * @var array
+     * @param Database $database
      */
-    protected $dbOptions;
-
-    /**
-     * @var \MongoCollection
-     */
-    protected $collection;
-
-    /**
-     * Constructor
-     *
-     * @param \Mongo $mongo
-     * @param array  $dbOptions
-     */
-    public function __construct(\Mongo $mongo, array $dbOptions = [])
+    public function __construct(Database $database)
     {
-        $this->mongo     = $mongo;
-        $this->dbOptions = array_merge([
-            'database'   => '',
-            'collection' => '',
-        ], $dbOptions);
-    }
-
-    /**
-     * Initialize the mongodb collection
-     *
-     * @throws \RuntimeException
-     */
-    public function initialize()
-    {
-        if (null !== $this->collection) {
-            return;
-        }
-
-        if (empty($this->dbOptions['database'])) {
-            throw new \RuntimeException('The option "database" must be set');
-        }
-        if (empty($this->dbOptions['collection'])) {
-            throw new \RuntimeException('The option "collection" must be set');
-        }
-
-        $this->collection = $this
-            ->mongo
-            ->selectDB($this->dbOptions['database'])
-            ->selectCollection($this->dbOptions['collection']);
+        $this->database = $database;
     }
 
     /**
@@ -112,14 +72,12 @@ class MongoDbStorage implements Storage
      */
     public function insert($storageName, $key, array $data)
     {
-        $this->initialize();
-
-        $value = [
-            'key'   => $key,
-            'value' => $data,
-        ];
-
-        $this->collection->insert($value);
+        $this->database
+            ->selectCollection($storageName)
+            ->insertOne([
+                'key'   => $key,
+                'value' => $data,
+            ]);
     }
 
     /**
@@ -127,14 +85,14 @@ class MongoDbStorage implements Storage
      */
     public function update($storageName, $key, array $data)
     {
-        $this->initialize();
-
-        $value = [
-            'key'   => $key,
-            'value' => $data,
-        ];
-
-        $this->collection->update(['key' => $key], $value);
+        $this->database
+            ->selectCollection($storageName)
+            ->replaceOne([
+                'key'   => $key,
+            ], [
+                'key'   => $key,
+                'value' => $data,
+            ]);
     }
 
     /**
@@ -142,9 +100,11 @@ class MongoDbStorage implements Storage
      */
     public function delete($storageName, $key)
     {
-        $this->initialize();
-
-        $this->collection->remove(['key' => $key]);
+        $this->database
+            ->selectCollection($storageName)
+            ->deleteOne([
+                'key' => $key,
+            ]);
     }
 
     /**
@@ -152,15 +112,23 @@ class MongoDbStorage implements Storage
      */
     public function find($storageName, $key)
     {
-        $this->initialize();
+        $result = $this->database
+            ->selectCollection($storageName, [
+                'typeMap' => [
+                    'array' => 'array',
+                    'document' => 'array',
+                    'root' => 'array',
+                ],
+            ])
+            ->findOne([
+                'key' => $key,
+            ]);
 
-        $value = $this->collection->findOne(['key' => $key], ['value']);
-
-        if ($value) {
-            return $value['value'];
+        if (! $result || ! $result['value']) {
+            throw new NotFoundException();
         }
 
-        throw new NotFoundException();
+        return $result['value'];
     }
 
     /**

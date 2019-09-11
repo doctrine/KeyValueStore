@@ -20,40 +20,34 @@
 
 namespace Doctrine\Tests\KeyValueStore\Storage;
 
+use Doctrine\KeyValueStore\NotFoundException;
 use Doctrine\KeyValueStore\Storage\MongoDbStorage;
+use MongoDB\Client;
 
 /**
  * MongoDb storage testcase
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  *
- * @requires extension mongo
+ * @covers \Doctrine\KeyValueStore\Storage\MongoDbStorage
+ * @requires extension mongodb
  */
 class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Client
+     */
+    private $client;
+
+    /**
+     * @var MongoDbStorage
+     */
+    private $storage;
+
     protected function setUp()
     {
-        $this->mongo = $this
-            ->getMockBuilder('\Mongo')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->mongodb = $this->getMockBuilder('\MongoDB')->disableOriginalConstructor()->getMock();
-
-        $this->mongo->expects($this->any())
-                    ->method('selectDB')
-                    ->will($this->returnValue($this->mongodb));
-
-        $this->collection = $this->getMockBuilder('MongoCollection')->disableOriginalConstructor()->getMock();
-
-        $this->mongodb->expects($this->once())
-             ->method('selectCollection')
-             ->will($this->returnValue($this->collection));
-
-        $this->storage = new MongoDbStorage($this->mongo, [
-            'collection' => 'test',
-            'database'   => 'test',
-        ]);
+        $this->client = new Client();
+        $this->storage = new MongoDbStorage($this->client->test);
     }
 
     public function testInsert()
@@ -63,20 +57,21 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
             'title'  => 'example book',
         ];
 
-        $dbDataset = [];
+        $this->storage->insert('mongodb', 'testInsert', $data);
 
-        $this->collection->expects($this->once())
-            ->method('insert')
-            ->will($this->returnCallback(function ($data) use (&$dbDataset) {
-                $dbDataset[] = $data;
-            }));
+        $result = $this->client
+            ->test
+            ->mongodb
+            ->findOne([
+                'key' => 'testInsert',
+            ]);
 
-        $this->storage->insert('mongodb', '1', $data);
-        $this->assertCount(1, $dbDataset);
-
-        $this->assertEquals([['key' => '1', 'value' => $data]], $dbDataset);
+        $this->assertSame($data, $result['value']->getArrayCopy());
     }
 
+    /**
+     * @depends testInsert
+     */
     public function testUpdate()
     {
         $data = [
@@ -84,80 +79,67 @@ class MongoDbStorageTest extends \PHPUnit_Framework_TestCase
             'title'  => 'example book',
         ];
 
-        $dbDataset = [];
+        $this->storage->insert('mongodb', 'testUpdate', [
+            'foo' => 'bar',
+        ]);
+        $this->storage->update('mongodb', 'testUpdate', $data);
 
-        $this->collection->expects($this->once())
-            ->method('update')
-            ->will($this->returnCallback(function ($citeria, $data) use (&$dbDataset) {
-                $dbDataset = [$citeria, $data];
-            }));
+        $result = $this->client
+            ->test
+            ->mongodb
+            ->findOne([
+                'key' => 'testUpdate',
+            ]);
 
-        $this->storage->update('mongodb', '1', $data);
-
-        $this->assertEquals(['key' => '1'], $dbDataset[0]);
-        $this->assertEquals(['key' => '1', 'value' => $data], $dbDataset[1]);
+        $this->assertSame($data, $result['value']->getArrayCopy());
     }
 
+    /**
+     * @depends testInsert
+     */
     public function testDelete()
     {
-        $dataset = [
-            [
-                'key'   => 'foobar',
-                'value' => [
-                    'author' => 'John Doe',
-                    'title'  => 'example book',
-                ],
-            ],
-        ];
+        $this->storage->insert('mongodb', 'testDelete', [
+            'foo' => 'bar',
+        ]);
 
-        $this->collection->expects($this->once())
-             ->method('remove')
-             ->will($this->returnCallback(function ($citeria) use (&$dataset) {
-                    foreach ($dataset as $key => $row) {
-                        if ($row['key'] === $citeria['key']) {
-                            unset($dataset[$key]);
-                        }
-                    }
-                }
-             ));
+        $this->storage->delete('mongodb', 'testDelete');
 
-        $this->storage->delete('test', 'foobar');
+        $result = $this->client
+            ->test
+            ->mongodb
+            ->findOne([
+                'key' => 'testDelete',
+            ]);
 
-        $this->assertCount(0, $dataset);
+        $this->assertNull($result);
     }
 
+    /**
+     * @depends testInsert
+     */
     public function testFind()
     {
         $dataset = [
-            [
-                'key'   => 'foobar',
-                'value' => [
-                    'author' => 'John Doe',
-                    'title'  => 'example book',
-                ],
-            ],
+            'author' => 'John Doe',
+            'title'  => 'example book',
         ];
 
-        $this->collection->expects($this->once())
-            ->method('findOne')
-            ->will($this->returnCallback(function ($citeria, $fields) use (&$dataset) {
-                foreach ($dataset as $key => $row) {
-                    if ($row['key'] === $citeria['key']) {
-                        return $row;
-                    }
-                }
-            }
-        ));
+        $this->storage->insert('mongodb', 'testFind', $dataset);
 
-        $data = $this->storage->find('test', 'foobar');
+        $data = $this->storage->find('mongodb', 'testFind');
 
-        $this->assertEquals($dataset[0]['value'], $data);
+        $this->assertEquals($dataset, $data);
+    }
+
+    public function testFindWithNotExistKey()
+    {
+        $this->setExpectedException(NotFoundException::class);
+        $this->storage->find('mongodb', 'not-existing-key');
     }
 
     public function testGetName()
     {
-        $this->storage->initialize();
-
         $this->assertEquals('mongodb', $this->storage->getName());
     }
 }

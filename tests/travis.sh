@@ -7,7 +7,5 @@ sudo apt-get install -y libuv-dev libssl-dev
 cd /tmp && git clone https://github.com/datastax/php-driver.git && cd php-driver && git submodule update --init
 cd ext && ./install.sh && cd "$TRAVIS_BUILD_DIR"
 echo "extension=cassandra.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
-# PHP extensions
-yes | pecl install mongo
 # PECL extensions
 echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini

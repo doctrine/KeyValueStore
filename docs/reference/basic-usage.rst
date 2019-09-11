@@ -8,7 +8,7 @@ This guide covers getting started with the Doctrine Key Value Store.
 
 To use the KeyValueStore you actually need:
 
-- PHP 5.5 or above
+- PHP 5.6 or above
 - Composer Package Manager (`Install Composer
   <http://getcomposer.org/doc/00-intro.md>`_)
 

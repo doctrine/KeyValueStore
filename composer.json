@@ -9,7 +9,8 @@
         "doctrine/couchdb": "^1.0.0-beta4",
         "phpunit/phpunit": "^4.8|^5.0",
         "aws/aws-sdk-php": "^3.8",
-        "riak/riak-client": "dev-master"
+        "riak/riak-client": "dev-master",
+        "mongodb/mongodb": "^1.4"
     },
     "suggest": {
         "aws/aws-sdk-php": "to use the DynamoDB storage",

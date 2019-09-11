@@ -224,23 +224,20 @@ See the `AWS docs <http://docs.aws.amazon.com/amazondynamodb/latest/developergui
 MongoDB
 -------
 
-Mongo support is provided using a `Mongo <http://php.net/manual/en/class.mongo.php>`_
-instance, the collection name and the database name.
-
-Both the options ``collection`` and ``database`` are required.
+MongoDB is based on `mongodb/mongodb <https://github.com/mongodb/mongo-php-library>`_:
+MongoDB support is provided using a `Database <https://docs.mongodb.com/php-library/current/reference/class/MongoDBDatabase/>`_
+instance.
 
 .. code-block:: php
 
     <?php
 
+    use MongoDB\Client;
     use Doctrine\KeyValueStore\Storage\MongoDbStorage;
 
-    $conn = new \Mongo(/* connection parameters and options */);
+    $client = new Client(/* connection parameters and options */);
 
-    $storage = new MongoDbStorage($conn, array(
-        'collection' => 'your_collection',
-        'database'   => 'your_database',
-    ));
+    $storage = new MongoDbStorage($client->your_database);
 
 Riak
 ----
