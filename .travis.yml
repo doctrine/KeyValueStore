@@ -11,7 +11,23 @@ php:
   - 7.2
   - 7.3
 
+addons:
+    apt:
+        sources:
+            -
+                key_url: 'https://packagecloud.io/gpg.key'
+                sourceline: 'deb https://packagecloud.io/basho/riak/ubuntu/ trusty main'
+            -
+                key_url: 'https://packagecloud.io/gpg.key'
+                sourceline: 'deb-src https://packagecloud.io/basho/riak/ubuntu/ trusty main'
+        update: true
+
+cache:
+    apt: true
+
 before_install:
+  - sudo apt-get install -y --allow-unauthenticated riak
+  - sudo service riak start
   - pecl install --force mongodb
   - if [[ ${TRAVIS_PHP_VERSION:0:1} != "7" ]]; then sh ./tests/travis.sh; fi
   - composer self-update

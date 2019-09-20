@@ -9,14 +9,13 @@
         "doctrine/couchdb": "^1.0.0-beta4",
         "phpunit/phpunit": "^4.8|^5.0",
         "aws/aws-sdk-php": "^3.8",
-        "riak/riak-client": "dev-master",
+        "php-riak/riak-client": "^1.0@alpha",
         "mongodb/mongodb": "^1.4"
     },
     "suggest": {
         "aws/aws-sdk-php": "to use the DynamoDB storage",
         "doctrine/couchdb": "to use the CouchDB storage",
-        "ext-couchbase": "to use the Couchbase storage",
-        "riak/riak-client": "to use the Riak storage"
+        "ext-couchbase": "to use the Couchbase storage"
     },
     "description": "Simple Key-Value Store Abstraction Layer that maps to PHP objects, allowing for many backends.",
     "license": "MIT",
