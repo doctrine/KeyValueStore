@@ -58,6 +58,7 @@ So far the following drivers exist (and are documented here):
 * Microsoft Windows Azure Table
 * Couchbase
 * CouchDB
+* DynamoDB
 * MongoDB
 * Riak
 
@@ -209,17 +210,9 @@ See the `AWS docs <http://docs.aws.amazon.com/amazondynamodb/latest/developergui
 
     <?php
 
-    $sdk = new \Aws\Sdk([...]);
-    $client = $sdk->createDynamoDb();
+    $client = DynamoDbClient::factory([...])
 
-    $storage = new DynamoDbStorage(
-        $client,
-        // Optional key name, defaults to Id.
-        null,
-        // Optional table name/ key name pairs.
-        // This example uses a table called Awesome keyed by MyKey.
-        ['storage_keys' => ['Awesome' => 'MyKey']]
-    );
+    $storage = new DynamoDbStorage($client);
 
 MongoDB
 -------
