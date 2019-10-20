@@ -17,5 +17,6 @@
         <var name="DOCTRINE_KEYVALUE_AZURE_NAME" value="" />
         <var name="DOCTRINE_KEYVALUE_AZURE_KEY" value="" />
         <env name="RIAK_DNS" value="" />
+        <env name="DYNAMODB_DNS" value="" />
     </php>
 </phpunit>
