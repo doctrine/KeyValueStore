@@ -1,6 +1,7 @@
 language: php
 
 services:
+  - docker
   - mongodb
   - redis-server
 
@@ -26,6 +27,7 @@ cache:
     apt: true
 
 before_install:
+  - docker run -d -p 8000:8000 amazon/dynamodb-local
   - sudo apt-get install -y --allow-unauthenticated riak
   - sudo service riak start
   - pecl install --force mongodb
